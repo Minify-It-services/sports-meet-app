@@ -4,7 +4,7 @@ const Home = () => {
     return (
         <div className="homeBackground"
             style={{
-            backgroundImage: "url(/home-bg.gif)",
+            backgroundImage: "url(/images/home-bg.gif)",
             height:"100vh",
             width:"100vw",
             backgroundPosition:"center",

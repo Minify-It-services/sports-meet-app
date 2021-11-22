@@ -1,11 +1,12 @@
 import * as React from 'react'
+import {useState} from 'react';
+
 import Typography from '@mui/material/Typography';
 import  Button  from '@mui/material/Button';
 import Container  from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
-import { Alert } from '@mui/material';
-import {useState} from 'react';
+import Alert from '@mui/material/Alert';
 
 //TODO: need fixing
 function SoloRegistration() {
@@ -24,7 +25,7 @@ function SoloRegistration() {
       }
     return (
             <>
-            <div className="banner" style={{minHeight:"30vh",backgroundImage: "url(" + "https://images.pexels.com/photos/34153/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350" + ")",
+            <div className="banner" style={{minHeight:"30vh",backgroundImage: "url(https://images.pexels.com/photos/34153/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350)",
             backgroundPosition: 'center',
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat'}}>

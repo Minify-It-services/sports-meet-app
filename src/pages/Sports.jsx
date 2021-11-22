@@ -1,9 +1,9 @@
 import * as React from 'react';
+
 import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
 import Box from '@mui/material/Box';
 import { Container,Typography } from '@mui/material';
-import '../styles/sport/Sport.module.css'
 //TODO: need to redisign again
 
 function Sports() {

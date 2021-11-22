@@ -1,4 +1,6 @@
 import * as React from 'react'
+import { useState } from 'react';
+
 import Typography from '@mui/material/Typography';
 import  Button  from '@mui/material/Button';
 import Container  from '@mui/material/Container';
@@ -6,9 +8,7 @@ import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-// import Stack from '@mui/material/Stack';
-import { Alert } from '@mui/material';
-import {useState} from 'react';
+import Alert from '@mui/material/Alert';
 
 
 function SoloRegistration() {
@@ -38,7 +38,7 @@ function SoloRegistration() {
       }
     return (
             <>
-            <div className="banner" style={{minHeight:"30vh",backgroundImage: "url(" + "https://i2-prod.irishmirror.ie/incoming/article8074062.ece/ALTERNATES/s1227b/Atletico-Madrid-v-Real-Madrid.jpg" + ")",
+            <div className="banner" style={{minHeight:"30vh",backgroundImage: "url(https://i2-prod.irishmirror.ie/incoming/article8074062.ece/ALTERNATES/s1227b/Atletico-Madrid-v-Real-Madrid.jpg)",
             backgroundPosition: 'center',
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat'}}>

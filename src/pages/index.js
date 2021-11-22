@@ -1,0 +1,8 @@
+export { default as SportPage } from './Sports'
+export { default as SoloRegistration } from './SoloRegistration'
+export { default as TeamRegistration } from './TeamRegistration'
+export { default as DuoRegistration } from './DuoRegistration'
+export { default as HomePage } from './Home'
+export { default as ProfilePage } from './Profile'
+export { default as Login } from './Login'
+export { default as PhoneRegister } from './PhoneRegister'
