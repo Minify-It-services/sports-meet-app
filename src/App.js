@@ -1,11 +1,21 @@
-import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
+import PhoneRegister from './pages/PhoneRegister/index'
+import Login from './pages/Login/index'
+import Profile from './pages/Profile/index'
+
 import './App.css';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <h1>Sports Meet App</h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        {/* <Route path="/" element={<HomePage />} /> */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/phoneRegister" element={<PhoneRegister />} />
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
