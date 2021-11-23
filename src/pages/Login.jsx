@@ -7,6 +7,8 @@ import axios from 'axios'
 
 const Login = () => {
 
+    const token = localStorage.getItem('token')
+
     const navigate = useNavigate()
     const { signOut } = useGoogleLogout({
         clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID,
@@ -40,29 +42,50 @@ const Login = () => {
         const faculty = email.substring(6, 7).toLowerCase()==='s'?'Software':'Computer'
 
         let response = {}
-         await axios({
-            method: 'POST',
-            baseURL: process.env.REACT_APP_ENVIRONMENT === 'development'?'http://localhost:5000/v1':'Hosting URL',
-            url: '/auth/register',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: {
-                name,
-                email,
-                year,
-                faculty,
-                semester,
-                imageUrl,
+            if(token){
+                await axios({
+                    method: 'POST',
+                    baseURL: process.env.REACT_APP_ENVIRONMENT === 'development'?'http://localhost:5000/v1':'Hosting URL',
+                    url: '/auth/login',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    data: {
+                        email,
+                    }
+                }).then(res => response = res.data)
+                .catch(err => response = err.response.data)
             }
-        }).then(res => response = res.data)
-        .catch(err => response = err.response.data)
+            else{
+                await axios({
+                   method: 'POST',
+                   baseURL: process.env.REACT_APP_ENVIRONMENT === 'development'?'http://localhost:5000/v1':'Hosting URL',
+                   url: '/auth/register',
+                   headers: {
+                       'Content-Type': 'application/json'
+                   },
+                   data: {
+                       name,
+                       email,
+                       year,
+                       faculty,
+                       semester,
+                       imageUrl,
+                   }
+               }).then(res => response = res.data)
+               .catch(err => response = err.response.data)
+            }
 
         const {status, data, message} = response
         if(status === 'success'){
             localStorage.setItem('user', JSON.stringify(data.user))
             localStorage.setItem('token', data.tokens.access.token)
-            navigate('/phone-register')
+            if(token){
+                navigate('/profile')
+            }
+            else{
+                navigate('/phone-register')
+            }
         }
         else{
             console.log(data, message);
@@ -84,7 +107,7 @@ const Login = () => {
                     <Box sx={{textAlign:'center'}}>
                         <GoogleLogin 
                             clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-                            buttonText='Login with GCES account'
+                            buttonText={`${token?'Login':'SignUp'} with GCES account`}
                             isSignedIn={false}
                             onSuccess={onSuccess}
                             onFailure={onFailure}
