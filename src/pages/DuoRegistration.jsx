@@ -9,9 +9,11 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { Alert } from '@mui/material';
 import {useState} from 'react';
 
-
+//TODO: SHOW ERROR MESSAGE ON EMPTY PARTNER SELECTED AND FONT SIZING
 function SoloRegistration() {
     const [registered, setRegsitered] = useState(false);
+    const [partner, setpartner] = useState('');
+
     const students = [
       { label: 'Sunil Poudel'},
       { label: 'Anil Bhujel'},
@@ -23,16 +25,25 @@ function SoloRegistration() {
         if (reason === 'clickaway') {
           return;
         }
-    
         setOpen(false);
       };
+      //TODO: API INTEGRATION
       const handleRegister=()=>{
-        setRegsitered(!registered);
-        setOpen(!open);
-        if (open) {
-           setTimeout(() => {
-           setOpen(false); 
-        }, 1000); 
+        if (!registered && partner.trim().length!==0) {
+          console.log('partner register vayo!');
+         setRegsitered(true);
+         setOpen(!open);
+        }
+        else if(registered)
+        {
+          console.log('leave hanyo! ');
+          setpartner('');
+          setRegsitered(false);
+          setOpen(!open);
+
+        }
+        else{
+          console.log('partner chaina');
         }
       }
     return (
@@ -44,24 +55,29 @@ function SoloRegistration() {
             </div>
             <Container sx={{marginTop:5}}>
             <Stack spacing={{xs:2,md:4}}>
-            <Typography variant="h4">Chess</Typography>
+            <Typography variant="h5">Badminton</Typography>
             <p>Fact: There are over 318 billion different possible positions after four moves each.</p>
-            <Typography variant="subtitle">Select Your Partner</Typography>
-            <Autocomplete
-            disablePortal
-            id="combo-box-demo"
-            options={students}
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="Partner" variant="standard" />}
-            />
-            <Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={()=>handleRegister()}>{registered? "Leave":"Register"}</Button>
-                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            {!registered? <Typography variant="subtitle">Select Your Partner</Typography> :
+            
+            <div><Typography variant="h5">Your Partner</Typography><p>{partner}</p></div>
+            } 
+            {
+               !registered? <Autocomplete
+               isOptionEqualToValue={(option, value) => option.label === value.label}
+                autoComplete={false}
+                options={students}
+                onChange={(event, value) => setpartner(value.label)}
+                renderInput={(params) => <TextField {...params} label="Partner" variant="standard" required={true}/>}
+                /> : <div></div>
+            }
+            <Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={handleRegister}>{registered? "Leave":"Register"}</Button>
+                <Snackbar open={open} autoHideDuration={1500} onClose={handleClose}>
                     <Alert onClose={handleClose} severity={registered?"success":"error"} sx={{ width: '100%' }}>
                     {registered? "Your have successfully registered.Yay!!" :"You left! 🥺"}
                     </Alert>
                 </Snackbar>
-            <Typography variant="h4">Rules</Typography>
-            <ul>
+            <Typography variant="h5">Rules</Typography>
+            <ul style={{margin:"0 20px",fontSize:"18px"}}>
                 <li>The King may move one square in any direction, so long as no piece is blocking his path.
                 </li>
                 <li>The Queen may move any number of squares straight or diagonally in any direction.
