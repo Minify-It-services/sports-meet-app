@@ -1,11 +1,11 @@
 import * as React from 'react'
+import {Link} from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Box  from '@mui/system/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import {Link} from 'react-router-dom';
 
 function PhoneRegister() {
     return (
