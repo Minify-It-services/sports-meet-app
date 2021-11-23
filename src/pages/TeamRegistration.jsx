@@ -11,8 +11,13 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Alert from '@mui/material/Alert';
 
 
-function SoloRegistration() {
+function TeamRegistration() {
     const [registered, setRegsitered] = useState(false);
+    const [manager, setmanager] = useState({});
+    const [coach, setcoach] = useState({});
+    const [captain, setcaptain] = useState({});
+    const [players, setplayers] = useState([{}]);
+    const [extraPlayers, setextraPlayers] = useState([{}]);
     const students = [
       { label: 'Sunil Poudel'},
       { label: 'Anil Bhujel'},
@@ -24,17 +29,19 @@ function SoloRegistration() {
         if (reason === 'clickaway') {
           return;
         }
-    
         setOpen(false);
       };
       const handleRegister=()=>{
+        console.log(manager,coach,captain,players,extraPlayers);
         setRegsitered(!registered);
         setOpen(!open);
-        if (open) {
-           setTimeout(() => {
-           setOpen(false); 
-        }, 1000); 
-        }
+      }
+      //TODO: HANDLE LIMITING PLAYER SELECTION AND EMPTY FIELDS
+      const handleLimitedPlayers=()=>{
+        console.log('hi limited players');
+        console.log(players);
+        if (players.length>2){return true}
+        else {return false}
       }
     return (
             <>
@@ -51,28 +58,37 @@ function SoloRegistration() {
               <div>
                 {/* <Typography variant="subtitle">Manager</Typography> */}
                 <Autocomplete
+                isOptionEqualToValue={(option, value) => option.label === value.label}
                 disablePortal
-                id="combo-box-demo"
                 options={students}
-                // sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="Partner" variant="standard" />}
+                onChange={(event,value)=>setmanager(value)}
+                renderInput={(params) => <TextField {...params} label="Manager" variant="standard" />}
+                />
+              </div>
+              <div>
+                <Autocomplete
+                isOptionEqualToValue={(option, value) => option.label === value.label}
+                disablePortal
+                options={students}
+                onChange={(event,value)=>setcaptain(value)}
+                renderInput={(params) => <TextField {...params} label="Captain" variant="standard" />}
                 />
               </div>
               <div>
               {/* <Typography variant="subtitle">Players</Typography> */}
               <Autocomplete
+                isOptionEqualToValue={(option, value) => option.label === value.label}
                 multiple
-                id="tags-standard"
+                onChange={(event,value)=>setplayers([value])}
                 options={students}
-                limitTags={2}
+                getOptionDisabled={handleLimitedPlayers}
+                // limitTags={2}
                 getOptionLabel={(option) => option.label}
-                // defaultValue={[students[0]]}
                 renderInput={(params) => (
                   <TextField
                     {...params}
                     variant="standard"
                     label="Players"
-                    placeholder="Favorites"
                   />
                 )}
               />
@@ -80,20 +96,21 @@ function SoloRegistration() {
               <div>
                 {/* <Typography variant="subtitle">Coach</Typography> */}
                   <Autocomplete
+                  isOptionEqualToValue={(option, value) => option.label === value.label}
                   disablePortal
-                  id="combo-box-demo"
+                  onChange={(event,value)=>setcoach(value)}
                   options={students}
-                  // sx={{ width: 300 }}
                   renderInput={(params) => <TextField {...params} label="Coach" variant="standard" />}
                 />
               </div>
               <div>
               {/* <Typography variant="subtitle">Extras</Typography> */}
                 <Autocomplete
+                  isOptionEqualToValue={(option, value) => option.label === value.label}
                   multiple
-                  id="tags-standard"
                   options={students}
                   limitTags={2}
+                  onChange={(event,value)=>setextraPlayers([value])}
                   getOptionLabel={(option) => option.label}
                   renderInput={(params) => (
                     <TextField
@@ -127,4 +144,4 @@ function SoloRegistration() {
     )
 }
 
-export default SoloRegistration
+export default TeamRegistration

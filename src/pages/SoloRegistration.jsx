@@ -20,6 +20,7 @@ function SoloRegistration() {
         setOpen(false);
       };
       const handleRegister=()=>{
+        //TODO: Perform registration with API
         setRegsitered(!registered);
         setOpen(!open);
       }
@@ -35,7 +36,7 @@ function SoloRegistration() {
             <Typography variant="h4">Chess</Typography>
             <p>Fact: There are over 318 billion different possible positions after four moves each.</p>
             <Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={()=>handleRegister()}>{registered? "Leave":"Register"}</Button>
-                <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
+                <Snackbar open={open} autoHideDuration={1500} onClose={handleClose}>
                     <Alert onClose={handleClose} severity={registered?"success":"error"} sx={{ width: '100%' }}>
                     {registered? "Your have successfully registered.Yay!!" :"You left! 🥺"}
                     </Alert>
