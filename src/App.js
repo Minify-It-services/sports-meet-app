@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-import { 
-    SportPage, HomePage, SoloRegistration, 
-    TeamRegistration, DuoRegistration,
-    PhoneRegister, ProfilePage, Login
-  } from './pages'
+// pages:guest
+import { SportPage, HomePage, SoloRegistration, TeamRegistration, DuoRegistration,PhoneRegister, ProfilePage, Login } from './pages';
+
+// pages:admin
+import Dashboard from './admin/pages/Dashboard';
 
 import React from 'react';
 import '@fontsource/roboto/300.css';
@@ -22,6 +22,7 @@ const App = () => {
         <Route path="/phone-register" element={<PhoneRegister />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/teamRegister/*" element={<Team />} />
+        <Route path="/admin/*" element={<Admin />} />
       </Routes>
     </BrowserRouter>
   );
@@ -34,6 +35,14 @@ const Team = () => {
       <Route path="team-registration" element={<TeamRegistration />} />
       <Route path="duo-registration" element={<DuoRegistration />} />
       <Route path="solo-registration" element={<SoloRegistration />} />
+    </Routes>
+  )
+}
+
+const Admin = () => {
+  return (
+    <Routes>
+      <Route path="dashboard" element={<Dashboard />} />
     </Routes>
   )
 }
