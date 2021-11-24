@@ -13,6 +13,8 @@ import {useState} from 'react';
 function SoloRegistration() {
     const [registered, setRegsitered] = useState(false);
     const [partner, setpartner] = useState('');
+    const [displayMessage, setdisplayMessage] = useState('');
+    const [hasError, sethasError] = useState(false);
 
     const students = [
       { label: 'Sunil Poudel'},
@@ -30,20 +32,24 @@ function SoloRegistration() {
       //TODO: API INTEGRATION
       const handleRegister=()=>{
         if (!registered && partner.trim().length!==0) {
-          console.log('partner register vayo!');
-         setRegsitered(true);
-         setOpen(!open);
+          sethasError(false);
+          setdisplayMessage('Successfully registered a Duo Team');
+          setRegsitered(true);
+          setOpen(!open);
         }
         else if(registered)
         {
-          console.log('leave hanyo! ');
+          sethasError(true);
+          setdisplayMessage('You Left the Team');
           setpartner('');
           setRegsitered(false);
           setOpen(!open);
 
         }
         else{
-          console.log('partner chaina');
+          sethasError(true);
+          setdisplayMessage('Please Fill the empty fields');
+          setOpen(!open);
         }
       }
     return (
@@ -72,8 +78,8 @@ function SoloRegistration() {
             }
             <Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={handleRegister}>{registered? "Leave":"Register"}</Button>
                 <Snackbar open={open} autoHideDuration={1500} onClose={handleClose}>
-                    <Alert onClose={handleClose} severity={registered?"success":"error"} sx={{ width: '100%' }}>
-                    {registered? "Your have successfully registered.Yay!!" :"You left! 🥺"}
+                    <Alert onClose={handleClose} severity={!hasError?"success":"error"} sx={{ width: '100%' }}>
+                    {displayMessage}
                     </Alert>
                 </Snackbar>
             <Typography variant="h5">Rules</Typography>
