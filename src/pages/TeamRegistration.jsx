@@ -9,6 +9,7 @@ import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import Alert from '@mui/material/Alert';
+import Chip from '@mui/material/Chip';
 
 
 function TeamRegistration() {
@@ -16,8 +17,11 @@ function TeamRegistration() {
     const [manager, setmanager] = useState({});
     const [coach, setcoach] = useState({});
     const [captain, setcaptain] = useState({});
-    const [players, setplayers] = useState([{}]);
-    const [extraPlayers, setextraPlayers] = useState([{}]);
+    const [players, setplayers] = useState([]);
+    const [extraPlayers, setextraPlayers] = useState([]);
+    const [hasError, sethasError] = useState(false);
+    const [displayMessage, setdisplayMessage] = useState('');
+    const [team, setteam] = useState({});
     const students = [
       { label: 'Sunil Poudel'},
       { label: 'Anil Bhujel'},
@@ -31,18 +35,58 @@ function TeamRegistration() {
         }
         setOpen(false);
       };
+      const isObjEmpty=(obj)=>{
+        if (obj && Object.keys(obj).length === 0
+        && Object.getPrototypeOf(obj) === Object.prototype) {
+          return true;
+        }
+        else return false;
+      }
+
       const handleRegister=()=>{
-        console.log(manager,coach,captain,players,extraPlayers);
-        setRegsitered(!registered);
-        setOpen(!open);
+          if (!registered && players.length!==0 && extraPlayers.length!==0 && !isObjEmpty(coach) && !isObjEmpty(manager) && !isObjEmpty(captain)) {
+            setdisplayMessage('Successfully registered a Team');
+            setteam(
+              {"name": "Software 5th sem Team A",
+            "year": "2018",
+            "semester": "5th",
+            "faculty": "Software",
+            "memberIds":[...players,...extraPlayers],
+            "coach": coach,
+            "manager": manager,
+            "captain": captain,
+            "sportId":"6198e9e4cd4bc645a092f230",
+          }
+          );
+            sethasError(false);
+            console.log('team register vayo!');
+            console.log(team);
+           setRegsitered(true);
+           setOpen(!open);
+          }
+          else if(registered)
+          {
+            console.log('leave hanyo! ');
+            sethasError(true);
+            setdisplayMessage('You Left the Team');
+            setRegsitered(false);
+            setOpen(!open);
+          }
+          else{
+            sethasError(true);
+            setdisplayMessage('Please Fill the empty fields');
+            setOpen(!open);
+            console.log('partner chaina');
+          }
+        // console.log(manager,coach,captain,players,extraPlayers);
       }
-      //TODO: HANDLE LIMITING PLAYER SELECTION AND EMPTY FIELDS
-      const handleLimitedPlayers=()=>{
-        console.log('hi limited players');
-        console.log(players);
-        if (players.length>2){return true}
-        else {return false}
-      }
+
+      const handleLimitedPlayers=(checkIn,maxLimit)=>{
+        if (checkIn.length>=maxLimit)
+        return true
+        else
+          return false
+        }
     return (
             <>
             <div className="banner" style={{minHeight:"30vh",backgroundImage: "url(https://i2-prod.irishmirror.ie/incoming/article8074062.ece/ALTERNATES/s1227b/Atletico-Madrid-v-Real-Madrid.jpg)",
@@ -54,9 +98,8 @@ function TeamRegistration() {
             <Stack spacing={3}>
             <Typography variant="h4">Football</Typography>
             <p>Fact: There are over 318 billion different possible positions after four moves each.</p>
-            <Stack spacing={{xs:2,md:4}}>
+            {!registered? <Stack spacing={{xs:2,md:4}}>
               <div>
-                {/* <Typography variant="subtitle">Manager</Typography> */}
                 <Autocomplete
                 isOptionEqualToValue={(option, value) => option.label === value.label}
                 disablePortal
@@ -75,14 +118,12 @@ function TeamRegistration() {
                 />
               </div>
               <div>
-              {/* <Typography variant="subtitle">Players</Typography> */}
               <Autocomplete
                 isOptionEqualToValue={(option, value) => option.label === value.label}
                 multiple
-                onChange={(event,value)=>setplayers([value])}
+                onChange={(event,value)=>setplayers(value)}
                 options={students}
-                getOptionDisabled={handleLimitedPlayers}
-                // limitTags={2}
+                getOptionDisabled={()=>handleLimitedPlayers(players,2)}
                 getOptionLabel={(option) => option.label}
                 renderInput={(params) => (
                   <TextField
@@ -94,7 +135,6 @@ function TeamRegistration() {
               />
               </div>
               <div>
-                {/* <Typography variant="subtitle">Coach</Typography> */}
                   <Autocomplete
                   isOptionEqualToValue={(option, value) => option.label === value.label}
                   disablePortal
@@ -104,29 +144,28 @@ function TeamRegistration() {
                 />
               </div>
               <div>
-              {/* <Typography variant="subtitle">Extras</Typography> */}
                 <Autocomplete
                   isOptionEqualToValue={(option, value) => option.label === value.label}
                   multiple
                   options={students}
-                  limitTags={2}
-                  onChange={(event,value)=>setextraPlayers([value])}
+                  getOptionDisabled={()=>handleLimitedPlayers(extraPlayers,3)}
+                  onChange={(event,value)=>setextraPlayers(value)}
                   getOptionLabel={(option) => option.label}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       variant="standard"
                       label="Extras"
-                      placeholder="Favorites"
                     />
                   )}
                 />
               </div>
-            </Stack>
+            </Stack> : <Chip label="Chip Outlined" variant="outlined" />
+            }
             <Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={()=>handleRegister()}>{registered? "Leave":"Register"}</Button>
-                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                    <Alert onClose={handleClose} severity={registered?"success":"error"} sx={{ width: '100%' }}>
-                    {registered? "Your have successfully registered.Yay!!" :"You left! 🥺"}
+                <Snackbar open={open} autoHideDuration={1500} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity={hasError?"error":"success"} sx={{ width: '100%' }}>
+                    {displayMessage}
                     </Alert>
                 </Snackbar>
             <Typography variant="h4">Rules</Typography>
