@@ -28,7 +28,7 @@ const Profile = () => {
                             return(
                                 <Grid key={id} item xs={6} md={3} justifyContent="center" textAlign="center">
                                     <Card>
-                                        <CardContent sx={{display:'grid', gridTemplateColumns:'25% 75%'}}>
+                                        <CardContent sx={{display:'grid', gridTemplateColumns:'20% 80%'}}>
                                             <Box>{getIcon()}</Box>
                                             <Typography variant="body1" sx={{display:'flex', justifyContent:'flex-start'}}>
                                                 {typeOfSports}
