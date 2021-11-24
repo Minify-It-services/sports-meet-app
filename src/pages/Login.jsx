@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import {Container, Box, Typography} from '@mui/material';
 import { GoogleLogin, useGoogleLogout } from 'react-google-login'
+import axios from 'axios'
 
 const Login = () => {
 
@@ -26,7 +27,7 @@ const Login = () => {
         }
     }
 
-    const onSuccess = (res) => {
+    const onSuccess = async (res) => {
         const { name, email, imageUrl } = res.profileObj
 
         if(!email.match(/^be20(1|2)(0|7|8|9)(s|c)e[0-9]{1,3}@gces.edu.np$/g)){
@@ -38,10 +39,35 @@ const Login = () => {
         const semester = getSem(year)
         const faculty = email.substring(6, 7).toLowerCase()==='s'?'Software':'Computer'
 
-        console.log(name, email, semester, faculty, year, imageUrl);
-        //TODO: add backend
+        let response = {}
+         await axios({
+            method: 'POST',
+            baseURL: process.env.REACT_APP_ENVIRONMENT === 'development'?'http://localhost:5000/v1':'Hosting URL',
+            url: '/auth/register',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                name,
+                email,
+                year,
+                faculty,
+                semester,
+                imageUrl,
+            }
+        }).then(res => response = res.data)
+        .catch(err => response = err.response.data)
 
-        navigate('/phone-register')
+        const {status, data, message} = response
+        if(status === 'success'){
+            localStorage.setItem('user', JSON.stringify(data.user))
+            localStorage.setItem('token', data.tokens.access.token)
+            navigate('/phone-register')
+        }
+        else{
+            console.log(data, message);
+        }
+
     }
     const onFailure = (res) => {
         console.log(res);
