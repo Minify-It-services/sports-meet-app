@@ -57,17 +57,19 @@ const Profile = () => {
                     <Box>
                         <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom:'25px' }}>Participated Sports:</Typography>
                         <Grid container spacing={1}>
-                            {user?.teams?.map((sport)=>{
+                            {user?.teams?.map((team, id)=>{
                                 
-                                const {id, typeOfSports, getIcon} = sport;
+                                const {teamName, sport, role} = team;
 
                                 return(
                                     <Grid key={id} item xs={6} md={3} justifyContent="center" textAlign="center">
                                         <Card>
-                                            <CardContent sx={{display:'grid', gridTemplateColumns:'20% 80%'}}>
-                                                <Box>{getIcon()}</Box>
+                                            <CardContent>
+                                                {/* <Box>{getIcon()}</Box> */}
                                                 <Typography variant="body1" sx={{display:'flex', justifyContent:'flex-start'}}>
-                                                    {typeOfSports}
+                                                    {teamName} | {sport}
+                                                    <br />
+                                                    {role}
                                                 </Typography>
                                             </CardContent>
                                         </Card>
