@@ -1,12 +1,12 @@
 import React from 'react';
 
 // components
-import DrawerBar from '../../components/DrawerBar';
+import DrawerBar from '../../../components/DrawerBar';
 
 const Dashboard = () => {
     return (
         <>
-            <DrawerBar />
+            <DrawerBar pageName={'Dashboard'} pageId={1} />
         </>
     )
 }

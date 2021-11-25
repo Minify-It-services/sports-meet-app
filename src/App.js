@@ -4,7 +4,11 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { SportPage, HomePage, SoloRegistration, TeamRegistration, DuoRegistration,PhoneRegister, ProfilePage, Login } from './pages';
 
 // pages:admin
-import Dashboard from './admin/pages/Dashboard';
+import Dashboard from './admin/pages/dashboard';
+import Sports from './admin/pages/sports';
+import Teams from './admin/pages/teams';
+import Fixtures from './admin/pages/fixtures';
+import Notice from './admin/pages/notice';
 
 import React from 'react';
 import '@fontsource/roboto/300.css';
@@ -43,6 +47,10 @@ const Admin = () => {
   return (
     <Routes>
       <Route path="dashboard" element={<Dashboard />} />
+      <Route path="sports" element={<Sports />} />
+      <Route path="teams" element={<Teams />} />
+      <Route path="fixtures" element={<Fixtures />} />
+      <Route path="notice" element={<Notice />} />
     </Routes>
   )
 }

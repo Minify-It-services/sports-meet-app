@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router';
 
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -96,7 +97,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const itemTypes = [
     {
         id:1,
-        text:'Dashboard',
+        text:'dashboard',
         getIcon(){
             return(
                 <BarChartIcon/>
@@ -105,7 +106,7 @@ const itemTypes = [
     },
     {
         id:2,
-        text:'Sports',
+        text:'sports',
         getIcon(){
             return(
                 <SportsIcon/>
@@ -114,7 +115,7 @@ const itemTypes = [
     },
     {
         id:3,
-        text:'Teams',
+        text:'teams',
         getIcon(){
             return(
                 <GroupsIcon/>
@@ -123,7 +124,7 @@ const itemTypes = [
     },
     {
         id:4,
-        text:'Fixtures',
+        text:'fixtures',
         getIcon(){
             return(
                 <TableChartIcon/>
@@ -132,7 +133,7 @@ const itemTypes = [
     },
     {
         id:5,
-        text:'Notice',
+        text:'notice',
         getIcon(){
             return(
                 <NotificationsIcon/>
@@ -141,7 +142,9 @@ const itemTypes = [
     },
 ];
 
-const DrawerBar = () => {
+
+const DrawerBar = ({pageName, pageId}) => {
+    const navigate = useNavigate();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
 
@@ -153,8 +156,12 @@ const DrawerBar = () => {
         setOpen(false);
     };
 
+    const handleListItemClick = (event, index) => {
+        navigate(`/admin/${itemTypes[index-1].text}`);
+    };
+
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box>
             <CssBaseline />
             <AppBar position="fixed" open={open}>
                 <Toolbar>
@@ -162,7 +169,7 @@ const DrawerBar = () => {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap component="div" sx={{flexGrow:'1'}}>
-                        Dashboard
+                        {pageName}
                     </Typography>
                     <IconButton color="inherit" aria-label="profile" edge="end">
                         <AccountCircleIcon />
@@ -178,7 +185,7 @@ const DrawerBar = () => {
                 <Divider />
                 <List>
                     {itemTypes.map((itemType) => (
-                        <ListItem button key={itemType.id}>
+                        <ListItem button key={itemType.id} selected={itemType.id === pageId} onClick={(event) => handleListItemClick(event, itemType.id)}>
                             <ListItemIcon>
                                 {itemType.getIcon()}
                             </ListItemIcon>
@@ -187,9 +194,6 @@ const DrawerBar = () => {
                     ))}
                 </List>
             </Drawer>
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                <DrawerHeader />
-            </Box>
         </Box>
     );
 }
