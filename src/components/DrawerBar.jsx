@@ -97,7 +97,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const itemTypes = [
     {
         id:1,
-        text:'Dashboard',
+        text:'dashboard',
         getIcon(){
             return(
                 <BarChartIcon/>
@@ -106,7 +106,7 @@ const itemTypes = [
     },
     {
         id:2,
-        text:'Sports',
+        text:'sports',
         getIcon(){
             return(
                 <SportsIcon/>
@@ -115,7 +115,7 @@ const itemTypes = [
     },
     {
         id:3,
-        text:'Teams',
+        text:'teams',
         getIcon(){
             return(
                 <GroupsIcon/>
@@ -124,7 +124,7 @@ const itemTypes = [
     },
     {
         id:4,
-        text:'Fixtures',
+        text:'fixtures',
         getIcon(){
             return(
                 <TableChartIcon/>
@@ -133,7 +133,7 @@ const itemTypes = [
     },
     {
         id:5,
-        text:'Notice',
+        text:'notice',
         getIcon(){
             return(
                 <NotificationsIcon/>
