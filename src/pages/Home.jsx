@@ -1,11 +1,11 @@
 import React from 'react';
 
 // components
-import Navbar from '../components/Navbar';
+import Layout from '../layout/Layout';
 
 const Home = () => {
     return (
-        <>
+        <Layout>
             <div className="homeBackground"
                 style={{
                 backgroundImage: "url(/images/home-bg.gif)",
@@ -31,8 +31,7 @@ const Home = () => {
                         <h4>We are working on it!! We’ll be there soon</h4>
                     </div>
             </div>
-            <Navbar></Navbar>
-        </>
+        </Layout>
     )
 }
 

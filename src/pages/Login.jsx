@@ -78,7 +78,7 @@ const Login = () => {
 
         const {status, data, message} = response
         if(status === 'success'){
-            localStorage.setItem('user', JSON.stringify(data.user))
+            localStorage.setItem('id', data.user.id)
             localStorage.setItem('token', data.tokens.access.token)
             if(token){
                 navigate('/profile')

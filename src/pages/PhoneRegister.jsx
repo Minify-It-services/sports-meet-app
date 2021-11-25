@@ -14,7 +14,7 @@ import Alert from '@mui/material/Alert';
 
 function PhoneRegister() {
     const navigate = useNavigate()
-    const id = JSON.parse(localStorage.getItem('user'));
+    const id = localStorage.getItem('id');
     const token = localStorage.getItem('token');
     const [contactNumber, setContactNumber] = React.useState('');
     const [phoneErro, setphoneErro] = useState(false);
@@ -54,7 +54,6 @@ function PhoneRegister() {
 
         const {status, data, message} = response
         if(status === 'success'){
-            localStorage.setItem('user', JSON.stringify(data))
             navigate('/profile')
         }
         else{

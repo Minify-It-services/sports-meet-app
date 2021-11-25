@@ -24,10 +24,10 @@ export const Navbar = () => {
     return (
         <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
             <BottomNavigation sx={{ width:'100%' }} value={value} onChange={handleChange}>
-                <BottomNavigationAction value="home" icon={<HomeIcon />}/>
+                <BottomNavigationAction value="home" icon={<HomeIcon />} onClick={() => navigate('/')}/>
                 <BottomNavigationAction value="fixtures" icon={<TableChartIcon />}/>
                 <BottomNavigationAction value="register" icon={<NoteAddIcon />}/>
-                <BottomNavigationAction value="login" icon={<PersonIcon />} onClick={() => {navigate('/login')}} />
+                <BottomNavigationAction value="profile" icon={<PersonIcon />} onClick={() => {navigate('/profile')}} />
             </BottomNavigation>
         </Paper>
     );
