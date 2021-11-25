@@ -1,14 +1,16 @@
 import React from 'react';
 
+
+
 // components
 import DrawerBar from '../../components/DrawerBar';
 
-const Dashboard = () => {
+const Sports = () => {
     return (
         <>
-            <DrawerBar pageName={'Dashboard'} pageId={1} />
+            <DrawerBar pageName={'Sports'} pageId ={2} />
         </>
     )
 }
 
-export default Dashboard
+export default Sports
