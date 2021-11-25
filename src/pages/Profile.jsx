@@ -47,7 +47,7 @@ const Profile = () => {
                 <Container sx={{height:'100%', width:'100%', display:'flex', flexDirection:'column', justifyContent:'space-evenly'}}>
 
                     <Stack direction="row" spacing={5} justifyContent="center" alignItems="center">
-                        <Avatar src="./images/profile.jpg" variant="rounded" sx={{width:'100px', height:'100px'}}/>
+                        <Avatar src={user.imageUrl} variant="rounded" sx={{width:'100px', height:'100px'}}/>
                         <Box>
                             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{user.name}</Typography>
                             <Typography variant="caption" sx={{fontStyle: 'italic', fontWeight: 'regular'}}>{user.email}</Typography>
