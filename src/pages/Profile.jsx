@@ -10,7 +10,7 @@ const Profile = () => {
 
     const navigate = useNavigate()
     
-    const {id} = JSON.parse(localStorage.getItem('user'))
+    const id = localStorage.getItem('id')
     const token = localStorage.getItem('token')
     const [ user, setUser ] = useState({})
 
