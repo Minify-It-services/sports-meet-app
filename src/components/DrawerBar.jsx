@@ -161,7 +161,7 @@ const DrawerBar = ({pageName, pageId}) => {
     };
 
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box>
             <CssBaseline />
             <AppBar position="fixed" open={open}>
                 <Toolbar>

@@ -1,7 +1,7 @@
 import React from 'react'
 
 // components
-import DrawerBar from '../../components/DrawerBar';
+import DrawerBar from '../../../components/DrawerBar';
 
 const Notice = () => {
     return (
