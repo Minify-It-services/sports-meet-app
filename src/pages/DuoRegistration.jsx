@@ -9,10 +9,10 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { Alert } from '@mui/material';
 import {useState} from 'react';
 
-//TODO: SHOW ERROR MESSAGE ON EMPTY PARTNER SELECTED AND FONT SIZING
+//TODO: Fix FONT SIZING
 function SoloRegistration() {
     const [registered, setRegsitered] = useState(false);
-    const [partner, setpartner] = useState('');
+    const [partner, setpartner] = useState({});
     const [displayMessage, setdisplayMessage] = useState('');
     const [hasError, sethasError] = useState(false);
 
@@ -29,9 +29,17 @@ function SoloRegistration() {
         }
         setOpen(false);
       };
+      const isObjEmpty=(obj)=>{
+        if (obj && Object.keys(obj).length === 0
+        && Object.getPrototypeOf(obj) === Object.prototype) {
+          return true;
+        }
+        else return false;
+      }
       //TODO: API INTEGRATION
       const handleRegister=()=>{
-        if (!registered && partner.trim().length!==0) {
+        console.log(partner);
+        if (!registered && !isObjEmpty(partner)) {
           sethasError(false);
           setdisplayMessage('Successfully registered a Duo Team');
           setRegsitered(true);
@@ -65,14 +73,14 @@ function SoloRegistration() {
             <p>Fact: There are over 318 billion different possible positions after four moves each.</p>
             {!registered? <Typography variant="subtitle">Select Your Partner</Typography> :
             
-            <div><Typography variant="h5">Your Partner</Typography><p>{partner}</p></div>
+            <div><Typography variant="h5">Your Partner</Typography><p>{partner.label}</p></div>
             } 
             {
                !registered? <Autocomplete
                isOptionEqualToValue={(option, value) => option.label === value.label}
                 autoComplete={false}
                 options={students}
-                onChange={(event, value) => setpartner(value.label)}
+                onChange={(event, value) => setpartner(value)}
                 renderInput={(params) => <TextField {...params} label="Partner" variant="standard" required={true}/>}
                 /> : <div></div>
             }
