@@ -5,6 +5,10 @@ import { SportPage, HomePage, SoloRegistration, TeamRegistration, DuoRegistratio
 
 // pages:admin
 import Dashboard from './admin/pages/Dashboard';
+import Sports from './admin/pages/Sports';
+import Teams from './admin/pages/Teams';
+import Fixtures from './admin/pages/Fixtures';
+import Notice from './admin/pages/Notice';
 
 import React from 'react';
 import '@fontsource/roboto/300.css';
@@ -43,6 +47,10 @@ const Admin = () => {
   return (
     <Routes>
       <Route path="dashboard" element={<Dashboard />} />
+      <Route path="sports" element={<Sports />} />
+      <Route path="teams" element={<Teams />} />
+      <Route path="fixtures" element={<Fixtures />} />
+      <Route path="notice" element={<Notice />} />
     </Routes>
   )
 }
