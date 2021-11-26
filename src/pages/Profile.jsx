@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import { Container, Box, Stack, Avatar, Typography, Grid, Card, CardContent } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom'
+import { Container, Box, Stack, Avatar, Typography, Grid, Card, CardContent, Button } from '@mui/material';
 import Cookies from 'universal-cookie';
+import jsendDestructor from '../utils/api/jsendDestructor';
 
 import Layout from '../layout/Layout';
 
@@ -13,20 +13,16 @@ const Profile = () => {
     
     const player = JSON.parse(localStorage.getItem('player'))
     const token = cookies.get('sports_app_token')
+    
+    const jsendRes = new jsendDestructor({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    })
+    
     const [ user, setUser ] = useState({})
 
     const getUserData = async () => {
-        let response = {}
-        await axios({
-            method: 'GET',
-            baseURL: process.env.REACT_APP_ENVIRONMENT === 'development'?'http://localhost:5000/v1':'Hosting URL',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-            url: `/users/${player.id}`,
-        }).then(res => response = res?.data.data)
-          .catch(err => response = err?.response.data)
+        const response = await jsendRes.destructFromApi(`/users/${player.id}`, 'GET')
 
         if(response.message && response.message==='Please authenticate')
             navigate('/login')

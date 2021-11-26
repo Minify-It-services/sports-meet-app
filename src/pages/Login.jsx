@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom'
 
 import {Container, Box, Typography} from '@mui/material';
 import { GoogleLogin, useGoogleLogout } from 'react-google-login'
-import axios from 'axios'
 import Cookies from 'universal-cookie'
+import jsendDestructor from '../utils/api/jsendDestructor';
 
 const Login = () => {
 
     const cookies = new Cookies()
+    const jsendRes = new jsendDestructor()
 
     const [ differentEmail, setDifferentEmail ] = useState(false)
     const token = cookies.get('sports_app_token')
@@ -49,37 +50,22 @@ const Login = () => {
 
         let response = {}
             if(player){
-                await axios({
-                    method: 'POST',
-                    baseURL: process.env.REACT_APP_ENVIRONMENT === 'development'?'http://localhost:5000/v1':'Hosting URL',
-                    url: '/auth/login',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    data: {
-                        email,
-                    }
-                }).then(res => response = res.data)
-                .catch(err => response = err.response.data)
+                response = await jsendRes.destructFromApi('/auth/login', 'POST', {email})
             }
             else{
-                await axios({
-                   method: 'POST',
-                   baseURL: process.env.REACT_APP_ENVIRONMENT === 'development'?'http://localhost:5000/v1':'Hosting URL',
-                   url: '/auth/register',
-                   headers: {
-                       'Content-Type': 'application/json'
-                   },
-                   data: {
-                       name,
-                       email,
-                       year,
-                       faculty,
-                       semester,
-                       imageUrl,
-                   }
-               }).then(res => response = res.data)
-               .catch(err => response = err.response.data)
+                const user = {
+                    name,
+                    email,
+                    year,
+                    faculty,
+                    semester,
+                    imageUrl,
+                    role: 'user',
+                }
+                if(year === '2018')
+                    user.role = 'admin'
+
+                response = await jsendRes.destructFromApi('/auth/register', 'POST', user)
             }
 
         const {status, data, message} = response

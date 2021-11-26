@@ -1,5 +1,4 @@
 import * as React from 'react'
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react';
 
@@ -13,11 +12,19 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import Cookies from 'universal-cookie';
 
+import jsendDestructor from '../utils/api/jsendDestructor';
+
 function PhoneRegister() {
     const navigate = useNavigate()
     const cookies = new Cookies()
     const { id } = JSON.parse(localStorage.getItem('player'));
     const token = cookies.get('sports_app_token');
+
+    const jsendRes = new jsendDestructor({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    })
+
     const [contactNumber, setContactNumber] = React.useState('');
     const [phoneErro, setphoneErro] = useState(false);
     const handleClose = (event, reason) => {
@@ -39,22 +46,9 @@ function PhoneRegister() {
         }
     }
     const handlePhoneRegister = async ()=>{
-        let response = {}
-         await axios({
-            method: 'PATCH',
-            baseURL: process.env.REACT_APP_ENVIRONMENT === 'development'?'http://localhost:5000/v1':'Hosting URL',
-            url: `/users/${id}`,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            data: {
-               contactNumber,
-            }
-        }).then(res => response = res.data)
-        .catch(err => response = err.response.data)
-
+        const response = await jsendRes.destructFromApi(`/users/${id}`, 'PATCH', {contactNumber})
         const {status, data, message} = response
+
         if(status === 'success'){
             navigate('/profile')
         }
