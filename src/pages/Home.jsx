@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import React from 'react';
 
 // components
@@ -27,8 +28,8 @@ const Home = () => {
                         justifyContent:"center",
                         textAlign:"center",
                         }}>
-                        <h3 style={{fontSize:"3rem"}}>Welcome To GCES Sports Meet App </h3>
-                        <h4>We are working on it!! We’ll be there soon</h4>
+                        <Typography variant="h3" style={{fontSize:"3rem"}}>Welcome To GCES Sports Meet App </Typography>
+                        <Typography variant="h6">Let's play soon</Typography>
                     </div>
             </div>
         </Layout>
