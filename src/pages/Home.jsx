@@ -5,7 +5,7 @@ import Layout from '../layout/Layout';
 
 const Home = () => {
     return (
-        <Layout>
+        <Layout title="Home Page">
             <div className="homeBackground"
                 style={{
                 backgroundImage: "url(/images/home-bg.gif)",

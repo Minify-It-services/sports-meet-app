@@ -3,6 +3,12 @@
   padding: 0;
   box-sizing: border-box;
 }
+.topbar {
+  padding: 1.5em 1em; 
+  position: fixed;
+  width: 100%;
+  box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
+}
 #phone{
   background-image:url("./assets/img/DesktopMode.svg");
   background-repeat: no-repeat;
