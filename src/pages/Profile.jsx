@@ -22,7 +22,7 @@ const Profile = () => {
     const [ user, setUser ] = useState({})
 
     const getUserData = async () => {
-        const response = await jsendRes.destructFromApi(`/users/${player.id}`, 'GET')
+        const response = await jsendRes.destructFromApi(`/users/${player?.id}`, 'GET')
 
         if(response.message && response.message==='Please authenticate')
             navigate('/login')
@@ -44,12 +44,12 @@ const Profile = () => {
                 <Container sx={{height:'100%', width:'100%', display:'flex', flexDirection:'column', justifyContent:'space-evenly'}}>
 
                     <Stack direction="row" spacing={5} justifyContent="center" alignItems="center">
-                        <Avatar src={player.imageUrl} variant="rounded" sx={{width:'100px', height:'100px'}}/>
+                        <Avatar src={player?.imageUrl} variant="rounded" sx={{width:'100px', height:'100px'}}/>
                         <Box>
-                            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{player.name}</Typography>
-                            <Typography variant="caption" sx={{fontStyle: 'italic', fontWeight: 'regular'}}>{player.email}</Typography>
+                            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{player?.name}</Typography>
+                            <Typography variant="caption" sx={{fontStyle: 'italic', fontWeight: 'regular'}}>{player?.email}</Typography>
                             {
-                                user.role==='admin'&&(
+                                user?.role==='admin'&&(
                                     <Button variant="outlined" sx={{ textAlign: 'center' }}>
                                         <Link style={{ color: '#1976d2', textDecoration: 'none' }} to="/admin/dashboard">Admin side</Link>
                                     </Button>
