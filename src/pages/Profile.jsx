@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { Container, Box, Stack, Avatar, Typography, Grid, Card, CardContent } from '@mui/material';
+import Cookies from 'universal-cookie';
 
-// data
 import Layout from '../layout/Layout';
 
 const Profile = () => {
 
     const navigate = useNavigate()
+    const cookies = new Cookies()
     
-    const id = localStorage.getItem('id')
-    const token = localStorage.getItem('token')
+    const player = JSON.parse(localStorage.getItem('player'))
+    const token = cookies.get('sports_app_token')
     const [ user, setUser ] = useState({})
 
     const getUserData = async () => {
@@ -23,7 +24,7 @@ const Profile = () => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
             },
-            url: `/users/${id}`,
+            url: `/users/${player.id}`,
         }).then(res => response = res?.data.data)
           .catch(err => response = err?.response.data)
 
@@ -34,7 +35,7 @@ const Profile = () => {
     }
 
     useEffect(() => {
-        if(!id){
+        if(!player){
             navigate('/login')
         }
         getUserData()
@@ -47,10 +48,10 @@ const Profile = () => {
                 <Container sx={{height:'100%', width:'100%', display:'flex', flexDirection:'column', justifyContent:'space-evenly'}}>
 
                     <Stack direction="row" spacing={5} justifyContent="center" alignItems="center">
-                        <Avatar src={user.imageUrl} variant="rounded" sx={{width:'100px', height:'100px'}}/>
+                        <Avatar src={player.imageUrl} variant="rounded" sx={{width:'100px', height:'100px'}}/>
                         <Box>
-                            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{user.name}</Typography>
-                            <Typography variant="caption" sx={{fontStyle: 'italic', fontWeight: 'regular'}}>{user.email}</Typography>
+                            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{player.name}</Typography>
+                            <Typography variant="caption" sx={{fontStyle: 'italic', fontWeight: 'regular'}}>{player.email}</Typography>
                         </Box>
                     </Stack>
 

@@ -11,11 +11,13 @@ import Container from '@mui/material/Container';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import Cookies from 'universal-cookie';
 
 function PhoneRegister() {
     const navigate = useNavigate()
-    const id = localStorage.getItem('id');
-    const token = localStorage.getItem('token');
+    const cookies = new Cookies()
+    const { id } = JSON.parse(localStorage.getItem('player'));
+    const token = cookies.get('sports_app_token');
     const [contactNumber, setContactNumber] = React.useState('');
     const [phoneErro, setphoneErro] = useState(false);
     const handleClose = (event, reason) => {
