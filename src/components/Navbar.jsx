@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
@@ -14,16 +14,25 @@ import PersonIcon from '@mui/icons-material/Person';
 export const Navbar = () => {
 
     const navigate = useNavigate();
+    const { pathname } = useLocation();
 
     const [value, setValue] = React.useState('home');
 
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
+    React.useEffect(() => {
+        switch (pathname) {
+            case '/':
+                setValue('home')
+                break;
+            case '/profile':
+                setValue('profile')
+                break;
+            default: return
+        }
+    }, [])
 
     return (
         <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
-            <BottomNavigation sx={{ width:'100%' }} value={value} onChange={handleChange}>
+            <BottomNavigation sx={{ width:'100%' }} value={value}>
                 <BottomNavigationAction value="home" icon={<HomeIcon />} onClick={() => navigate('/')}/>
                 <BottomNavigationAction value="fixtures" icon={<TableChartIcon />}/>
                 <BottomNavigationAction value="register" icon={<NoteAddIcon />}/>
