@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 
 import {Container, Box, Typography} from '@mui/material';
 import { GoogleLogin, useGoogleLogout } from 'react-google-login'
 import axios from 'axios'
+import Cookies from 'universal-cookie'
 
 const Login = () => {
 
-    const token = localStorage.getItem('token')
+    const cookies = new Cookies()
+
+    const [ differentEmail, setDifferentEmail ] = useState(false)
+    const token = cookies.get('sports_app_token')
+    const player = JSON.parse(localStorage.getItem('player'))
 
     const navigate = useNavigate()
     const { signOut } = useGoogleLogout({
@@ -33,16 +38,17 @@ const Login = () => {
         const { name, email, imageUrl } = res.profileObj
 
         if(!email.match(/^be20(1|2)(0|7|8|9)(s|c)e[0-9]{1,3}@gces.edu.np$/g)){
-            // TODO: handle error
+            setDifferentEmail(true)
             signOut()
             return
         }
+        setDifferentEmail(false)
         const year = email.substring(2, 6)
         const semester = getSem(year)
         const faculty = email.substring(6, 7).toLowerCase()==='s'?'Software':'Computer'
 
         let response = {}
-            if(token){
+            if(player){
                 await axios({
                     method: 'POST',
                     baseURL: process.env.REACT_APP_ENVIRONMENT === 'development'?'http://localhost:5000/v1':'Hosting URL',
@@ -78,9 +84,20 @@ const Login = () => {
 
         const {status, data, message} = response
         if(status === 'success'){
-            localStorage.setItem('id', data.user.id)
-            localStorage.setItem('token', data.tokens.access.token)
-            if(token){
+            const player = {
+                id: data.user.id,
+                year: data.user.year,
+                semester: data.user.semester,
+                faculty: data.user.faculty,
+                email: data.user.email,
+                imageUrl: data.user.imageUrl,
+                name: data.user.name,
+            }
+            localStorage.setItem('player', JSON.stringify(player))
+            let date = new Date()
+            date.setDate(date.getDate() + 30)
+            cookies.set('sports_app_token', data.tokens.access.token, { expires: date })
+            if(data.user.contactNumber!==''){
                 navigate('/profile')
             }
             else{
@@ -104,7 +121,7 @@ const Login = () => {
                         <Typography variant="h4" sx={{fontWeight:'600'}}>Welcome to GCES</Typography>
                         <Typography variant="caption">Sign in to continue your GCES sports journey</Typography>
                     </Box>
-                    <Box sx={{textAlign:'center'}}>
+                    <Box sx={{textAlign:'center', border: (differentEmail&&'1px solid #dc3545') }}>
                         <GoogleLogin 
                             clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
                             buttonText={`${token?'Login':'SignUp'} with GCES account`}
@@ -113,6 +130,13 @@ const Login = () => {
                             onFailure={onFailure}
                         />
                     </Box>
+                    {
+                        differentEmail&&(
+                            <Box sx={{textAlign: 'center'}}>
+                                <Typography variant="h6" sx={{color: '#dc3545'}}>Please Use the Bese Email</Typography>
+                            </Box>
+                        )
+                    }
                 </Box>
             </Container>
         </Box>
