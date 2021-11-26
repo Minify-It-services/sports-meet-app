@@ -48,6 +48,13 @@ const Profile = () => {
                         <Box>
                             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{player.name}</Typography>
                             <Typography variant="caption" sx={{fontStyle: 'italic', fontWeight: 'regular'}}>{player.email}</Typography>
+                            {
+                                user.role==='admin'&&(
+                                    <Button variant="outlined" sx={{ textAlign: 'center' }}>
+                                        <Link style={{ color: '#1976d2', textDecoration: 'none' }} to="/admin/dashboard">Admin side</Link>
+                                    </Button>
+                                )
+                            }
                         </Box>
                     </Stack>
 
