@@ -27,9 +27,8 @@ const Profile = () => {
         if(response.message && response.message==='Please authenticate')
             navigate('/login')
 
-        setUser(response)
+        setUser(response.data)
     }
-
     useEffect(() => {
         if(!player){
             navigate('/login')

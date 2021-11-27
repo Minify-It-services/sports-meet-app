@@ -28,6 +28,7 @@ export const Navbar = () => {
                 break;
             default: return
         }
+    // eslint-disable-next-line
     }, [])
 
     return (
