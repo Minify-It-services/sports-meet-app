@@ -16,7 +16,7 @@ export const Navbar = () => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
 
-    const [value, setValue] = React.useState('home');
+    const [value, setValue] = React.useState();
 
     React.useEffect(() => {
         switch (pathname) {
@@ -37,10 +37,10 @@ export const Navbar = () => {
     return (
         <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
             <BottomNavigation sx={{ width:'100%' }} value={value}>
-                <BottomNavigationAction value="home" icon={<HomeIcon />} onClick={() => navigate('/')}/>
-                <BottomNavigationAction value="fixtures" icon={<TableChartIcon />}/>
-                <BottomNavigationAction value="register" icon={<NoteAddIcon />} onClick={()=> navigate('/teamRegister')}/>
-                <BottomNavigationAction value="profile" icon={<PersonIcon />} onClick={() => {navigate('/profile')}} />
+                <BottomNavigationAction lable="Home" value="home" icon={<HomeIcon />} onClick={() => navigate('/')}/>
+                <BottomNavigationAction lable="Fixtures" value="fixtures" icon={<TableChartIcon />}/>
+                <BottomNavigationAction lable="Register" value="register" icon={<NoteAddIcon />} onClick={()=> navigate('/teamRegister')}/>
+                <BottomNavigationAction lable="Profile" value="profile" icon={<PersonIcon />} onClick={() => {navigate('/profile')}} />
             </BottomNavigation>
         </Paper>
     );
