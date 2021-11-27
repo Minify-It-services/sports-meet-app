@@ -8,9 +8,12 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { Alert } from '@mui/material';
 import {useState} from 'react';
+import {useLocation} from 'react-router-dom';
 
 //TODO: Fix FONT SIZING
 function SoloRegistration() {
+    const location = useLocation()
+    const [sport, setSport] = useState(location.state)
     const [registered, setRegsitered] = useState(false);
     const [partner, setpartner] = useState({});
     const [displayMessage, setdisplayMessage] = useState('');
@@ -69,7 +72,7 @@ function SoloRegistration() {
             </div>
             <Container sx={{marginTop:5}}>
             <Stack spacing={{xs:2,md:4}}>
-            <Typography variant="h5">Badminton</Typography>
+            <Typography variant="h5">{sport.name}</Typography>
             <p>Fact: There are over 318 billion different possible positions after four moves each.</p>
             {!registered? <Typography variant="subtitle">Select Your Partner</Typography> :
             
@@ -92,12 +95,9 @@ function SoloRegistration() {
                 </Snackbar>
             <Typography variant="h5">Rules</Typography>
             <ul style={{margin:"0 20px",fontSize:"18px"}}>
-                <li>The King may move one square in any direction, so long as no piece is blocking his path.
-                </li>
-                <li>The Queen may move any number of squares straight or diagonally in any direction.
-                </li>
-                <li>The Rook may move in a straight line, any number of squares horizontally or vertically.
-                </li>
+              {
+                sport.rules.map(rule=>(<li key={rule}>{rule}</li>))
+              }
             </ul>
             </Stack>
         </Container>

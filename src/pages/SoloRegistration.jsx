@@ -7,10 +7,13 @@ import Container  from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import {useLocation} from 'react-router-dom'
 
 //TODO: need fixing
-function SoloRegistration() {
-    const [registered, setRegsitered] = useState(false);
+const SoloRegistration = ()=> {
+  const location = useLocation()
+  const [sport, setSport] = useState(location.state)
+  const [registered, setRegsitered] = useState(false);
     const [open, setOpen] = React.useState(false);
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -33,7 +36,7 @@ function SoloRegistration() {
             </div>
             <Container sx={{marginTop:5}}>
             <Stack spacing={3}>
-            <Typography variant="h4">Chess</Typography>
+            <Typography variant="h4">{sport.name}</Typography>
             <p>Fact: There are over 318 billion different possible positions after four moves each.</p>
             <Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={()=>handleRegister()}>{registered? "Leave":"Register"}</Button>
                 <Snackbar open={open} autoHideDuration={1500} onClose={handleClose}>
@@ -43,12 +46,9 @@ function SoloRegistration() {
                 </Snackbar>
             <Typography variant="h4">Rules</Typography>
             <ul>
-                <li>The King may move one square in any direction, so long as no piece is blocking his path.
-                </li>
-                <li>The Queen may move any number of squares straight or diagonally in any direction.
-                </li>
-                <li>The Rook may move in a straight line, any number of squares horizontally or vertically.
-                </li>
+              {
+                sport.rules.map(rule=>(<li key={rule}>{rule}</li>))
+              }
             </ul>
             </Stack>
         </Container>

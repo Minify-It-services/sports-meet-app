@@ -11,8 +11,11 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Alert from "@mui/material/Alert";
 import Chip from "@mui/material/Chip";
 import Box from "@mui/material/Box";
+import {useLocation} from 'react-router-dom'
 
 function TeamRegistration() {
+  const location = useLocation()
+  const [sport, setSport] = useState(location.state)
   const [registered, setRegsitered] = useState(false);
   // const [extraPlayers, setextraPlayers] = useState([]);
   const [hasError, sethasError] = useState(false);
@@ -107,7 +110,7 @@ function TeamRegistration() {
       ></div>
       <Container sx={{ marginTop: 5 }}>
         <Stack spacing={3}>
-          <Typography variant="h4">Football</Typography>
+          <Typography variant="h4">{sport.name}</Typography>
           <p>
             Fact: There are over 318 billion different possible positions after
             four moves each.
@@ -256,18 +259,9 @@ function TeamRegistration() {
           </Snackbar>
           <Typography variant="h4">Rules</Typography>
           <ul>
-            <li>
-              The King may move one square in any direction, so long as no piece
-              is blocking his path.
-            </li>
-            <li>
-              The Queen may move any number of squares straight or diagonally in
-              any direction.
-            </li>
-            <li>
-              The Rook may move in a straight line, any number of squares
-              horizontally or vertically.
-            </li>
+            {
+              sport.rules.map(rule=>(<li key={rule}>{rule}</li>))
+            }
           </ul>
         </Stack>
       </Container>
