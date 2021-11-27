@@ -10,7 +10,7 @@ const Home = () => {
             <div className="homeBackground"
                 style={{
                 backgroundImage: "url(/images/home-bg.gif)",
-                height:"90vh",
+                height:"70vh",
                 width:"100%",
                 backgroundPosition:"center",
                 backgroundRepeat:"no-repeat",

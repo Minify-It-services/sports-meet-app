@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
-import { Container, Box, Stack, Avatar, Typography, Grid, Card, CardContent, Button } from '@mui/material';
+import { Container, Box, Stack, Avatar, Typography, Grid, Button, Chip, Paper, Divider } from '@mui/material';
 import Cookies from 'universal-cookie';
 import jsendDestructor from '../utils/api/jsendDestructor';
 
@@ -39,10 +39,10 @@ const Profile = () => {
 
     return (
         <Layout title="Profile Page">
-            <Box sx={{width:'100%',height:'100vh'}}>
-                <Container sx={{height:'100%', width:'100%', display:'flex', flexDirection:'column', justifyContent:'space-evenly'}}>
+            <Box sx={{width:'100%'}}>
+                <Container sx={{height:'100%', width:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
 
-                    <Stack direction="row" spacing={5} justifyContent="center" alignItems="center">
+                    <Stack direction="row" spacing={5} justifyContent="center" alignItems="center" sx={{ margin:'1em 0' }}>
                         <Avatar src={player?.imageUrl} variant="rounded" sx={{width:'100px', height:'100px'}}/>
                         <Box>
                             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{player?.name}</Typography>
@@ -66,16 +66,16 @@ const Profile = () => {
 
                                 return(
                                     <Grid key={id} item xs={6} md={3} justifyContent="center" textAlign="center">
-                                        <Card>
-                                            <CardContent>
-                                                {/* <Box>{getIcon()}</Box> */}
-                                                <Typography variant="body1" sx={{display:'flex', justifyContent:'flex-start'}}>
-                                                    {teamName} | {sport}
-                                                    <br />
-                                                    {role}
-                                                </Typography>
-                                            </CardContent>
-                                        </Card>
+                                        <Paper variant="outlined" sx={{ padding: '1em .5em'}}>
+                                            <Typography variant="body1">
+                                                {teamName}
+                                            </Typography>
+                                            <Box sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                                                <Chip size="small" label={sport} variant="outlined" color="primary" />
+                                                <Divider orientation="vertical" flexItem />
+                                                <Chip size="small" label={role} variant="outlined" color="warning" />
+                                            </Box>
+                                        </Paper>
                                     </Grid>
                                 );
                                 
