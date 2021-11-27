@@ -6,8 +6,11 @@
 .topbar {
   padding: 1.5em 1em; 
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
+  background-color: #fff;
 }
 #phone{
   background-image:url("./assets/img/DesktopMode.svg");
@@ -22,4 +25,7 @@
     background-size: cover;
     background-position: center;
   }
+}
+::-webkit-scrollbar {
+  width: 0;
 }
