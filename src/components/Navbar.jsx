@@ -26,6 +26,9 @@ export const Navbar = () => {
             case '/profile':
                 setValue('profile')
                 break;
+            case '/teamRegister':
+                setValue('register')
+                break;
             default: return
         }
     // eslint-disable-next-line
@@ -36,7 +39,7 @@ export const Navbar = () => {
             <BottomNavigation sx={{ width:'100%' }} value={value}>
                 <BottomNavigationAction value="home" icon={<HomeIcon />} onClick={() => navigate('/')}/>
                 <BottomNavigationAction value="fixtures" icon={<TableChartIcon />}/>
-                <BottomNavigationAction value="register" icon={<NoteAddIcon />}/>
+                <BottomNavigationAction value="register" icon={<NoteAddIcon />} onClick={()=> navigate('/teamRegister')}/>
                 <BottomNavigationAction value="profile" icon={<PersonIcon />} onClick={() => {navigate('/profile')}} />
             </BottomNavigation>
         </Paper>
