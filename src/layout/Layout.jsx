@@ -4,12 +4,13 @@ import Navbar from '../components/Navbar'
 const Layout = ({ title, children }) => {
     return (
         <>
+         <div style={{ height: '120px', width: '100%'}} />
+         {children}
          <div className="topbar">
              <Typography >
                 {title}
              </Typography>
          </div>
-         {children}
          <Navbar />   
         </>
     )
