@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 // pages:guest
-import { SportPage, HomePage, SoloRegistration, TeamRegistration, DuoRegistration,PhoneRegister, ProfilePage, Login } from './pages';
+import { TeamRegister, HomePage, SoloRegistration, TeamRegistration, DuoRegistration,PhoneRegister, ProfilePage, Login } from './pages';
 
 // pages:admin
 import Dashboard from './admin/pages/dashboard';
@@ -35,7 +35,7 @@ const App = () => {
 const Team = () => {
   return (
     <Routes>
-      <Route path="sportSelect" element={<SportPage />} />
+      <Route path="/" element={<TeamRegister />} />
       <Route path="team-registration" element={<TeamRegistration />} />
       <Route path="duo-registration" element={<DuoRegistration />} />
       <Route path="solo-registration" element={<SoloRegistration />} />
