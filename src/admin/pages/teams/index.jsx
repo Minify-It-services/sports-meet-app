@@ -62,12 +62,12 @@ const Teams = () => {
         <Box sx={{ display: 'flex' }}>
             <DrawerBar pageName={'Team'} pageId ={3} />
             <Box sx={{flexGrow:1, pt:12.5, px:{xs:2,sm:3,md:5}}}>
-                <Box sx={{display:'flex', justifyContent:action?'flex-end':'flex-start'}}>
-                    {action?<Button variant="contained" color="primary" onClick={()=>{setaction(!action); if(!isObjEmpty(toEdit)){
+                <Box sx={{display:'flex', justifyContent:!action?'flex-end':'flex-start'}}>
+                    {!action?<Button variant="contained" color="primary" onClick={()=>{setaction(!action); if(!isObjEmpty(toEdit)){
                         settoEdit({})
                     }}}>Add Teams</Button>:<Button onClick={()=>setaction(!action)}> <ArrowBackIosIcon /></Button>}
                 </Box>
-                {action? <TableContainer component={Paper} sx={{mt:2}}>
+                {!action? <TableContainer component={Paper} sx={{mt:2}}>
                     <Table aria-label="simple table">
                         <TableHead>
                             <TableRow>
