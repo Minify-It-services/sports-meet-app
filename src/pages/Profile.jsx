@@ -55,7 +55,7 @@ const Profile = () => {
 
                     <Stack direction="row" spacing={5} justifyContent="center" alignItems="center" sx={{ margin:'1em 0' }}>
                         <Avatar src={`https://avatars.dicebear.com/api/croodles/${seed}.svg?scale=80`} variant="rounded" sx={{width:'100px', height:'100px', border: '1px solid #25252521'}}/>
-                        <Box>
+                        <Box sx={{display:'flex', flexDirection:'column'}}>
                             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{player?.name}</Typography>
                             <Typography variant="caption" sx={{fontStyle: 'italic', fontWeight: 'regular'}}>{player?.email}</Typography>
                             {

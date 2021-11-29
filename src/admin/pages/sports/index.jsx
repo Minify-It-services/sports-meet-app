@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -10,6 +11,9 @@ import TableRow from '@mui/material/TableRow';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+
+import AddSport from './AddSport';
 
 // components
 import DrawerBar from '../../../components/DrawerBar';
@@ -23,30 +27,38 @@ const rows = [
         vice: 'Yogesh Thapa'
     },
     {
-        id:'1',
-        name:'football',
-        captain:'Utsab Gurung',
-        vice: 'Yogesh Thapa'
+        id:'2',
+        name:'volleyball',
+        captain:'Alson Garbuja',
+        vice: 'Sunil Paudel'
     },
 ];
 
-// buttons:
-const buttons = [
-  <Button key="one" variant="outlined" color="primary">Edit</Button>,
-  <Button key="two" variant="outlined" color="error">Delete</Button>,
-];
-
-
-const Sports = () => {
+const Sport = () => {
+    const [action, setaction] = useState(false);
+    const [toEdit, settoEdit] = useState({});
+    const editData=(row)=>{
+        setaction(!action);
+        settoEdit(row);
+    }
+    const isObjEmpty=(obj)=>{
+        if (obj && Object.keys(obj).length === 0
+        && Object.getPrototypeOf(obj) === Object.prototype) {
+          return true;
+        }
+        else return false;
+      }
     return (
         <Box sx={{ display: 'flex' }}>
             <DrawerBar pageName={'Sports'} pageId ={2} />
-            <Box sx={{flexGrow:1, pt:12.5, px:5}}>
-                <Box sx={{display:'flex', justifyContent:'flex-end'}}>
-                    <Button variant="contained" color="primary">Add Sports</Button>
+            <Box sx={{flexGrow:1, pt:12.5, px:{xs:2,sm:3,md:5}}}>
+                <Box sx={{display:'flex', justifyContent:!action?'flex-end':'flex-start'}}>
+                    {!action?<Button variant="contained" color="primary" onClick={()=>{setaction(!action); if(!isObjEmpty(toEdit)){
+                        settoEdit({})
+                    }}}>Add Sports</Button>:<Button onClick={()=>setaction(!action)}> <ArrowBackIosIcon /></Button>}
                 </Box>
-                <TableContainer component={Paper} sx={{mt:2}}>
-                    <Table aria-label="simple table">
+                {!action? <TableContainer component={Paper} sx={{mt:2, overflow:'scroll'}}>
+                    <Table aria-label="simple table" sx={{overflow:'scroll'}}>
                         <TableHead>
                             <TableRow>
                                 <TableCell align="center">Id</TableCell>
@@ -56,19 +68,20 @@ const Sports = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row) => (
-                                <TableRow  key={row.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                    <TableCell component="th" scope="row" align="center">1</TableCell>
-                                    <TableCell align="center">{row.name}</TableCell>
+                            {rows.map((row,index) => (
+                                <TableRow  key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                    <TableCell component="th" scope="row" align="center">{row.id}</TableCell>
+                                    <TableCell align="center" sx={{textTransform:'capitalize'}}>{row.name}</TableCell>
                                     <TableCell align="center">
                                         <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">
-                                            <p>{row.captain}</p>
-                                            <p>{row.vice}</p>
+                                            <p sx={{textTransform:'capitalize'}}>{row.captain}</p>
+                                            <p sx={{textTransform:'capitalize'}}>{row.vice}</p>
                                         </Stack>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
-                                            {buttons}
+                                        <Button key="one" variant="outlined" color="primary" onClick={()=>editData(row)}>Edit</Button>
+                                        <Button key="two" variant="outlined" color="error">Delete</Button>
                                         </Stack>
                                     </TableCell>
                                 </TableRow>
@@ -76,9 +89,11 @@ const Sports = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
+                : <AddSport row={toEdit} changeAction={setaction}></AddSport>
+                }
             </Box>
         </Box>
     )
 }
 
-export default Sports
+export default Sport
