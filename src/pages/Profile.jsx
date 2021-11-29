@@ -43,7 +43,7 @@ const Profile = () => {
                 <Container sx={{height:'100%', width:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
 
                     <Stack direction="row" spacing={5} justifyContent="center" alignItems="center" sx={{ margin:'1em 0' }}>
-                        <Avatar src={player?.imageUrl} variant="rounded" sx={{width:'100px', height:'100px'}}/>
+                        <Avatar src={`https://avatars.dicebear.com/api/bottts/${player?.name}.svg`} variant="rounded" sx={{width:'100px', height:'100px', border: '1px solid #25252521'}}/>
                         <Box>
                             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{player?.name}</Typography>
                             <Typography variant="caption" sx={{fontStyle: 'italic', fontWeight: 'regular'}}>{player?.email}</Typography>
