@@ -83,6 +83,7 @@ function SoloRegistration() {
       useEffect(() => {
         getPlayers();
         checkForAvailability();
+      // eslint-disable-next-line
       }, [])
       
       const handleRegister = async () => {
