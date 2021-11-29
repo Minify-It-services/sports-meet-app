@@ -189,7 +189,7 @@ const DrawerBar = ({pageName, pageId}) => {
                             <ListItemIcon>
                                 {itemType.getIcon()}
                             </ListItemIcon>
-                            <ListItemText primary={itemType.text} />
+                            <ListItemText sx={{textTransform:'capitalize'}} primary={itemType.text} />
                         </ListItem>
                     ))}
                 </List>
