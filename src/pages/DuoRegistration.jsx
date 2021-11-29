@@ -7,15 +7,31 @@ import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { Alert } from '@mui/material';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {useLocation} from 'react-router-dom';
+import Cookies from 'universal-cookie'
+import jsendDestructor from '../utils/api/jsendDestructor'
+import NoTeam from '../components/NoTeam'
 
 //TODO: Fix FONT SIZING
 function SoloRegistration() {
     const location = useLocation()
-    const [sport, setSport] = useState(location.state)
+    const cookies = new Cookies()
+
+    const token = cookies.get('sports_app_token')
+    const player = JSON.parse(localStorage.getItem('player'))
+
+    const jsendRes = new jsendDestructor({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
+
+    const [sport] = useState(location.state)
     const [registered, setRegsitered] = useState(false);
+    const [teamId, setTeamId] = useState('')
+    const [hasTeamSlot, setHasTeamSlot] = useState(true)
     const [partner, setpartner] = useState({});
+    const [members, setMembers] = useState([])
     const [displayMessage, setdisplayMessage] = useState('');
     const [hasError, sethasError] = useState(false);
 
@@ -39,8 +55,71 @@ function SoloRegistration() {
         }
         else return false;
       }
-      //TODO: API INTEGRATION
-      const handleRegister=()=>{
+
+      const getPlayers = async () => {
+        const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}`, 'GET')
+        
+        if(status === 'success'){
+          setMembers(data.results)
+          console.log(members);
+        }else{
+          console.log(data, message);
+        }
+      }
+
+      const checkForAvailability = async () => {
+        const { data } = await jsendRes.destructFromApi(
+          `/teams/check?sport=${sport.name}&year=${player.year}&faculty=${player.faculty}&playerId=${player.id}`, 
+          'GET'
+        )
+        if(data.message === 'Team full'){
+          console.log('Oh no no team spot remaning');
+          setHasTeamSlot(false)
+        }
+        if(data.message === 'Already in a team'){
+          console.log('hey you already in team');
+          setTeamId(data.teamId)
+          setRegsitered(true)
+          console.log(teamId)
+          console.log(data.teams);
+        }
+        if(data.message === 'Not in team and team empty'){
+          console.log('Ready to play?');
+        }
+      }
+
+      useEffect(() => {
+        getPlayers();
+        checkForAvailability();
+      }, [])
+      
+      const handleRegister = async () => {
+        let response;
+
+        if(registered){
+          response = await jsendRes.destructFromApi(`/teams/leave/${teamId}`, 'DELETE')
+        }else{
+          const team = {
+            name: player.name,
+            year: player.year,
+            semester: player.semester,
+            faculty: player.faculty,
+            sport: sport.name,
+            memberIds: [
+              player.id
+            ],
+          }
+          response = await jsendRes.destructFromApi('/teams', 'POST', team)
+        }
+        
+        const { data, status, message } = response
+
+        if(status === 'success'){
+          setRegsitered(!registered);
+          setOpen(!open);
+        }else{
+          console.log(data, message);
+        }
         console.log(partner);
         if (!registered && !isObjEmpty(partner)) {
           sethasError(false);
@@ -76,13 +155,13 @@ function SoloRegistration() {
             <p>Fact: There are over 318 billion different possible positions after four moves each.</p>
             {!registered? <Typography variant="subtitle">Select Your Partner</Typography> :
             
-            <div><Typography variant="h5">Your Partner</Typography><p>{partner.label}</p></div>
+            <div><Typography variant="h5">Your Partner</Typography><p>{partner.name}</p></div>
             } 
             {
                !registered? <Autocomplete
-               isOptionEqualToValue={(option, value) => option.label === value.label}
+               isOptionEqualToValue={(option, value) => option.label === value.name}
                 autoComplete={false}
-                options={students}
+                options={members}
                 onChange={(event, value) => setpartner(value)}
                 renderInput={(params) => <TextField {...params} label="Partner" variant="standard" required={true}/>}
                 /> : <div></div>
