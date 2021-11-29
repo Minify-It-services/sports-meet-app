@@ -36,6 +36,7 @@ const TeamRegister = () => {
     };
     useEffect(() => {
         getSports();
+      // eslint-disable-next-line
     }, []);
 
     return (

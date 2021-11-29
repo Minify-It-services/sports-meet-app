@@ -35,12 +35,6 @@ function SoloRegistration() {
     const [displayMessage, setdisplayMessage] = useState('');
     const [hasError, sethasError] = useState(false);
 
-    const students = [
-      { label: 'Sunil Poudel'},
-      { label: 'Anil Bhujel'},
-      { label: 'Utasb Gurung'},
-      { label: 'Biwash Thapa'},
-    ];
     const [open, setOpen] = React.useState(false);
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -57,11 +51,9 @@ function SoloRegistration() {
       }
 
       const getPlayers = async () => {
-        const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}`, 'GET')
-        
+        const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}&userId=${player.id}`, 'GET')
         if(status === 'success'){
-          setMembers(data.results)
-          console.log(members);
+          setMembers(data)
         }else{
           console.log(data, message);
         }
@@ -153,20 +145,27 @@ function SoloRegistration() {
             <Stack spacing={{xs:2,md:4}}>
             <Typography variant="h5">{sport.name}</Typography>
             <p>Fact: There are over 318 billion different possible positions after four moves each.</p>
-            {!registered? <Typography variant="subtitle">Select Your Partner</Typography> :
-            
-            <div><Typography variant="h5">Your Partner</Typography><p>{partner.name}</p></div>
-            } 
             {
-               !registered? <Autocomplete
-               isOptionEqualToValue={(option, value) => option.label === value.name}
-                autoComplete={false}
-                options={members}
-                onChange={(event, value) => setpartner(value)}
-                renderInput={(params) => <TextField {...params} label="Partner" variant="standard" required={true}/>}
-                /> : <div></div>
+              hasTeamSlot?(
+                <>
+                {!registered? <Typography variant="subtitle">Select Your Partner</Typography> :
+            
+                <div><Typography variant="h5">Your Partner</Typography><p>{partner.name}</p></div>
+                } 
+                {
+                  !registered? <Autocomplete
+                  getOptionLabel={(option) => option.name}
+                  isOptionEqualToValue={(option, value) => option.label === value.name}
+                    autoComplete={false}
+                    options={members}
+                    onChange={(event, value) => setpartner(value)}
+                    renderInput={(params) => <TextField {...params} label="Partner" variant="standard" required={true}/>}
+                    /> : <div></div>
+                }
+                <Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={handleRegister}>{registered? "Leave":"Register"}</Button>
+              </>
+              ):<NoTeam/>
             }
-            <Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={handleRegister}>{registered? "Leave":"Register"}</Button>
                 <Snackbar open={open} autoHideDuration={1500} onClose={handleClose}>
                     <Alert onClose={handleClose} severity={!hasError?"success":"error"} sx={{ width: '100%' }}>
                     {displayMessage}
