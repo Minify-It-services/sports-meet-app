@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 import {Container, Box, Typography} from '@mui/material';
 import { GoogleLogin, useGoogleLogout } from 'react-google-login'
@@ -12,8 +12,6 @@ const Login = () => {
     const jsendRes = new jsendDestructor()
 
     const [ differentEmail, setDifferentEmail ] = useState(false)
-    const token = cookies.get('sports_app_token')
-    const player = JSON.parse(localStorage.getItem('player'))
 
     const navigate = useNavigate()
     const { signOut } = useGoogleLogout({
@@ -21,22 +19,8 @@ const Login = () => {
         onLogoutSuccess: () => console.log('logged out')
     })
 
-    const getSem = (year) => {
-        switch (year) {
-            case '2018':
-                return '5th'
-            case '2017':
-                return '7th'
-            case '2019':
-                return '3rd'
-            case '2020':
-                return '1st'
-            default: return 'unknown'
-        }
-    }
-
     const onSuccess = async (res) => {
-        const { name, email, imageUrl } = res.profileObj
+        const { email } = res.profileObj
 
         if(!email.match(/^be20(1|2)(0|7|8|9)(s|c)e[0-9]{1,3}@gces.edu.np$/g)){
             setDifferentEmail(true)
@@ -44,29 +28,8 @@ const Login = () => {
             return
         }
         setDifferentEmail(false)
-        const year = email.substring(2, 6)
-        const semester = getSem(year)
-        const faculty = email.substring(6, 7).toLowerCase()==='s'?'Software':'Computer'
 
-        let response = {}
-            if(player){
-                response = await jsendRes.destructFromApi('/auth/login', 'POST', {email})
-            }
-            else{
-                const user = {
-                    name,
-                    email,
-                    year,
-                    faculty,
-                    semester,
-                    imageUrl,
-                    role: 'user',
-                }
-                if(year === '2018')
-                    user.role = 'admin'
-
-                response = await jsendRes.destructFromApi('/auth/register', 'POST', user)
-            }
+        const response = await jsendRes.destructFromApi('/auth/login', 'POST', {email})
 
         const {status, data, message} = response
         if(status === 'success'){
@@ -83,12 +46,8 @@ const Login = () => {
             let date = new Date()
             date.setDate(date.getDate() + 30)
             cookies.set('sports_app_token', data.tokens.access.token, { expires: date })
-            if(data.user.contactNumber!==''){
-                navigate('/profile')
-            }
-            else{
-                navigate('/phone-register')
-            }
+            
+            navigate('/profile')
         }
         else{
             console.log(data, message);
@@ -105,16 +64,23 @@ const Login = () => {
                 <Box sx={{display: 'flex',flexDirection: 'column',justifyContent: 'space-evenly',alignItems: 'center',height:'50%'}}>
                     <Box sx={{textAlign:'center'}}>
                         <Typography variant="h4" sx={{fontWeight:'600'}}>Welcome to GCES</Typography>
-                        <Typography variant="caption">Sign in to continue your GCES sports journey</Typography>
+                        <Typography variant="caption">Log in to continue your GCES sports journey</Typography>
                     </Box>
                     <Box sx={{textAlign:'center', border: (differentEmail&&'1px solid #dc3545') }}>
                         <GoogleLogin 
                             clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-                            buttonText={`${token?'Login':'SignUp'} with GCES account`}
+                            buttonText='Login with GCES account'
                             isSignedIn={false}
                             onSuccess={onSuccess}
                             onFailure={onFailure}
                         />
+                    </Box>
+                    <Box sx={{textAlign:'center'}}>
+                        <Typography variant="caption">OR</Typography>
+                        <Typography variant="body2">
+                            Don't have an account?
+                            <Link to="/register">Register Now</Link>
+                        </Typography>
                     </Box>
                     {
                         differentEmail&&(
