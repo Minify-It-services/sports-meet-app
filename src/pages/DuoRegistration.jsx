@@ -30,7 +30,7 @@ function SoloRegistration() {
     const [registered, setRegsitered] = useState(false);
     const [teamId, setTeamId] = useState('')
     const [hasTeamSlot, setHasTeamSlot] = useState(true)
-    const [partner, setpartner] = useState({});
+    const [partner, setPartner] = useState({});
     const [members, setMembers] = useState([])
     const [displayMessage, setdisplayMessage] = useState('');
     const [hasError, sethasError] = useState(false);
@@ -69,11 +69,12 @@ function SoloRegistration() {
           setHasTeamSlot(false)
         }
         if(data.message === 'Already in a team'){
+          setPartner(data.teamMembers[0])
           console.log('hey you already in team');
           setTeamId(data.teamId)
           setRegsitered(true)
           console.log(teamId)
-          console.log(data.teams);
+          console.log(data.teamMembers);
         }
         if(data.message === 'Not in team and team empty'){
           console.log('Ready to play?');
@@ -93,13 +94,14 @@ function SoloRegistration() {
           response = await jsendRes.destructFromApi(`/teams/leave/${teamId}`, 'DELETE')
         }else{
           const team = {
-            name: player.name,
+            name: `${player.name}, ${partner.name}`,
             year: player.year,
             semester: player.semester,
             faculty: player.faculty,
             sport: sport.name,
             memberIds: [
-              player.id
+              player.id,
+              partner.id,
             ],
           }
           response = await jsendRes.destructFromApi('/teams', 'POST', team)
@@ -108,31 +110,17 @@ function SoloRegistration() {
         const { data, status, message } = response
 
         if(status === 'success'){
-          setRegsitered(!registered);
+          if(registered){
+            setRegsitered(false)
+            setdisplayMessage('You Left the Team');
+          }
+          else{
+            setRegsitered(true)
+            setdisplayMessage(`Successfully registered in ${sport.name}`);
+          }
           setOpen(!open);
         }else{
           console.log(data, message);
-        }
-        console.log(partner);
-        if (!registered && !isObjEmpty(partner)) {
-          sethasError(false);
-          setdisplayMessage('Successfully registered a Duo Team');
-          setRegsitered(true);
-          setOpen(!open);
-        }
-        else if(registered)
-        {
-          sethasError(true);
-          setdisplayMessage('You Left the Team');
-          setpartner('');
-          setRegsitered(false);
-          setOpen(!open);
-
-        }
-        else{
-          sethasError(true);
-          setdisplayMessage('Please Fill the empty fields');
-          setOpen(!open);
         }
       }
     return (
@@ -159,7 +147,7 @@ function SoloRegistration() {
                   isOptionEqualToValue={(option, value) => option.label === value.name}
                     autoComplete={false}
                     options={members}
-                    onChange={(event, value) => setpartner(value)}
+                    onChange={(event, value) => setPartner(value)}
                     renderInput={(params) => <TextField {...params} label="Partner" variant="standard" required={true}/>}
                     /> : <div></div>
                 }
