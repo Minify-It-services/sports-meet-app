@@ -33,7 +33,7 @@ function SoloRegistration() {
     const [partner, setPartner] = useState({});
     const [members, setMembers] = useState([])
     const [displayMessage, setdisplayMessage] = useState('');
-    const [hasError, sethasError] = useState(false);
+    const [hasError, setHasError] = useState(false);
 
     const [open, setOpen] = React.useState(false);
     const handleClose = (event, reason) => {
@@ -42,13 +42,6 @@ function SoloRegistration() {
         }
         setOpen(false);
       };
-      const isObjEmpty=(obj)=>{
-        if (obj && Object.keys(obj).length === 0
-        && Object.getPrototypeOf(obj) === Object.prototype) {
-          return true;
-        }
-        else return false;
-      }
 
       const getPlayers = async () => {
         const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}&userId=${player.id}`, 'GET')
@@ -112,10 +105,12 @@ function SoloRegistration() {
         if(status === 'success'){
           if(registered){
             setRegsitered(false)
+            setHasError(true)
             setdisplayMessage('You Left the Team');
           }
           else{
             setRegsitered(true)
+            setHasError(false)
             setdisplayMessage(`Successfully registered in ${sport.name}`);
           }
           setOpen(!open);
