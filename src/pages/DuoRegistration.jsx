@@ -44,7 +44,7 @@ function SoloRegistration() {
       };
 
       const getPlayers = async () => {
-        const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}&userId=${player.id}`, 'GET')
+        const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}&userId=${player.id}&faculty=${player.faculty}&sport=${sport.name}`, 'GET')
         if(status === 'success'){
           setMembers(data)
         }else{
