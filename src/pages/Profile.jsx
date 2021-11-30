@@ -26,7 +26,7 @@ const Profile = () => {
         const response = await jsendRes.destructFromApi(`/users/${player?.id}`, 'GET')
 
         if(response.message && response.message==='Please authenticate')
-            navigate('/login')
+            navigate('/register')
 
         setUser(response.data)
     }
@@ -41,7 +41,7 @@ const Profile = () => {
     }
     useEffect(() => {
         if(!player){
-            navigate('/login')
+            navigate('/register')
         }
         getUserData()
         getRandomWords()
