@@ -15,7 +15,7 @@ import {useLocation} from 'react-router-dom'
 
 function TeamRegistration() {
   const location = useLocation()
-  const [sport, setSport] = useState(location.state)
+  const [sport] = useState(location.state)
   const [registered, setRegsitered] = useState(false);
   // const [extraPlayers, setextraPlayers] = useState([]);
   const [hasError, sethasError] = useState(false);

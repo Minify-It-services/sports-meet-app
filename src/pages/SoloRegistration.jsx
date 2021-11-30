@@ -61,6 +61,7 @@ const SoloRegistration = ()=> {
 
       useEffect(() => {
         checkForAvailability();
+      // eslint-disable-next-line
       }, [])
 
       const handleRegister = async () => {

@@ -12,7 +12,7 @@ class jsendDestructor {
 
         await axios({
             method: method,
-            baseURL: process.env.REACT_APP_ENVIRONMENT === 'development'?'http://localhost:5000/v1':'Hosting URL',
+            baseURL: process.env.REACT_APP_ENVIRONMENT === 'development'?'http://localhost:5000/v1':'https://gces-sport-app.herokuapp.com/v1/',
             url: url,
             headers: this.header,
             data: payload
