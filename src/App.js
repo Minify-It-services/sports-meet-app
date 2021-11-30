@@ -16,6 +16,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import './App.css';
+import MatchFixture from './admin/pages/fixtures/MatchFixture';
 
 const App = () => {
   return (
@@ -49,8 +50,16 @@ const Admin = () => {
       <Route path="dashboard" element={<Dashboard />} />
       <Route path="sports" element={<Sports />} />
       <Route path="teams" element={<Teams />} />
-      <Route path="fixtures" element={<Fixtures />} />
+      <Route path="fixtures/*" element={<Matches />} />
       <Route path="notice" element={<Notice />} />
+    </Routes>
+  )
+}
+const Matches = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<Fixtures />} />
+      <Route path="game" element={<MatchFixture />} />
     </Routes>
   )
 }
