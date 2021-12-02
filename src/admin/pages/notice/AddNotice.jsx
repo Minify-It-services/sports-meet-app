@@ -32,15 +32,30 @@ function AddNotice(props) {
         }
     }, [editData,props.row]);
 
+    const pushNotice= async ()=> {
+        let response = {}
+        if(forEdit){
+            const noticeToSend = {
+                title: editedNotice.title,
+                description: editedNotice.description,
+            }
+            response = await props.jsendRes.destructFromApi(`/notices/${editedNotice.id}`,'PATCH',noticeToSend)
+        }
+        else{
+            response = await props.jsendRes.destructFromApi('/notices','POST',editedNotice)
+        }
+        if(response.status === 'success'){
+            window.location.reload()
+        }
+        else{
+            console.log(response)
+        }
+    }
+
     const handleChange = (event,keyName) => {
         seteditedNotice((prev)=>{return {...prev,[`${keyName}`]:event.target.value}})
     };
-    //TODO:ONSAVE GO BACK TO TABLE SCREEN WITH SET STATE
-    // const handleSave = useCallback(event => {
-    //     props.changeAction(false);
-    //     console.log(editedNotice);
-    //   }, [props,editedNotice])
-    return (
+        return (
         <Stack spacing={{ xs: 1, sm: 2, md: 3 }} sx={{mt:2}}>
             <TextField id="standard-basic" label="Title" variant="standard" type="text" defaultValue={!forEdit?editData.title:""} onChange={(event)=>handleChange(event,'title')}/>
             <TextareaAutosize
@@ -50,7 +65,7 @@ function AddNotice(props) {
             defaultValue={!forEdit?editData.description:""} onChange={(event)=>handleChange(event,'description')}
             />
             {/* <TextField id="standard-basic" label="Description" variant="standard" type="text" defaultValue={!forEdit?editData.description:""} onChange={(event)=>handleChange(event,'description')}/> */}
-            <Button variant="outlined" color="success" onClick={()=>console.log(editedNotice)}>Save</Button>
+            <Button variant="outlined" color="success" onClick={pushNotice}>Save</Button>
         </Stack>
     )
 }
