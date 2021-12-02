@@ -1,4 +1,8 @@
-import * as React from 'react'
+import * as React from 'react';
+import {useState, useEffect} from 'react';
+import {useLocation} from 'react-router-dom';
+import Cookies from 'universal-cookie';
+
 import Typography from '@mui/material/Typography';
 import  Button  from '@mui/material/Button';
 import Container  from '@mui/material/Container';
@@ -7,14 +11,13 @@ import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { Alert } from '@mui/material';
-import {useState, useEffect} from 'react';
-import {useLocation} from 'react-router-dom';
-import Cookies from 'universal-cookie'
+
+// components:
 import jsendDestructor from '../utils/api/jsendDestructor'
 import NoTeam from '../components/NoTeam'
 
 //TODO: Fix FONT SIZING
-function SoloRegistration() {
+const DuoRegistration = () => {
     const location = useLocation()
     const cookies = new Cookies()
 
@@ -191,4 +194,4 @@ function SoloRegistration() {
     )
 }
 
-export default SoloRegistration
+export default DuoRegistration

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
-import { Container, Box, Stack, Avatar, Typography, Grid, Button, Chip, Paper, Divider } from '@mui/material';
 import Cookies from 'universal-cookie';
-import jsendDestructor from '../utils/api/jsendDestructor';
 
+import { Container, Box, Stack, Avatar, Typography, Grid, Button, Chip, Paper, Divider } from '@mui/material';
+
+// components
 import Layout from '../layout/Layout';
+import jsendDestructor from '../utils/api/jsendDestructor';
 
 const Profile = () => {
 

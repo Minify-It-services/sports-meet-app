@@ -19,10 +19,12 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
-
-
-import DrawerBar from '../../../components/DrawerBar';
 import { Typography } from '@mui/material';
+
+// components
+import DrawerBar from '../../../components/DrawerBar';
+
+// data:
 const rows = [
     {
         date:"5-12-2021",
@@ -37,10 +39,10 @@ const rows = [
         score:{
             team1: 0, // default
             team2: 0, // default
-         },
-         resultId: 'mongoDB_id', // default --> null,
-         status: "upcoming", // default
-         sport:"volleyball"
+        },
+        resultId: 'mongoDB_id', // default --> null,
+        status: "upcoming", // default
+        sport:"volleyball"
     },
     {
         date:"5-12-2021",
@@ -55,12 +57,13 @@ const rows = [
         score:{
             team1: 0, // default
             team2: 0, // default
-         },
-         resultId: 'mongoDB_id', // default --> null,
-         status: "upcoming", // default
-         sport:"volleyball"
+        },
+        resultId: 'mongoDB_id', // default --> null,
+        status: "upcoming", // default
+        sport:"volleyball"
     },
 ];
+
 const teams=[{
     name: "Software 1th sem Team A",
     "year": "2018",
@@ -94,6 +97,7 @@ const teams=[{
     "sportId":"6198e9e4cd4bc645a092f230"
 },
 ]
+
 const MatchFixture = () => {
     const [date, setdate] = useState(new Date());
     const [action, setaction] = useState(false);
@@ -105,10 +109,10 @@ const MatchFixture = () => {
     const isObjEmpty=(obj)=>{
         if (obj && Object.keys(obj).length === 0
         && Object.getPrototypeOf(obj) === Object.prototype) {
-          return true;
+            return true;
         }
         else return false;
-      }
+    }
     return (
         <Box sx={{ display: 'flex' }}>
             <DrawerBar pageName={'Fixture'} pageId ={4} />

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react';
+import Cookies from 'universal-cookie';
 
 import TextField from '@mui/material/TextField';
 import Box  from '@mui/system/Box';
@@ -10,11 +11,11 @@ import Container from '@mui/material/Container';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import Cookies from 'universal-cookie';
 
+// components:
 import jsendDestructor from '../utils/api/jsendDestructor';
 
-function PhoneRegister() {
+const PhoneRegister = () => {
     const navigate = useNavigate()
     const cookies = new Cookies()
     const { id } = JSON.parse(localStorage.getItem('player'));

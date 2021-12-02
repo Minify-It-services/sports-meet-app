@@ -13,9 +13,8 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
-import AddSport from './AddSport';
-
 // components
+import AddSport from './AddSport';
 import DrawerBar from '../../../components/DrawerBar';
 
 // data
@@ -44,18 +43,18 @@ const Sport = () => {
     const isObjEmpty=(obj)=>{
         if (obj && Object.keys(obj).length === 0
         && Object.getPrototypeOf(obj) === Object.prototype) {
-          return true;
+            return true;
         }
         else return false;
-      }
+    }
     return (
         <Box sx={{ display: 'flex' }}>
-            <DrawerBar pageName={'Sports'} pageId ={2} />
+            <DrawerBar pageName={'Sport'} pageId ={2} />
             <Box sx={{flexGrow:1, pt:12.5, px:{xs:2,sm:3,md:5}}}>
                 <Box sx={{display:'flex', justifyContent:!action?'flex-end':'flex-start'}}>
                     {!action?<Button variant="contained" color="primary" onClick={()=>{setaction(!action); if(!isObjEmpty(toEdit)){
                         settoEdit({})
-                    }}}>Add Sports</Button>:<Button onClick={()=>setaction(!action)}> <ArrowBackIosIcon /></Button>}
+                    }}}>Add Sport</Button>:<Button onClick={()=>setaction(!action)}> <ArrowBackIosIcon /></Button>}
                 </Box>
                 {!action? <TableContainer component={Paper} sx={{mt:2, overflow:'scroll'}}>
                     <Table aria-label="simple table" sx={{overflow:'scroll'}}>

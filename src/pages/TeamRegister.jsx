@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import Cookies from "universal-cookie";
 
 import CustomCard from "../components/CustomCard";
 import Layout from "../layout/Layout";
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+
+// components:
 import jsendDestructor from "../utils/api/jsendDestructor";
-import Cookies from "universal-cookie";
-import { Link } from "react-router-dom";
 
 // const Item = styled(Paper)(() => ({
 //     textAlign: "center",

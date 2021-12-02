@@ -11,7 +11,7 @@ import TableChartIcon from '@mui/icons-material/TableChart';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import PersonIcon from '@mui/icons-material/Person';
 
-export const Navbar = () => {
+const Navbar = () => {
 
     const navigate = useNavigate();
     const { pathname } = useLocation();

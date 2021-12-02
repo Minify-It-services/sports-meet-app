@@ -1,6 +1,9 @@
 import React from 'react'
-import '../styles/customcard/customcard.scss'
+
 import Typography from '@mui/material/Typography';
+
+// scss
+import '../styles/customcard/customcard.scss'
 
 
 function CustomCard(props) {
