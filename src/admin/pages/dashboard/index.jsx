@@ -37,10 +37,9 @@ const Dashboard = () => {
 
         if(status === 'success'){
             setCounts(data)
-            console.log(counts);
         }else{
             if(message === 'Forbidden')
-                navigate('/profile')
+            navigate('/profile')
         }
     }
 
@@ -48,51 +47,43 @@ const Dashboard = () => {
         getData();
     // eslint-disable-next-line
     }, []);
-
-    // data:
-    const cards = [
-        {
-            id: 1,
-            title: 'Sports',
-            number: 10
-        },
-        {
-            id: 2,
-            title: 'Teams',
-            number: 16
-        },
-        {
-            id: 1,
-            title: 'Matches',
-            number: 60
-        },
-        {
-            id: 1,
-            title: 'Players',
-            number: 160
-        },
-    ]
-
+    
     return (
         <Box sx={{ display: 'flex', marginBottom:'50px' }}>
             <DrawerBar pageName={'Dashboard'} pageId={1} />
             <Box sx={{ flexGrow: 1, pt: 12.5, px: { xs: 2, sm: 3, md: 5 } }}>
                 {/* cards: total numbers */}
                 <Stack direction='row' spacing={5}>
-                    {cards.map((card)=> {
-                        return(
-                        <Card sx={{width:'150px'}} key={card.id}>
-                            <CardContent align='center'>
-                                <Typography variant='h7' sx={{fontWeight:'400', opacity:'0.75'}}>
-                                    {card.title}
-                                </Typography>
-                                <Typography variant='h3' sx={{fontWeight:'500'}}>
-                                    {card.number}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                        )
-                    })}
+                    <Card sx={{width:'150px'}} >
+                        <CardContent align='center'>
+                            <Typography variant='h7' sx={{fontWeight:'400', opacity:'0.75'}}>
+                                Players
+                            </Typography>
+                            <Typography variant='h3' sx={{fontWeight:'500'}}>
+                                {counts.totalUsers}
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                    <Card sx={{width:'150px'}} >
+                        <CardContent align='center'>
+                            <Typography variant='h7' sx={{fontWeight:'400', opacity:'0.75'}}>
+                                Sports
+                            </Typography>
+                            <Typography variant='h3' sx={{fontWeight:'500'}}>
+                                {counts.totalSports}
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                    <Card sx={{width:'150px'}} >
+                        <CardContent align='center'>
+                            <Typography variant='h7' sx={{fontWeight:'400', opacity:'0.75'}}>
+                                Teams
+                            </Typography>
+                            <Typography variant='h3' sx={{fontWeight:'500'}}>
+                                {counts.totalTeams}
+                            </Typography>
+                        </CardContent>
+                    </Card>
                 </Stack>
                 {/* table: matches of the day */}
                 <TableContainer component={Paper} sx={{ marginTop:'50px'}}>
