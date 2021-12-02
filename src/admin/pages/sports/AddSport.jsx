@@ -10,6 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 
 import { cleanup } from '@testing-library/react';
+// Currently same values and same setstate are used to all select option in textfield 
 
 function AddTeam(props) {
     const currencies = [
@@ -118,18 +119,7 @@ function AddTeam(props) {
                     </MenuItem>
                 ))}
                 </TextField>
-                <TextField
-                select
-                label="Image URL"
-                value={currency}
-                onChange={handleChange}
-                >
-                {currencies.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                    </MenuItem>
-                ))}
-                </TextField>
+                <TextField id="standard-basic" label="Image URL" variant="standard" type="text" />
             </Box>
             <TextareaAutosize
             aria-label="empty textarea"
