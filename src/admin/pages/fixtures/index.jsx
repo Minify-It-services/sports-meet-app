@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import Cookies from "universal-cookie";
 
-import CustomCard from "../../../components/CustomCard";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+
+// components
+import CustomCard from "../../../components/CustomCard";
 import jsendDestructor from "../../../utils/api/jsendDestructor";
-import Cookies from "universal-cookie";
-import { Link } from "react-router-dom";
 
 import DrawerBar from "../../../components/DrawerBar";
 

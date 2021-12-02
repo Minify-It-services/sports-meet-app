@@ -1,5 +1,7 @@
 import * as React from 'react'
 import {useState, useEffect} from 'react';
+import {useLocation} from 'react-router-dom';
+import Cookies from 'universal-cookie'
 
 import Typography from '@mui/material/Typography';
 import  Button  from '@mui/material/Button';
@@ -7,8 +9,8 @@ import Container  from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import {useLocation} from 'react-router-dom'
-import Cookies from 'universal-cookie'
+
+// components
 import jsendDestructor from '../utils/api/jsendDestructor'
 import NoTeam from '../components/NoTeam'
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState,useEffect,useCallback } from 'react';
+import { cleanup } from '@testing-library/react';
 
 import TextField  from '@mui/material/TextField';
 import Button  from '@mui/material/Button';
@@ -9,32 +10,31 @@ import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 
-import { cleanup } from '@testing-library/react';
 // Currently same values and same setstate are used to all select option in textfield 
 
 function AddTeam(props) {
     const currencies = [
         {
-          value: 'USD',
-          label: '$',
+            value: 'USD',
+            label: '$',
         },
         {
-          value: 'EUR',
-          label: '€',
+            value: 'EUR',
+            label: '€',
         },
         {
-          value: 'BTC',
-          label: '฿',
+            value: 'BTC',
+            label: '฿',
         },
         {
-          value: 'JPY',
-          label: '¥',
+            value: 'JPY',
+            label: '¥',
         },
-      ];
-      const [currency, setCurrency] = React.useState('EUR');
-      const handleChange = (event) => {
+    ];
+    const [currency, setCurrency] = React.useState('EUR');
+    const handleChange = (event) => {
         setCurrency(event.target.value);
-      };
+    };
     
     const [forEdit, setforEdit] = useState(false);
     const [editedSport, seteditedSport] = useState({});

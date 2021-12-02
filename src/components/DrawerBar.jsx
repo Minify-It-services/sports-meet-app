@@ -106,7 +106,7 @@ const itemTypes = [
     },
     {
         id:2,
-        text:'sports',
+        text:'sport',
         getIcon(){
             return(
                 <SportsIcon/>
@@ -115,7 +115,7 @@ const itemTypes = [
     },
     {
         id:3,
-        text:'teams',
+        text:'team',
         getIcon(){
             return(
                 <GroupsIcon/>
@@ -124,7 +124,7 @@ const itemTypes = [
     },
     {
         id:4,
-        text:'fixtures',
+        text:'fixture',
         getIcon(){
             return(
                 <TableChartIcon/>

@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
+import {useLocation} from 'react-router-dom'
 
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -11,9 +12,8 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Alert from "@mui/material/Alert";
 import Chip from "@mui/material/Chip";
 import Box from "@mui/material/Box";
-import {useLocation} from 'react-router-dom'
 
-function TeamRegistration() {
+const TeamRegistration = () => {
   const location = useLocation()
   const [sport] = useState(location.state)
   const [registered, setRegsitered] = useState(false);

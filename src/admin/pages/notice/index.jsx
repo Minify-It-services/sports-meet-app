@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import Cookies from 'universal-cookie';
 
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -12,8 +13,8 @@ import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import Cookies from 'universal-cookie'
 
+// components
 import AddNotice from './AddNotice';
 import jsendDestructor from '../../../utils/api/jsendDestructor'
 
@@ -58,7 +59,7 @@ const Notice = () => {
         }
     }
     useEffect(() => {
-       fetchNotices()
+        fetchNotices()
     }, [])
 
     const handleDelete =async (id)=> {

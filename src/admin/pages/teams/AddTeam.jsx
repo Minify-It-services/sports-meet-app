@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState,useEffect,useCallback } from 'react';
+import { cleanup } from '@testing-library/react';
 
 import TextField  from '@mui/material/TextField';
 import Button  from '@mui/material/Button';
@@ -7,10 +8,7 @@ import Box from '@mui/material/Box';
 import ToggleButton from '@mui/material/ToggleButton';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
-
-
 import AddIcon from '@mui/icons-material/Add';
-import { cleanup } from '@testing-library/react';
 
 function AddTeam(props) {
     const [playersCount, setplayersCount] = useState(1);
@@ -38,6 +36,7 @@ function AddTeam(props) {
     }, [editData,props.row]);
 // }, []);
 
+    // data:
     const academyList = [
         {
           year: '2017',
@@ -56,6 +55,7 @@ function AddTeam(props) {
           semester: '1st',
         },
       ];
+
     const faculty = ['Software','Computer'];
     const handleChange = (event,keyName) => {
         seteditedTeam((prev)=>{return {...prev,[`${keyName}`]:event.target.value}})
@@ -75,7 +75,7 @@ function AddTeam(props) {
                 value="check"
                 // selected={selected}
                 onChange={() => {
-                   setplayersCount(playersCount=>playersCount+1);
+                  setplayersCount(playersCount=>playersCount+1);
                 }}
                 sx={{maxWidth:'50px',justifySelf:'end'}}
                 >
