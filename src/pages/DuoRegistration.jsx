@@ -27,13 +27,15 @@ function SoloRegistration() {
     })
 
     const [sport] = useState(location.state)
-    const [registered, setRegsitered] = useState(false);
-    const [teamId, setTeamId] = useState('')
-    const [hasTeamSlot, setHasTeamSlot] = useState(true)
-    const [partner, setPartner] = useState({});
+    const [duoData, setDuoData] = useState({
+      registered: false,
+      teamId: '',
+      hasTeamSlot: true,
+      partner: {},
+      displayMessage: '',
+      hasError: false,
+    })
     const [members, setMembers] = useState([])
-    const [displayMessage, setdisplayMessage] = useState('');
-    const [hasError, setHasError] = useState(false);
 
     const [open, setOpen] = React.useState(false);
     const handleClose = (event, reason) => {
@@ -58,43 +60,48 @@ function SoloRegistration() {
           'GET'
         )
         if(data.message === 'Team full'){
-          console.log('Oh no no team spot remaning');
-          setHasTeamSlot(false)
+          setDuoData(prevState => {
+            return {
+              ...prevState,
+              hasTeamSlot: false,
+            }
+          })
         }
         if(data.message === 'Already in a team'){
-          setPartner(data.teamMembers[0])
-          console.log('hey you already in team');
-          setTeamId(data.teamId)
-          setRegsitered(true)
-          console.log(teamId)
-          console.log(data.teamMembers);
-        }
-        if(data.message === 'Not in team and team empty'){
-          console.log('Ready to play?');
+          setDuoData(prevState => {
+            return {
+              ...prevState,
+              partner: data.teamMembers[0],
+              registered: true,
+              teamId: data.teamId
+            }
+          })
         }
       }
 
       useEffect(() => {
-        getPlayers();
         checkForAvailability();
+        if(!duoData.partner.name){
+          getPlayers();
+        }
       // eslint-disable-next-line
-      }, [])
+      }, [duoData.registered])
       
       const handleRegister = async () => {
         let response;
 
-        if(registered){
-          response = await jsendRes.destructFromApi(`/teams/leave/${teamId}`, 'DELETE')
+        if(duoData.registered){
+          response = await jsendRes.destructFromApi(`/teams/leave/${duoData.teamId}`, 'DELETE')
         }else{
           const team = {
-            name: `${player.name}, ${partner.name}`,
+            name: `${player.name}, ${duoData.partner.name}`,
             year: player.year,
             semester: player.semester,
             faculty: player.faculty,
             sport: sport.name,
             memberIds: [
               player.id,
-              partner.id,
+              duoData.partner.id,
             ],
           }
           response = await jsendRes.destructFromApi('/teams', 'POST', team)
@@ -103,17 +110,26 @@ function SoloRegistration() {
         const { data, status, message } = response
 
         if(status === 'success'){
-          if(registered){
-            setRegsitered(false)
-            setHasError(true)
-            setdisplayMessage('You Left the Team');
+          if(duoData.registered){
+            setDuoData(prevState => {
+              return {
+                ...prevState,
+                registered: false,
+                hasError: true,
+                displayMessage: 'You Left the Team',
+              }
+            })
+          }else{
+            setDuoData(prevState => {
+              return {
+                ...prevState,
+                registered: true,
+                hasError: false,
+                displayMessage: `Successfully registered in ${sport.name}`,
+              }
+            })
           }
-          else{
-            setRegsitered(true)
-            setHasError(false)
-            setdisplayMessage(`Successfully registered in ${sport.name}`);
-          }
-          setOpen(!open);
+          setOpen(true);
         }else{
           console.log(data, message);
         }
@@ -130,31 +146,39 @@ function SoloRegistration() {
             <Typography variant="h5">{sport.name}</Typography>
             <p>Fact: There are over 318 billion different possible positions after four moves each.</p>
             {
-              hasTeamSlot?(
+              duoData.hasTeamSlot?(
                 <>
-                {!registered? <Typography variant="subtitle">Select Your Partner</Typography> :
-            
-                <div><Typography variant="h5">Your Partner</Typography><p>{partner.name}</p></div>
-                } 
                 {
-                  !registered? <Autocomplete
-                  getOptionLabel={(option) => option.name}
-                  isOptionEqualToValue={(option, value) => option.label === value.name}
-                    autoComplete={false}
-                    options={members}
-                    onChange={(event, value) => setPartner(value)}
-                    renderInput={(params) => <TextField {...params} label="Partner" variant="standard" required={true}/>}
-                    /> : <div></div>
+                  duoData.registered ? (
+                    <div><Typography variant="h5">Your Partner</Typography><p>{duoData.partner.name}</p></div>
+                  ) :(
+                    <>
+                      <Typography variant="subtitle">Select Your Partner</Typography>
+                      <Autocomplete
+                        getOptionLabel={(option) => option.name}
+                        isOptionEqualToValue={(option, value) => option.label === value.name}
+                          autoComplete={false}
+                          options={members}
+                          onChange={(event, value) => setDuoData(prevState => {
+                            return {
+                              ...prevState,
+                              partner: value,
+                            }
+                          })}
+                          renderInput={(params) => <TextField {...params} label="Partner" variant="standard" required={true}/>}
+                      />
+                    </>
+                  )
                 }
-                <Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={handleRegister}>{registered? "Leave":"Register"}</Button>
+                <Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={handleRegister}>{duoData.registered? "Leave":"Register"}</Button>
               </>
               ):<NoTeam/>
             }
-                <Snackbar open={open} autoHideDuration={1500} onClose={handleClose}>
-                    <Alert onClose={handleClose} severity={!hasError?"success":"error"} sx={{ width: '100%' }}>
-                    {displayMessage}
-                    </Alert>
-                </Snackbar>
+            <Snackbar open={open} autoHideDuration={1500} onClose={handleClose}>
+                <Alert onClose={handleClose} severity={!duoData.hasError?"success":"error"} sx={{ width: '100%' }}>
+                {duoData.displayMessage}
+                </Alert>
+            </Snackbar>
             <Typography variant="h5">Rules</Typography>
             <ul style={{margin:"0 20px",fontSize:"18px"}}>
               {
