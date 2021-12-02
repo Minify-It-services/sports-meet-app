@@ -172,7 +172,7 @@ const DrawerBar = ({pageName, pageId}) => {
                         {pageName}
                     </Typography>
                     <IconButton color="inherit" aria-label="profile" edge="end">
-                        <AccountCircleIcon />
+                        <AccountCircleIcon onClick={()=>{navigate('/profile')}} />
                     </IconButton>
                 </Toolbar>
             </AppBar>
