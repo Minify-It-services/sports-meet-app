@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import Cookies from 'universal-cookie';
 
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -12,27 +13,11 @@ import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import Cookies from 'universal-cookie'
-
-import AddNotice from './AddNotice';
-import jsendDestructor from '../../../utils/api/jsendDestructor'
 
 // components
+import AddNotice from './AddNotice';
+import jsendDestructor from '../../../utils/api/jsendDestructor'
 import DrawerBar from '../../../components/DrawerBar';
-
-// data
-const rows = [
-    {
-        title: "Delay in Match 5",
-        description: "Hi ",
-        id: "215fsd564431132df",
-    },
-    {
-        title: "Software Engineering",
-        description: "Hi ",
-        id: "av215fsd564431132df",
-    }
-];
 
 const Notice = () => {
     const cookies = new Cookies()
@@ -59,6 +44,7 @@ const Notice = () => {
     }
     useEffect(() => {
        fetchNotices()
+    // eslint-disable-next-line
     }, [])
 
     const handleDelete =async (id)=> {

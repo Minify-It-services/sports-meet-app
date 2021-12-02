@@ -18,10 +18,13 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-
-
-import DrawerBar from '../../../components/DrawerBar';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
 import { Typography } from '@mui/material';
+
+// components
+import DrawerBar from '../../../components/DrawerBar';
+
+// data:
 const rows = [
     {
         date:"5-12-2021",
@@ -36,10 +39,10 @@ const rows = [
         score:{
             team1: 0, // default
             team2: 0, // default
-         },
-         resultId: 'mongoDB_id', // default --> null,
-         status: "upcoming", // default
-         sport:"volleyball"
+        },
+        resultId: 'mongoDB_id', // default --> null,
+        status: "upcoming", // default
+        sport:"volleyball"
     },
     {
         date:"5-12-2021",
@@ -54,12 +57,13 @@ const rows = [
         score:{
             team1: 0, // default
             team2: 0, // default
-         },
-         resultId: 'mongoDB_id', // default --> null,
-         status: "upcoming", // default
-         sport:"volleyball"
+        },
+        resultId: 'mongoDB_id', // default --> null,
+        status: "upcoming", // default
+        sport:"volleyball"
     },
 ];
+
 const teams=[{
     name: "Software 1th sem Team A",
     "year": "2018",
@@ -93,6 +97,7 @@ const teams=[{
     "sportId":"6198e9e4cd4bc645a092f230"
 },
 ]
+
 const MatchFixture = () => {
     const [date, setdate] = useState(new Date());
     const [action, setaction] = useState(false);
@@ -104,10 +109,10 @@ const MatchFixture = () => {
     const isObjEmpty=(obj)=>{
         if (obj && Object.keys(obj).length === 0
         && Object.getPrototypeOf(obj) === Object.prototype) {
-          return true;
+            return true;
         }
         else return false;
-      }
+    }
     return (
         <Box sx={{ display: 'flex' }}>
             <DrawerBar pageName={'Fixture'} pageId ={4} />
@@ -149,19 +154,17 @@ const MatchFixture = () => {
                 </TableContainer>
                 // : <AddTeam row={toEdit} changeAction={setaction}></AddTeam>
                 : <div row={toEdit}>
-                    <Stack spacing={4}>
+                    <Stack spacing={4} my={4}>
                         <Typography>Select two Teams </Typography>
-                        <Box display="grid" gridTemplateColumns="1fr 1fr">
+                        <Box display="grid" gridTemplateColumns="1fr 1fr" gap={5}>
                             <Autocomplete
                             disablePortal
                             options={teams.map(team=>team.name)}
-                            sx={{ width: 300 }}
                             renderInput={(params) => <TextField {...params} label="Team1" />}
                             />
                             <Autocomplete
                             disablePortal
                             options={teams.map(team=>team.name)}
-                            sx={{ width: 300 }}
                             renderInput={(params) => <TextField {...params} label="Team2" />}
                             />
                         </Box>
@@ -174,6 +177,24 @@ const MatchFixture = () => {
                             renderInput={(params) => <TextField {...params} />}
                             />
                         </LocalizationProvider>
+                        <Box display='grid' gridTemplateColumns="1fr 1fr" gap={5}>
+                            <TextField id="standard-basic" label="Team1 Score" variant="standard" type="number" />
+                            <TextField id="standard-basic" label="Team2 Score" variant="standard" type="number" />
+                        </Box>
+                        <Box display="grid" gridTemplateColumns="1fr 1fr" gap={5}>
+                            <TextareaAutosize
+                            aria-label="empty textarea"
+                            placeholder="Card Description"
+                            style={{ width: '100%',minHeight:'200px' }}
+                            // defaultValue={!forEdit?editData.description:""} onChange={(event)=>handleChange(event,'description')}
+                            />
+                            <TextareaAutosize
+                            aria-label="empty textarea"
+                            placeholder="Score Description"
+                            style={{ width: '100%',minHeight:'200px' }}
+                            // defaultValue={!forEdit?editData.description:""} onChange={(event)=>handleChange(event,'description')}
+                            />
+                        </Box>
                         <Button variant="outlined" color="success" onClick={()=>console.log('save match fixture')}>Save</Button>
                     </Stack>
                 </div>

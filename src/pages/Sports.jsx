@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import { Container,Typography } from '@mui/material';
 //TODO: need to redisign again
 
-function Sports() {
+const Sports = () => {
     return (
         <div id="sport">
         <Container >

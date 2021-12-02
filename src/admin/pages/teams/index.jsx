@@ -86,7 +86,7 @@ const Teams = () => {
                 <Box sx={{display:'flex', justifyContent:!action?'flex-end':'flex-start'}}>
                     {!action?<Button variant="contained" color="primary" onClick={()=>{setaction(!action); if(!isObjEmpty(toEdit)){
                         settoEdit({})
-                    }}}>Add Teams</Button>:<Button onClick={()=>setaction(!action)}> <ArrowBackIosIcon /></Button>}
+                    }}}>Add Team</Button>:<Button onClick={()=>setaction(!action)}> <ArrowBackIosIcon /></Button>}
                 </Box>
                 {!action? <TableContainer component={Paper} sx={{mt:2}}>
                     <Table aria-label="simple table">
