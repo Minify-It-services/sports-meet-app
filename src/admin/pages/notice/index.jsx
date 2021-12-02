@@ -16,23 +16,7 @@ import Cookies from 'universal-cookie'
 
 import AddNotice from './AddNotice';
 import jsendDestructor from '../../../utils/api/jsendDestructor'
-
-// components
 import DrawerBar from '../../../components/DrawerBar';
-
-// data
-const rows = [
-    {
-        title: "Delay in Match 5",
-        description: "Hi ",
-        id: "215fsd564431132df",
-    },
-    {
-        title: "Software Engineering",
-        description: "Hi ",
-        id: "av215fsd564431132df",
-    }
-];
 
 const Notice = () => {
     const cookies = new Cookies()
@@ -59,6 +43,7 @@ const Notice = () => {
     }
     useEffect(() => {
        fetchNotices()
+    // eslint-disable-next-line
     }, [])
 
     const handleDelete =async (id)=> {
