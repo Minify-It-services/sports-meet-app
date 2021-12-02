@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -12,8 +12,9 @@ import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-
+import Cookies from 'universal-cookie'
 import AddTeam from './AddTeam';
+import jsendResDestructor from '../../../utils/api/jsendDestructor'
 
 // components
 import DrawerBar from '../../../components/DrawerBar';
@@ -45,8 +46,15 @@ const rows = [
 ];
 
 const Teams = () => {
+    const cookies = new Cookies
+    const token = cookies.get('sports_app_token')
+    const jsendRes = new jsendResDestructor({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    })
     const [action, setaction] = useState(false);
     const [toEdit, settoEdit] = useState({});
+    const [teams, setTeams] = useState([])
     const editData=(row)=>{
         setaction(!action);
         settoEdit(row);
@@ -58,6 +66,19 @@ const Teams = () => {
         }
         else return false;
       }
+
+    const fetchTeams = async ()=>{
+        const response = await jsendRes.destructFromApi('/teams','GET')
+        if(response.status === 'success'){
+            setTeams(response.data)
+        }
+        else{
+            console.log(response.message);
+        }
+    }
+    useEffect(() => {
+       fetchTeams()
+    }, [])
     return (
         <Box sx={{ display: 'flex' }}>
             <DrawerBar pageName={'Team'} pageId ={3} />
@@ -71,32 +92,32 @@ const Teams = () => {
                     <Table aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell align="center">Id</TableCell>
+                                <TableCell align="center">S.N.</TableCell>
                                 <TableCell align="center">Team Name</TableCell>
                                 <TableCell align="center">Year</TableCell>
                                 <TableCell align="center">Faculty</TableCell>
-                                <TableCell align="center">Actions</TableCell>
+                                {/* <TableCell align="center">Actions</TableCell> */}
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row,index) => (
+                            {teams?.map((team,index) => (
                                 <TableRow  key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                    <TableCell component="th" scope="row" align="center">{row.sportId}</TableCell>
-                                    <TableCell align="center">{row.name}</TableCell>
-                                    <TableCell align="center">{row.year}</TableCell>
-                                    <TableCell align="center">{row.faculty}</TableCell>
-                                    <TableCell align="center">
+                                    <TableCell component="th" scope="row" align="center">{index+1}</TableCell>
+                                    <TableCell align="center">{team.name}</TableCell>
+                                    <TableCell align="center">{team.year}</TableCell>
+                                    <TableCell align="center">{team.faculty}</TableCell>
+                                    {/* <TableCell align="center">
                                         <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
                                         <Button key="one" variant="outlined" color="primary" onClick={()=>editData(row)}>Edit</Button>
                                         <Button key="two" variant="outlined" color="error">Delete</Button>
                                         </Stack>
-                                    </TableCell>
+                                    </TableCell> */}
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
-                : <AddTeam row={toEdit} changeAction={setaction}></AddTeam>
+                : <AddTeam row={toEdit} jsendRes={jsendRes} changeAction={setaction}></AddTeam>
                 // : <AddTeam row={toEdit}></AddTeam>
 
                 }

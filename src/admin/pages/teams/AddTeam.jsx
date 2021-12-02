@@ -4,17 +4,41 @@ import { useState,useEffect,useCallback } from 'react';
 import TextField  from '@mui/material/TextField';
 import Button  from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import ToggleButton from '@mui/material/ToggleButton';
+import Autocomplete from '@mui/material/Autocomplete';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
-
 
 import AddIcon from '@mui/icons-material/Add';
 import { cleanup } from '@testing-library/react';
 
 function AddTeam(props) {
-    const [playersCount, setplayersCount] = useState(1);
-    const [forEdit, setforEdit] = useState(false);
+  const [members, setMembers] = useState([])
+  const [sports, setSports] = useState([])
+  const [sport, setSport] = useState('')
+  
+  const fetchSports = async ()=>{
+    const response = await props.jsendRes.destructFromApi('/sports','GET')
+      if(response.status === 'success'){
+          setSports(response.data)
+      }
+      else{
+          console.log(response.message);
+      }
+  }
+  const getPlayers = async () => {
+    const response = await props.jsendRes.destructFromApi(`/users?year=2018`, 'GET')
+    if(response.status === 'success'){
+      setMembers(response.data)
+    }else{
+      console.log(response.data, response.message);
+    }
+  }
+  useEffect(() => {
+    fetchSports();
+    getPlayers();
+  }, [])
+
+  const [forEdit, setforEdit] = useState(false);
     const [editedTeam, seteditedTeam] = useState({});
     let editData=props.row;
     const isObjEmpty=(obj)=>{
@@ -70,23 +94,26 @@ function AddTeam(props) {
             <TextField id="standard-basic" label="Team Name" variant="standard" type="text" defaultValue={!forEdit?editData.name:""} />
             {!forEdit?<div>
             <Box display="grid" gridTemplateColumns="1fr 1fr" justifyContent="space-between">
-            <h3>Players</h3>
-            <ToggleButton
-                value="check"
-                // selected={selected}
-                onChange={() => {
-                   setplayersCount(playersCount=>playersCount+1);
-                }}
-                sx={{maxWidth:'50px',justifySelf:'end'}}
-                >
-                <AddIcon />
-            </ToggleButton>
+            <h3>Sport</h3>
             </Box>
-            <Stack spacing={2}>
-            {
-                [...Array(playersCount)].map((e, i) =><TextField id="standard-basic" label={`Player ${i+1}`} variant="standard" type="text" key={i}/>)
-            }
-            </Stack>
+            <Autocomplete
+              getOptionLabel={(option) => option.name}
+              isOptionEqualToValue={(option, value) => option.label === value.name}
+                autoComplete={false}
+                options={sports}
+                onChange={(event, value) => setSport(value)}
+                renderInput={(params) => <TextField {...params} label="Sport" variant="standard" required={true}/>}
+            />
+            <Autocomplete
+              multiple
+              id="tags-standard"
+              getOptionLabel={(option) => option.name}
+              isOptionEqualToValue={(option, value) => option.label === value.name}
+              autoComplete={false}
+              options={members}
+              onChange={(event, value) => setSport(value)}
+              renderInput={(params) => <TextField {...params} label="Team Members" variant="standard" required={true}/>}
+            />
             </div>
             :<div>
                 <Box display="grid" gridTemplateColumns="1fr 1fr" justifyContent="space-between" gap="50px">
