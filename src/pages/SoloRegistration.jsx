@@ -28,9 +28,12 @@ const SoloRegistration = ()=> {
   })
 
   const [sport] = useState(location.state)
-  const [registered, setRegsitered] = useState(false);
-  const [teamId, setTeamId] = useState('')
-  const [hasTeamSlot, setHasTeamSlot] = useState(true)
+  const [soloData, setSoloData] = useState({
+    registered: false,
+    teamId: '',
+    hasTeamSlot: true,
+    displayMessage: '',
+  })
     const [open, setOpen] = React.useState(false);
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -46,32 +49,31 @@ const SoloRegistration = ()=> {
           'GET'
         )
         if(data.message === 'Team full'){
-          console.log('Oh no no team spot remaning');
-          setHasTeamSlot(false)
+          setSoloData(prevState => ({
+            ...prevState,
+            hasTeamSlot: false,
+          }))
         }
         if(data.message === 'Already in a team'){
-          console.log('hey you already in team');
-          setTeamId(data.teamId)
-          setRegsitered(true)
-          console.log(teamId)
-          console.log(data.teams);
-        }
-        if(data.message === 'Not in team and team empty'){
-          console.log('Ready to play?');
+          setSoloData(prevState => ({
+            ...prevState,
+            teamId: data.teamId,
+            registered: true,
+          }))
         }
       }
 
       useEffect(() => {
         checkForAvailability();
       // eslint-disable-next-line
-      }, [])
+      }, [soloData.registered])
 
       const handleRegister = async () => {
 
         let response;
 
-        if(registered){
-          response = await jsendRes.destructFromApi(`/teams/leave/${teamId}`, 'DELETE')
+        if(soloData.registered){
+          response = await jsendRes.destructFromApi(`/teams/leave/${soloData.teamId}`, 'DELETE')
         }else{
           const team = {
             name: player.name,
@@ -89,7 +91,19 @@ const SoloRegistration = ()=> {
         const { data, status, message } = response
 
         if(status === 'success'){
-          setRegsitered(!registered);
+          if(soloData.registered){
+            setSoloData(prevState => ({
+              ...prevState,
+              registered: false,
+              displayMessage: `Successfully left from ${sport.name}`
+            }))
+          }else{
+            setSoloData(prevState => ({
+              ...prevState,
+              registered: true,
+              displayMessage: `Successfully registered to ${sport.name}`
+            }))
+          }
           setOpen(!open);
         }else{
           console.log(data, message);
@@ -107,15 +121,15 @@ const SoloRegistration = ()=> {
             <Typography variant="h4">{sport.name}</Typography>
             <p>Fact: There are over 318 billion different possible positions after four moves each.</p>
             {
-              hasTeamSlot?(
-                <Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={()=>handleRegister()}>{registered? "Leave":"Register"}</Button>
+              soloData.hasTeamSlot?(
+                <Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={()=>handleRegister()}>{soloData.registered? "Leave":"Register"}</Button>
               ):(
                 <NoTeam />
               )
             }
             <Snackbar open={open} autoHideDuration={1500} onClose={handleClose}>
-                <Alert onClose={handleClose} severity={registered?"success":"error"} sx={{ width: '100%' }}>
-                {registered? "Your have successfully registered.Yay!!" :"You left! 🥺"}
+                <Alert onClose={handleClose} severity={soloData.registered?"success":"error"} sx={{ width: '100%' }}>
+                {soloData.displayMessage}
                 </Alert>
             </Snackbar>
             <Typography variant="h4">Rules</Typography>

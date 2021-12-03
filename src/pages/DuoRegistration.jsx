@@ -119,6 +119,7 @@ const DuoRegistration = () => {
                 ...prevState,
                 registered: false,
                 hasError: true,
+                partner: {},
                 displayMessage: 'You Left the Team',
               }
             })
