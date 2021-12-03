@@ -12,28 +12,12 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 
 // Currently same values and same setstate are used to all select option in textfield 
 
-function AddTeam(props) {
-    const currencies = [
-        {
-            value: 'USD',
-            label: '$',
-        },
-        {
-            value: 'EUR',
-            label: '€',
-        },
-        {
-            value: 'BTC',
-            label: '฿',
-        },
-        {
-            value: 'JPY',
-            label: '¥',
-        },
-    ];
-    const [currency, setCurrency] = React.useState('EUR');
+function AddSport(props) {
+    
+    const [members, setMembers] = useState([])
+    // const [currency, setCurrency] = React.useState('EUR');
     const handleChange = (event) => {
-        setCurrency(event.target.value);
+        // setCurrency(event.target.value);
     };
     
     const [forEdit, setforEdit] = useState(false);
@@ -46,6 +30,17 @@ function AddTeam(props) {
         }
         else return false;
     }
+    const getPlayers = async () => {
+        const response = await props.jsendRes.destructFromApi('/users', 'GET')
+        if(response.status === 'success'){
+          setMembers(response.data)
+        }else{
+          console.log(response.data, response.message);
+        }
+      }
+    useEffect(()=>{
+        getPlayers();
+    },[])
     useEffect(() => {
         if (isObjEmpty(editData)) {
             setforEdit(false);
@@ -70,56 +65,38 @@ function AddTeam(props) {
             <TextField id="standard-basic" label="Coordinator" variant="standard" type="text" defaultValue={!forEdit?editData.captain:""} />
             <TextField id="standard-basic" label="Vice-Coordinator" variant="standard" type="text" defaultValue={!forEdit?editData.vice:""} />
             <Autocomplete
-                isOptionEqualToValue={(option, value) =>
-                option.label === value.label
-                }
-                disablePortal
-                options={['Ref1']}
-                onChange={(e) =>console.log('set selected value')}
+                multiple
+                id="tags-standard"
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.label === value.name}
+                autoComplete={false}
+                // disablePortal
+                options={members}
+                // onChange={(e) =>console.log('set selected value')}
+                onChange={(event, value) => setMembers(value)}
                 renderInput={(params) => (
                 <TextField {...params} label="Refree" variant="standard" />
                 )}
             />
             <Box display='grid' gridTemplateColumns="1fr 1fr"  gap={5}>
-                <TextField
-                select
-                label="Class Limit"
-                value={currency}
-                onChange={handleChange}
-                >
-                {currencies.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                    </MenuItem>
-                ))}
-                </TextField>
-                <TextField
-                select
-                label="Total Limit"
-                value={currency}
-                onChange={handleChange}
-                >
-                {currencies.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                    </MenuItem>
-                ))}
-                </TextField>
+                <TextField label="Class Limit" variant="standard" type="number" />
+                <TextField label="Total Limit" variant="standard" type="number" />
+                <TextField label="Player Limit" variant="standard" type="number" />
+                <TextField label="Extra Limit" variant="standard" type="number" />
+                <TextField label="Image URL" variant="standard" type="text" />
+                <TextField label="Background image URL" variant="standard" type="text" />
             </Box>
             <Box display='grid' gridTemplateColumns="1fr 1fr" gap={5}>
                 <TextField
                 select
                 label="Sports Type"
-                value={currency}
                 onChange={handleChange}
                 >
-                {currencies.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                    </MenuItem>
-                ))}
+                    <MenuItem  value="single">Single</MenuItem>
+                    <MenuItem  value="duo">Double</MenuItem>
+                    <MenuItem  value="team">Team</MenuItem>
                 </TextField>
-                <TextField id="standard-basic" label="Image URL" variant="standard" type="text" />
+                
             </Box>
             <TextareaAutosize
             aria-label="empty textarea"
@@ -132,4 +109,4 @@ function AddTeam(props) {
     )
 }
 
-export default AddTeam
+export default AddSport
