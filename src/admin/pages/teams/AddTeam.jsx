@@ -13,8 +13,10 @@ import AddIcon from '@mui/icons-material/Add';
 
 function AddTeam(props) {
   const [members, setMembers] = useState([])
+  const [teachers, setTeachers] = useState([])
   const [sports, setSports] = useState([])
   const [sport, setSport] = useState('')
+  const [selectedOptions, setSelectedOptions] = useState([])
   
   const fetchSports = async ()=>{
     const response = await props.jsendRes.destructFromApi('/sports','GET')
@@ -26,7 +28,7 @@ function AddTeam(props) {
       }
   }
   const getPlayers = async () => {
-    const response = await props.jsendRes.destructFromApi(`/users?year=2018`, 'GET')
+    const response = await props.jsendRes.destructFromApi(`/users?year=0`, 'GET')
     if(response.status === 'success'){
       setMembers(response.data)
     }else{
@@ -113,7 +115,8 @@ function AddTeam(props) {
               isOptionEqualToValue={(option, value) => option.label === value.name}
               autoComplete={false}
               options={members}
-              onChange={(event, value) => setSport(value)}
+              onChange={(event, value) => setTeachers(value)}
+              getOptionDisabled={(option)=>(selectedOptions.includes(option)?true:false)}
               renderInput={(params) => <TextField {...params} label="Team Members" variant="standard" required={true}/>}
             />
             </div>

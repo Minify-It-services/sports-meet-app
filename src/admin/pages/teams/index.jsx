@@ -19,34 +19,8 @@ import jsendResDestructor from '../../../utils/api/jsendDestructor'
 // components
 import DrawerBar from '../../../components/DrawerBar';
 
-// data
-const rows = [
-    {
-        name: "Software Team A",
-        year: "2018",
-        semester: "5th",
-        faculty: "Software",
-        memberIs:["619a241e106c9015687a1d71"],
-        coach:"619a22bc0498ca60f4153ea8",
-        manager: "619a22bc0498ca60f4153ea8",
-        captain: "619a22bc0498ca60f4153ea8",
-        sportId:"6198e9e4cd4bc645a092f230"
-    },
-    {
-        name: "Computer Team A",
-        year: "2018",
-        semester: "5th",
-        faculty: "Software",
-        memberIds:["619a241e106c9015687a1d71"],
-        coach: "619a22bc0498ca60f4153ea8",
-        manager: "619a22bc0498ca60f4153ea8",
-        captain: "619a22bc0498ca60f4153ea8",
-        sportId:"6198e9e4cd4bc645a092f230"
-    }
-];
-
 const Teams = () => {
-    const cookies = new Cookies
+    const cookies = new Cookies()
     const token = cookies.get('sports_app_token')
     const jsendRes = new jsendResDestructor({
         'Content-Type': 'application/json',
@@ -55,10 +29,7 @@ const Teams = () => {
     const [action, setaction] = useState(false);
     const [toEdit, settoEdit] = useState({});
     const [teams, setTeams] = useState([])
-    const editData=(row)=>{
-        setaction(!action);
-        settoEdit(row);
-    }
+    
     const isObjEmpty=(obj)=>{
         if (obj && Object.keys(obj).length === 0
         && Object.getPrototypeOf(obj) === Object.prototype) {
@@ -94,6 +65,7 @@ const Teams = () => {
                             <TableRow>
                                 <TableCell align="center">S.N.</TableCell>
                                 <TableCell align="center">Team Name</TableCell>
+                                <TableCell align="center">Sport</TableCell>
                                 <TableCell align="center">Year</TableCell>
                                 <TableCell align="center">Faculty</TableCell>
                                 {/* <TableCell align="center">Actions</TableCell> */}
@@ -104,14 +76,9 @@ const Teams = () => {
                                 <TableRow  key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <TableCell component="th" scope="row" align="center">{index+1}</TableCell>
                                     <TableCell align="center">{team.name}</TableCell>
+                                    <TableCell align="center">{team.sport}</TableCell>
                                     <TableCell align="center">{team.year}</TableCell>
                                     <TableCell align="center">{team.faculty}</TableCell>
-                                    {/* <TableCell align="center">
-                                        <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
-                                        <Button key="one" variant="outlined" color="primary" onClick={()=>editData(row)}>Edit</Button>
-                                        <Button key="two" variant="outlined" color="error">Delete</Button>
-                                        </Stack>
-                                    </TableCell> */}
                                 </TableRow>
                             ))}
                         </TableBody>
