@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+#match-card{
+    background-color: #ECF3FB;
+    padding: 1rem 1rem 0.5rem 1rem;
+    border-radius: 6px;
+    // margin: 1rem;
+    font-family: 'Poppins', sans-serif;
+    .match{
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        margin-bottom: 0.5rem;
+        gap: 1rem;
+        text-align: center;
+        .time{
+            color: #FF804B;
+            text-decoration: underline;
+        }
+        .team1{
+            justify-self: start;
+        }
+        .team2{
+            justify-self: end;
+        }
+    }
+}
