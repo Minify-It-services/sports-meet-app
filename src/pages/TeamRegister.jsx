@@ -42,7 +42,7 @@ const TeamRegister = () => {
     }, []);
 
     return (
-        <Layout title="Team Register">
+        <Layout title="Register">
             <Box sx={{ width: "100%" }}>
                 <Container
                     sx={{
@@ -77,14 +77,13 @@ const TeamRegister = () => {
                             }
                             return (
                             <Link
-                                to={`/teamRegister/${type}`}
+                                to={`/teamRegister/${type}/${sport.name}`}
                                 key={sport.id}
-                                state={sport}
                                 style={{ textDecoration: "none" }}
                             >
                             <CustomCard
                                 label={sport.name}
-                                image="https://www.pngkit.com/png/full/481-4812605_playing-cricket-cartoon-clipart-cricket-royalty-free-cricket.png"
+                                image={sport.imageUrl}
                             ></CustomCard>
                             </Link>
                             );
