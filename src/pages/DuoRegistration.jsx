@@ -49,7 +49,7 @@ const DuoRegistration = () => {
       };
 
       const getPlayers = async () => {
-        const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}&userId=${player.id}&faculty=${player.faculty}&sport=${sport.name}`, 'GET')
+        const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}&userId=${player.id}&faculty=${player.faculty}&sport=${sport.name}&gender=${player.gender}`, 'GET')
         if(status === 'success'){
           setMembers(data)
         }else{
