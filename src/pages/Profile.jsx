@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
-import { Container, Box, Stack, Avatar, Typography, Grid, Button, Chip, Paper, Divider } from '@mui/material';
 import Cookies from 'universal-cookie';
-import jsendDestructor from '../utils/api/jsendDestructor';
 
+import { Container, Box, Stack, Avatar, Typography, Grid, Button, Chip, Paper, Divider } from '@mui/material';
+
+// components
 import Layout from '../layout/Layout';
+import jsendDestructor from '../utils/api/jsendDestructor';
 
 const Profile = () => {
 
@@ -20,7 +22,6 @@ const Profile = () => {
     })
     
     const [ user, setUser ] = useState({})
-    const [ seed, setSeed ] = useState('hello')
 
     const getUserData = async () => {
         const response = await jsendRes.destructFromApi(`/users/${player?.id}`, 'GET')
@@ -30,21 +31,20 @@ const Profile = () => {
 
         setUser(response.data)
     }
-    const getRandomWords = () => {
-        let text = "";
-        const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    // const getRandomWords = () => {
+    //     let text = "";
+    //     const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-        for (var i = 0; i < 5; i++)
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
+    //     for (var i = 0; i < 5; i++)
+    //         text += possible.charAt(Math.floor(Math.random() * possible.length));
 
-        setSeed(text)
-    }
+    //     setSeed(text)
+    // }
     useEffect(() => {
         if(!player){
             navigate('/register')
         }
         getUserData()
-        getRandomWords()
     // eslint-disable-next-line
     }, [])
 
@@ -54,7 +54,7 @@ const Profile = () => {
                 <Container sx={{height:'100%', width:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
 
                     <Stack direction="row" spacing={5} justifyContent="center" alignItems="center" sx={{ margin:'1em 0' }}>
-                        <Avatar src={`https://avatars.dicebear.com/api/croodles/${seed}.svg?scale=80`} variant="rounded" sx={{width:'100px', height:'100px', border: '1px solid #25252521'}}/>
+                        <Avatar src={`https://avatars.dicebear.com/api/bottts/${player?.name}.svg?scale=80`} variant="rounded" sx={{width:'100px', height:'100px', border: '1px solid #25252521'}}/>
                         <Box sx={{display:'flex', flexDirection:'column'}}>
                             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{player?.name}</Typography>
                             <Typography variant="caption" sx={{fontStyle: 'italic', fontWeight: 'regular'}}>{player?.email}</Typography>

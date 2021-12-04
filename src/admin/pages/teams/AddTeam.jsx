@@ -1,20 +1,44 @@
 import React from 'react';
 import { useState,useEffect,useCallback } from 'react';
+import { cleanup } from '@testing-library/react';
 
 import TextField  from '@mui/material/TextField';
 import Button  from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import ToggleButton from '@mui/material/ToggleButton';
-import MenuItem from '@mui/material/MenuItem';
+import Autocomplete from '@mui/material/Autocomplete';
 import Stack from '@mui/material/Stack';
 
-
-import AddIcon from '@mui/icons-material/Add';
-import { cleanup } from '@testing-library/react';
-
 function AddTeam(props) {
-    const [playersCount, setplayersCount] = useState(1);
-    const [forEdit, setforEdit] = useState(false);
+  const [members, setMembers] = useState([])
+  const [teachers, setTeachers] = useState([])
+  const [sports, setSports] = useState([])
+  const [sport, setSport] = useState('')
+  const [selectedOptions, setSelectedOptions] = useState([])
+  
+  const fetchSports = async ()=>{
+    const response = await props.jsendRes.destructFromApi('/sports','GET')
+      if(response.status === 'success'){
+          setSports(response.data)
+      }
+      else{
+          console.log(response.message);
+      }
+  }
+  const getPlayers = async () => {
+    const response = await props.jsendRes.destructFromApi(`/users?year=0`, 'GET')
+    if(response.status === 'success'){
+      setMembers(response.data)
+    }else{
+      console.log(response.data, response.message);
+    }
+  }
+  useEffect(() => {
+    fetchSports();
+    getPlayers();
+  // eslint-disable-next-line
+  }, [])
+
+  const [forEdit, setforEdit] = useState(false);
     const [editedTeam, seteditedTeam] = useState({});
     let editData=props.row;
     const isObjEmpty=(obj)=>{
@@ -36,89 +60,44 @@ function AddTeam(props) {
             cleanup();
         }
     }, [editData,props.row]);
-// }, []);
 
-    const academyList = [
-        {
-          year: '2017',
-          semester: '7th',
-        },
-        {
-          year: '2018',
-          semester: '5th',
-        },
-        {
-          year: '2019',
-          semester: '3rd',
-        },
-        {
-          year: '2020',
-          semester: '1st',
-        },
-      ];
-    const faculty = ['Software','Computer'];
-    const handleChange = (event,keyName) => {
-        seteditedTeam((prev)=>{return {...prev,[`${keyName}`]:event.target.value}})
-    };
     //TODO:ONSAVE GO BACK TO TABLE SCREEN
     const handleSave = useCallback(event => {
         props.changeAction(false);
-        console.log(editedTeam);
+        console.log(editedTeam, teachers, sport);
+      //eslint-disable-next-line
       }, [props,editedTeam])
     return (
         <Stack spacing={{ xs: 1, sm: 2, md: 3 }} sx={{mt:2}}>
             <TextField id="standard-basic" label="Team Name" variant="standard" type="text" defaultValue={!forEdit?editData.name:""} />
-            {!forEdit?<div>
+            <div>
             <Box display="grid" gridTemplateColumns="1fr 1fr" justifyContent="space-between">
-            <h3>Players</h3>
-            <ToggleButton
-                value="check"
-                // selected={selected}
-                onChange={() => {
-                   setplayersCount(playersCount=>playersCount+1);
+              <h3>Sport</h3>
+              </Box>
+              <Autocomplete
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.label === value.name}
+                  autoComplete={false}
+                  options={sports}
+                  onChange={(event, value) => setSport(value)}
+                  renderInput={(params) => <TextField {...params} label="Sport" variant="standard" required={true}/>}
+              />
+              <Autocomplete
+                multiple
+                id="tags-standard"
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.label === value.name}
+                autoComplete={false}
+                options={members}
+                onChange={(event, value) => {
+                  setTeachers(value)
+                  setSelectedOptions(value)
                 }}
-                sx={{maxWidth:'50px',justifySelf:'end'}}
-                >
-                <AddIcon />
-            </ToggleButton>
-            </Box>
-            <Stack spacing={2}>
-            {
-                [...Array(playersCount)].map((e, i) =><TextField id="standard-basic" label={`Player ${i+1}`} variant="standard" type="text" key={i}/>)
-            }
-            </Stack>
+                getOptionDisabled={(option)=>(selectedOptions.includes(option)?true:false)}
+                renderInput={(params) => <TextField {...params} label="Team Members" variant="standard" required={true}/>}
+              />
             </div>
-            :<div>
-                <Box display="grid" gridTemplateColumns="1fr 1fr" justifyContent="space-between" gap="50px">
-                <TextField
-                select
-                label="Year"
-                value={editedTeam.year}
-                onChange={(event)=>handleChange(event,'year')}
-                >
-                {academyList.map((option) => (
-                    <MenuItem key={option.year} value={option.year}>
-                    {option.year}
-                    </MenuItem>
-                ))}
-                </TextField>
-                <TextField
-                select
-                label="Faculty"
-                value={editedTeam.faculty}
-                onChange={(event)=>handleChange(event,'faculty')}
-                >
-                {faculty.map((option) => (
-                    <MenuItem key={option} value={option}>
-                    {option}
-                    </MenuItem>
-                ))}
-                </TextField>
-                </Box>
-            </div>
-            }
             <Button variant="outlined" color="success" onClick={handleSave}>Save</Button>
-            {/* <Button variant="outlined" color="success">Save</Button> */}
         </Stack>
     )
 }

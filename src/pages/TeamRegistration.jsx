@@ -1,5 +1,6 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import {useLocation} from 'react-router-dom'
 
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -11,32 +12,42 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Alert from "@mui/material/Alert";
 import Chip from "@mui/material/Chip";
 import Box from "@mui/material/Box";
-import {useLocation} from 'react-router-dom'
+import Cookies from 'universal-cookie';
 
-function TeamRegistration() {
+import jsendDestructor from '../utils/api/jsendDestructor'
+import NoTeam from '../components/NoTeam'
+
+const TeamRegistration = () => {
+
+  const managerRef = useRef()
+  const coachRef = useRef()
+  const captainRef = useRef()
+  const playerRef = useRef()
   const location = useLocation()
   const [sport] = useState(location.state)
-  const [registered, setRegsitered] = useState(false);
-  // const [extraPlayers, setextraPlayers] = useState([]);
-  const [hasError, sethasError] = useState(false);
-  const [displayMessage, setdisplayMessage] = useState("");
-  const [team, setteam] = useState({
-    name: "Software 5th sem Team A",
-    year: "2018",
-    semester: "5th",
-    faculty: "Software",
+  const cookies = new Cookies()
+
+  const token = cookies.get('sports_app_token')
+  const player = JSON.parse(localStorage.getItem('player'))
+
+  const jsendRes = new jsendDestructor({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+  })
+
+  const [teamData, setTeamData] = useState({
+    registered: false,
+    hasError: false,
+    displayMessage: '',
+    hasTeamSlot: true,
+    teamId: '',
     memberIds: [],
-    coach: "",
-    manager: "",
-    captain: "",
-    sportId: "",
-  });
-  const students = [
-    { label: "Sunil Poudel" },
-    { label: "Anil Bhujel" },
-    { label: "Utasb Gurung" },
-    { label: "Biwash Thapa" },
-  ];
+    coach: '',
+    manager: '',
+    captain: '',
+    selectedOptions: [],
+  })
+  const [members, setMembers] = useState([])
   const [open, setOpen] = React.useState(false);
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -44,57 +55,162 @@ function TeamRegistration() {
     }
     setOpen(false);
   };
-  // const isObjEmpty=(obj)=>{
-  //   if (obj && Object.keys(obj).length === 0
-  //   && Object.getPrototypeOf(obj) === Object.prototype) {
-  //     return true;
-  //   }
-  //   else return false;
-  // }
+  
+  const getPlayers = async () => {
+    const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}&userId=${player.id}&faculty=${player.faculty}&sport=${sport.name}`, 'GET')
+    if(status === 'success'){
+      setMembers(data)
+    }else{
+      console.log(data, message);
+    }
+  }
 
-  const handleRegister = () => {
-    if (
-      !registered &&
-      team.memberIds.length !== 0 &&
-      team.captain.length !== 0 &&
-      team.coach.length !== 0 &&
-      team.manager.length !== 0
-    ) {
-      setdisplayMessage("Successfully registered a Team");
-      console.log("team register vayo!");
-      console.log(team);
-      sethasError(false);
-      setRegsitered(!registered);
-      setOpen(!open);
-    } else if (registered) {
-      console.log("leave hanyo! ");
-      sethasError(true);
-      setdisplayMessage("You Left the Team");
-      setteam({
-        name: "Software 5th sem Team A",
-        year: "2018",
-        semester: "5th",
-        faculty: "Software",
-        memberIds: [],
-        coach: "",
-        manager: "",
-        captain: "",
-        sportId: "",
-      });
-      setRegsitered(!registered);
-      setOpen(!open);
-    } else {
-      sethasError(true);
-      setdisplayMessage("Please Fill the empty fields");
-      setOpen(!open);
-      console.log("partner chaina");
+  const checkForAvailability = async () => {
+    const { data } = await jsendRes.destructFromApi(
+      `/teams/check?sport=${sport.name}&year=${player.year}&faculty=${player.faculty}&playerId=${player.id}`, 
+      'GET'
+    )
+    if(data.message === 'Team full'){
+      setTeamData(prevState => {
+        return {
+          ...prevState,
+          hasTeamSlot: false,
+        }
+      })
+    }
+    if(data.message === 'Already in a team'){
+      setTeamData(prevState => {
+        return {
+          ...prevState,
+          memberIds: data.teamMembers,
+          coach: data.coach,
+          manager: data.manager,
+          captain: data.captain,
+          registered: true,
+          teamId: data.teamId
+        }
+      })
+    }
+  }
+
+  useEffect(() => {
+    checkForAvailability();
+    if(!teamData.coach){
+      getPlayers();
+    }
+  // eslint-disable-next-line
+  }, [teamData.registered])
+
+  const getYear = (year) => {
+    switch(year) {
+      case '2018':
+        return '3rd year'
+      case '2017':
+        return '4th year'
+      case '2019':
+        return '2nd year'
+      case '2020':
+        return '1st year'
+      default: return ''
+    }
+  }
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    if(teamData.memberIds.length === 2){
+      let response = {}
+      if(teamData.registered){
+
+      }else{
+        const teamToSend = {
+          name: `${player.faculty} ${getYear(player.year)} Team A`,
+          year: player.year,
+          semester: player.semester,
+          faculty: player.faculty,
+          sport: sport.name,
+          coach: teamData.coach.id,
+          captain: teamData.captain.id,
+          manager: teamData.manager.id,
+          memberIds: teamData.memberIds.map(member => member.id)
+        }
+
+        response = await jsendRes.destructFromApi('/teams', 'POST', teamToSend)
+      }
+
+      const { data, status, message } = response
+
+      if(status === 'success'){
+        if(teamData.registered){
+          setTeamData(prevState => {
+            return {
+              ...prevState,
+              registered: false,
+              hasError: true,
+              displayMessage: 'You Left the Team',
+            }
+          })
+        }else{
+          setTeamData(prevState => {
+            return {
+              ...prevState,
+              registered: true,
+              hasError: false,
+              displayMessage: `Successfully registered in ${sport.name}`,
+            }
+          })
+        }
+        setOpen(true);
+      }else{
+        console.log(data, message);
+      }
+    }else{
+      setTeamData(prevState => ({
+        ...prevState,
+        hasError: true,
+        displayMessage: 'Please select required players'
+      }))
+      setOpen(true);
     }
   };
 
-  const handleLimitedPlayers = (checkIn, maxLimit) => {
-    if (checkIn.length >= maxLimit) return true;
-    else return false;
-  };
+  const handleChange = (e, value, ref) => {
+    const name = ref.current.getAttribute('name')
+    if(value){
+      if(name === 'memberIds'){
+        if(teamData[name].length === 0 || (teamData[name].length <= value.length)){
+          setTeamData(prevState => {
+            return {
+              ...prevState,
+              [name]: [...value],
+              selectedOptions: [...prevState.selectedOptions, ...value]
+            }
+          })
+        }else{
+          setTeamData(prevState => {
+            return {
+              ...prevState,
+              [name]: [...value],
+              selectedOptions: [teamData.manager, teamData.coach, teamData.captain, ...value]
+            }
+          })
+        }
+      }else{
+        setTeamData(prevState => ({
+            ...prevState,
+            [name]: value,
+            selectedOptions: [...prevState.selectedOptions, value]
+          })
+        )
+      }
+    }else{
+      setTeamData(prevState => ({
+        ...prevState,
+        selectedOptions: prevState.selectedOptions.filter(val => JSON.stringify(val)!==JSON.stringify(teamData[name])),
+      }))
+    }
+  }
+
   return (
     <>
       <div
@@ -112,149 +228,127 @@ function TeamRegistration() {
         <Stack spacing={3}>
           <Typography variant="h4">{sport.name}</Typography>
           <p>
-            Fact: There are over 318 billion different possible positions after
-            four moves each.
+            Coordinator: {sport.coordinator} <br />
+            Vice-Coordinator: {sport.viceCoordinator}
           </p>
-          {!registered ? (
-            <Stack spacing={{ xs: 2, md: 4 }}>
-              <div>
-                <Autocomplete
-                  isOptionEqualToValue={(option, value) =>
-                    option.label === value.label
-                  }
-                  disablePortal
-                  options={students}
-                  onChange={(e) =>
-                    setteam((prev) => {
-                      return { ...prev, manager: e.target.value };
-                    })
-                  }
-                  renderInput={(params) => (
-                    <TextField {...params} label="Manager" variant="standard" />
-                  )}
-                />
-              </div>
-              <div>
-                <Autocomplete
-                  isOptionEqualToValue={(option, value) =>
-                    option.label === value.label
-                  }
-                  disablePortal
-                  options={students}
-                  onChange={(e) =>
-                    setteam((prev) => {
-                      return { ...prev, captain: e.target.value };
-                    })
-                  }
-                  renderInput={(params) => (
-                    <TextField {...params} label="Captain" variant="standard" />
-                  )}
-                />
-              </div>
-              <div>
-                <Autocomplete
-                  isOptionEqualToValue={(option, value) =>
-                    option.label === value.label
-                  }
-                  multiple
-                  onChange={(event, value) =>
-                    setteam((prev) => {
-                      return {
-                        ...prev,
-                        memberIds: [...team.memberIds, ...value],
-                      };
-                    })
-                  }
-                  options={students}
-                  getOptionDisabled={() =>
-                    handleLimitedPlayers(team.memberIds, 2)
-                  }
-                  getOptionLabel={(option) => option.label}
-                  renderInput={(params) => (
-                    <TextField {...params} variant="standard" label="Players" />
-                  )}
-                />
-              </div>
-              <div>
-                <Autocomplete
-                  isOptionEqualToValue={(option, value) =>
-                    option.label === value.label
-                  }
-                  disablePortal
-                  onChange={(e) =>
-                    setteam((prev) => {
-                      return { ...prev, coach: e.target.value };
-                    })
-                  }
-                  options={students}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Coach" variant="standard" />
-                  )}
-                />
-              </div>
-              <div>
-                <Autocomplete
-                  isOptionEqualToValue={(option, value) =>
-                    option.label === value.label
-                  }
-                  multiple
-                  options={students}
-                  getOptionDisabled={() =>
-                    handleLimitedPlayers(team.memberIds, 5)
-                  }
-                  onChange={(event, value) =>
-                    setteam((prev) => {
-                      return {
-                        ...prev,
-                        memberIds: [...team.memberIds, ...value],
-                      };
-                    })
-                  }
-                  getOptionLabel={(option) => option.label}
-                  renderInput={(params) => (
-                    <TextField {...params} variant="standard" label="Extras" />
-                  )}
-                />
-              </div>
-            </Stack>
-          ) : (
-            <div>
-              <Typography variant="h6">Team Members</Typography>
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: {
-                    lg: "repeat(12,1fr)",
-                    xs: "repeat(2,1fr)",
-                    md: "repeat(6,1fr)",
-                  },
-                }}
-              >
-                {team.memberIds.map((member, index) => (
-                  <Chip
-                    sx={{ m: 1 }}
-                    key={index}
-                    label={member.label}
-                    variant="outlined"
-                  />
-                ))}
-              </Box>
-            </div>
-          )}
-          <Button
-            variant="contained"
-            sx={{ width: 150, alignSelf: "center" }}
-            onClick={() => handleRegister()}
-          >
-            {registered ? "Leave" : "Register"}
-          </Button>
+          {
+            teamData.hasTeamSlot?(
+              <>
+                {!teamData.registered ? (
+                  <Stack spacing={{ xs: 2, md: 4 }}>
+                    <form id="team-form" onSubmit={handleRegister}>
+                      <div>
+                        <Autocomplete
+                          getOptionLabel={(option) => option.name}
+                          isOptionEqualToValue={(option, value) =>
+                            option.label === value.name
+                          }
+                          disablePortal
+                          name="manager"
+                          ref={managerRef}
+                          options={members}
+                          onChange={(e, value) => handleChange(e, value, managerRef)}
+                          getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
+                          renderInput={(params) => (
+                            <TextField {...params} label="Manager" variant="standard" required={true} />
+                          )}
+                        />
+                      </div>
+                      <div>
+                        <Autocomplete
+                          getOptionLabel={(option) => option.name}
+                          isOptionEqualToValue={(option, value) =>
+                            option.label === value.name
+                          }
+                          disablePortal
+                          name="captain"
+                          ref={captainRef}
+                          options={members}
+                          onChange={(e, value) => handleChange(e, value, captainRef)}
+                          getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
+                          renderInput={(params) => (
+                            <TextField {...params} label="Captain" variant="standard" required={true} />
+                          )}
+                        />
+                      </div>
+                      <div>
+                        <Autocomplete
+                          getOptionLabel={(option) => option.name}
+                          isOptionEqualToValue={(option, value) =>
+                            option.label === value.name
+                          }
+                          disablePortal
+                          name="coach"
+                          ref={coachRef}
+                          onChange={(e, value) => handleChange(e, value, coachRef)}
+                          options={members}
+                          getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
+                          renderInput={(params) => (
+                            <TextField {...params} label="Coach" variant="standard" required={true} />
+                          )}
+                        />
+                      </div>
+                      <div>
+                        <Autocomplete
+                          getOptionLabel={(option) => option.name}
+                          isOptionEqualToValue={(option, value) =>
+                            option.label === value.name
+                          }
+                          multiple
+                          name="memberIds"
+                          ref={playerRef}
+                          onChange={(e, value) => handleChange(e, value, playerRef)}
+                          options={members}
+                          getOptionDisabled={(option) => (( teamData.memberIds?.length === 2 || teamData.selectedOptions.includes(option) )?true:false)}
+                          renderInput={(params) => (
+                            <TextField {...params} variant="standard" label="Players" />
+                          )}
+                        />
+                      </div>
+                    </form>
+                  </Stack>
+                ) : (
+                  <div>
+                    <Typography variant="h6">Team Members</Typography>
+                    <Box
+                      sx={{
+                        display: "grid",
+                        gridTemplateColumns: {
+                          lg: "repeat(12,1fr)",
+                          xs: "repeat(2,1fr)",
+                          md: "repeat(6,1fr)",
+                        },
+                      }}
+                    >
+                      {teamData.memberIds.map((member, index) => (
+                        <Chip
+                          sx={{ m: 1 }}
+                          key={index}
+                          label={member.label}
+                          variant="outlined"
+                        />
+                      ))}
+                    </Box>
+                  </div>
+                )}
+                <Button
+                  variant="contained"
+                  sx={{ width: 150, alignSelf: "center" }}
+                  form="team-form"
+                  type="submit"
+                >
+                  {teamData.registered ? "Leave" : "Register"}
+                </Button>
+              </>
+            ): <NoTeam />
+          }
           <Snackbar open={open} autoHideDuration={1500} onClose={handleClose}>
             <Alert
               onClose={handleClose}
-              severity={hasError ? "error" : "success"}
+              severity={teamData.hasError ? "error" : "success"}
               sx={{ width: "100%" }}
             >
-              {displayMessage}
+              {teamData.displayMessage}
             </Alert>
           </Snackbar>
           <Typography variant="h4">Rules</Typography>

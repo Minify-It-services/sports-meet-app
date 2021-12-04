@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -12,31 +12,24 @@ import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-
-import AddSport from './AddSport';
+import Cookies from 'universal-cookie';
+import jsendResDestructor from '../../../utils/api/jsendDestructor'
 
 // components
+import AddSport from './AddSport';
 import DrawerBar from '../../../components/DrawerBar';
 
-// data
-const rows = [
-    {
-        id:'1',
-        name:'football',
-        captain:'Utsab Gurung',
-        vice: 'Yogesh Thapa'
-    },
-    {
-        id:'2',
-        name:'volleyball',
-        captain:'Alson Garbuja',
-        vice: 'Sunil Paudel'
-    },
-];
-
 const Sport = () => {
+    const cookies = new Cookies();
+    const token = cookies.get('sports_app_token');
+    const jsendRes = new jsendResDestructor({
+        'Content-Type': 'application/jsend',
+        'Authorization': `Bearer ${token}`
+    })
     const [action, setaction] = useState(false);
     const [toEdit, settoEdit] = useState({});
+    const [sports, setSports] = useState([])
+
     const editData=(row)=>{
         setaction(!action);
         settoEdit(row);
@@ -44,18 +37,31 @@ const Sport = () => {
     const isObjEmpty=(obj)=>{
         if (obj && Object.keys(obj).length === 0
         && Object.getPrototypeOf(obj) === Object.prototype) {
-          return true;
+            return true;
         }
         else return false;
-      }
+    }
+    const fetchSports = async ()=>{
+        const response = await jsendRes.destructFromApi('/sports','GET')
+        if(response.status === 'success'){
+            setSports(response.data)
+        }
+        else{
+            console.log(response.message);
+        }
+    }
+    useEffect(() => {
+        fetchSports()
+    // eslint-disable-next-line
+     }, [])
     return (
         <Box sx={{ display: 'flex' }}>
-            <DrawerBar pageName={'Sports'} pageId ={2} />
+            <DrawerBar pageName={'Sport'} pageId ={2} />
             <Box sx={{flexGrow:1, pt:12.5, px:{xs:2,sm:3,md:5}}}>
                 <Box sx={{display:'flex', justifyContent:!action?'flex-end':'flex-start'}}>
                     {!action?<Button variant="contained" color="primary" onClick={()=>{setaction(!action); if(!isObjEmpty(toEdit)){
                         settoEdit({})
-                    }}}>Add Sports</Button>:<Button onClick={()=>setaction(!action)}> <ArrowBackIosIcon /></Button>}
+                    }}}>Add Sport</Button>:<Button onClick={()=>setaction(!action)}> <ArrowBackIosIcon /></Button>}
                 </Box>
                 {!action? <TableContainer component={Paper} sx={{mt:2, overflow:'scroll'}}>
                     <Table aria-label="simple table" sx={{overflow:'scroll'}}>
@@ -63,24 +69,24 @@ const Sport = () => {
                             <TableRow>
                                 <TableCell align="center">Id</TableCell>
                                 <TableCell align="center">Name</TableCell>
-                                <TableCell align="center">Coordinator</TableCell>
+                                <TableCell align="center">Coordinators</TableCell>
                                 <TableCell align="center">Actions</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row,index) => (
+                            {sports?.map((sport,index) => (
                                 <TableRow  key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                    <TableCell component="th" scope="row" align="center">{row.id}</TableCell>
-                                    <TableCell align="center" sx={{textTransform:'capitalize'}}>{row.name}</TableCell>
+                                    <TableCell component="th" scope="row" align="center">{index+1}</TableCell>
+                                    <TableCell align="center" sx={{textTransform:'capitalize'}}>{sport.name}</TableCell>
                                     <TableCell align="center">
                                         <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">
-                                            <p sx={{textTransform:'capitalize'}}>{row.captain}</p>
-                                            <p sx={{textTransform:'capitalize'}}>{row.vice}</p>
+                                            <p sx={{textTransform:'capitalize'}}>{sport.coordinator}</p>
+                                            <p sx={{textTransform:'capitalize'}}>{sport.viceCoordinator}</p>
                                         </Stack>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
-                                        <Button key="one" variant="outlined" color="primary" onClick={()=>editData(row)}>Edit</Button>
+                                        <Button key="one" variant="outlined" color="primary" onClick={()=>editData(sport)}>Edit</Button>
                                         <Button key="two" variant="outlined" color="error">Delete</Button>
                                         </Stack>
                                     </TableCell>
@@ -89,7 +95,7 @@ const Sport = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                : <AddSport row={toEdit} changeAction={setaction}></AddSport>
+                : <AddSport row={toEdit} jsendRes={jsendRes} changeAction={setaction}></AddSport>
                 }
             </Box>
         </Box>

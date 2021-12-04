@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 // pages:guest
@@ -9,12 +10,15 @@ import Sports from './admin/pages/sports';
 import Teams from './admin/pages/teams';
 import Fixtures from './admin/pages/fixtures';
 import Notice from './admin/pages/notice';
+import MatchFixture from './admin/pages/fixtures/MatchFixture';
 
-import React from 'react';
+// fonts:
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+
+// css:
 import './App.css';
 
 const App = () => {
@@ -48,10 +52,18 @@ const Admin = () => {
   return (
     <Routes>
       <Route path="dashboard" element={<Dashboard />} />
-      <Route path="sports" element={<Sports />} />
-      <Route path="teams" element={<Teams />} />
-      <Route path="fixtures" element={<Fixtures />} />
+      <Route path="sport" element={<Sports />} />
+      <Route path="team" element={<Teams />} />
+      <Route path="fixture/*" element={<Matches />} />
       <Route path="notice" element={<Notice />} />
+    </Routes>
+  )
+}
+const Matches = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<Fixtures />} />
+      <Route path="game" element={<MatchFixture />} />
     </Routes>
   )
 }

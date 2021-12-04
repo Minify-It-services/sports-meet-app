@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom'
-
-import {Container, Box, Typography} from '@mui/material';
 import { GoogleLogin, useGoogleLogout } from 'react-google-login'
 import Cookies from 'universal-cookie'
+
+import {Container, Box, Typography} from '@mui/material';
+
+// components:
 import jsendDestructor from '../utils/api/jsendDestructor';
 
 const Register = () => {
