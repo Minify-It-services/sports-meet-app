@@ -41,9 +41,9 @@ const Team = () => {
   return (
     <Routes>
       <Route path="/" element={<TeamRegister />} />
-      <Route path="team-registration" element={<TeamRegistration />} />
-      <Route path="duo-registration" element={<DuoRegistration />} />
-      <Route path="solo-registration" element={<SoloRegistration />} />
+      <Route path="team-registration/:sportName" element={<TeamRegistration />} />
+      <Route path="duo-registration/:sportName" element={<DuoRegistration />} />
+      <Route path="solo-registration/:sportName" element={<SoloRegistration />} />
     </Routes>
   )
 }
