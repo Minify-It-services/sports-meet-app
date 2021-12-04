@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {useState, useEffect} from 'react';
-import {useLocation} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import Cookies from 'universal-cookie'
 
 import Typography from '@mui/material/Typography';
@@ -13,10 +13,13 @@ import Alert from '@mui/material/Alert';
 // components
 import jsendDestructor from '../utils/api/jsendDestructor'
 import NoTeam from '../components/NoTeam'
+import { getSport } from '../utils/helpers/getSport';
+import Layout from '../layout/Layout';
 
 //TODO: need fixing
 const SoloRegistration = ()=> {
-  const location = useLocation()
+
+  const { sportName } = useParams()
   const cookies = new Cookies()
 
   const token = cookies.get('sports_app_token')
@@ -27,7 +30,7 @@ const SoloRegistration = ()=> {
     'Authorization': `Bearer ${token}`
   })
 
-  const [sport] = useState(location.state)
+  const [sport, setSport] = useState({})
   const [soloData, setSoloData] = useState({
     registered: false,
     teamId: '',
@@ -45,7 +48,7 @@ const SoloRegistration = ()=> {
 
       const checkForAvailability = async () => {
         const { data } = await jsendRes.destructFromApi(
-          `/teams/check?sport=${sport.name}&year=${player.year}&faculty=${player.faculty}&playerId=${player.id}`, 
+          `/teams/check?sport=${sportName}&year=${player.year}&faculty=${player.faculty}&playerId=${player.id}`, 
           'GET'
         )
         if(data.message === 'Team full'){
@@ -64,6 +67,7 @@ const SoloRegistration = ()=> {
       }
 
       useEffect(() => {
+        getSport(sportName, jsendRes).then(res => setSport(res))
         checkForAvailability();
       // eslint-disable-next-line
       }, [soloData.registered])
@@ -95,13 +99,13 @@ const SoloRegistration = ()=> {
             setSoloData(prevState => ({
               ...prevState,
               registered: false,
-              displayMessage: `Successfully left from ${sport.name}`
+              displayMessage: `Successfully left from ${sportName}`
             }))
           }else{
             setSoloData(prevState => ({
               ...prevState,
               registered: true,
-              displayMessage: `Successfully registered to ${sport.name}`
+              displayMessage: `Successfully registered to ${sportName}`
             }))
           }
           setOpen(!open);
@@ -110,18 +114,18 @@ const SoloRegistration = ()=> {
         }
       }
     return (
-            <>
-            <div className="banner" style={{minHeight:"30vh",backgroundImage: "url(https://images.pexels.com/photos/34153/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350)",
+        <Layout title="Single Register" isSecondPage>
+          <div className="banner" style={{minHeight:"30vh",backgroundImage: "url(https://images.pexels.com/photos/34153/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350)",
             backgroundPosition: 'center',
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat'}}>
             </div>
             <Container sx={{marginTop:5}}>
             <Stack spacing={3}>
-            <Typography variant="h4">{sport.name}</Typography>
+            <Typography variant="h4">{sportName}</Typography>
             <p>
-              Coordinator: {sport.coordinator} <br />
-              Vice-Coordinator: {sport.viceCoordinator}
+              Coordinator: {sport?.coordinator} <br />
+              Vice-Coordinator: {sport?.viceCoordinator}
             </p>
             {
               soloData.hasTeamSlot?(
@@ -138,12 +142,12 @@ const SoloRegistration = ()=> {
             <Typography variant="h4">Rules</Typography>
             <ul>
               {
-                sport.rules.map(rule=>(<li key={rule}>{rule}</li>))
+                sport?.rules?.map(rule=>(<li key={rule}>{rule}</li>))
               }
             </ul>
             </Stack>
         </Container>
-        </>
+      </Layout>
     )
 }
 

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useEffect, useRef } from "react";
-import {useLocation} from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -15,6 +15,8 @@ import Cookies from 'universal-cookie';
 
 import jsendDestructor from '../utils/api/jsendDestructor'
 import NoTeam from '../components/NoTeam'
+import { getSport } from '../utils/helpers/getSport'
+import Layout from "../layout/Layout";
 
 const TeamRegistration = () => {
 
@@ -22,8 +24,8 @@ const TeamRegistration = () => {
   const coachRef = useRef()
   const captainRef = useRef()
   const playerRef = useRef()
-  const location = useLocation()
-  const [sport] = useState(location.state)
+  const { sportName } = useParams()
+  const [sport, setSport] = useState({})
   const cookies = new Cookies()
 
   const token = cookies.get('sports_app_token')
@@ -57,7 +59,7 @@ const TeamRegistration = () => {
   };
   
   const getPlayers = async () => {
-    const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}&userId=${player.id}&faculty=${player.faculty}&sport=${sport.name}&gender=${player.gender}`, 'GET')
+    const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}&userId=${player.id}&faculty=${player.faculty}&sport=${sportName}&gender=${player.gender}`, 'GET')
     if(status === 'success'){
       setMembers(data)
     }else{
@@ -67,7 +69,7 @@ const TeamRegistration = () => {
 
   const checkForAvailability = async () => {
     const { data } = await jsendRes.destructFromApi(
-      `/teams/check?sport=${sport.name}&year=${player.year}&faculty=${player.faculty}&playerId=${player.id}`, 
+      `/teams/check?sport=${sportName}&year=${player.year}&faculty=${player.faculty}&playerId=${player.id}`, 
       'GET'
     )
     if(data.message === 'Team full'){
@@ -96,6 +98,7 @@ const TeamRegistration = () => {
   }
 
   useEffect(() => {
+    getSport(sportName, jsendRes).then(res => setSport(res))
     checkForAvailability();
     getPlayers();
   // eslint-disable-next-line
@@ -216,7 +219,7 @@ const TeamRegistration = () => {
   }
 
   return (
-    <>
+    <Layout title="Team Register" isSecondPage>
       <div
         className="banner"
         style={{
@@ -230,10 +233,10 @@ const TeamRegistration = () => {
       ></div>
       <Container sx={{ marginTop: 5 }}>
         <Stack spacing={3}>
-          <Typography variant="h4">{sport.name}</Typography>
+          <Typography variant="h4">{sportName}</Typography>
           <p>
-            Coordinator: {sport.coordinator} <br />
-            Vice-Coordinator: {sport.viceCoordinator}
+            Coordinator: {sport?.coordinator} <br />
+            Vice-Coordinator: {sport?.viceCoordinator}
           </p>
           {
             teamData.hasTeamSlot?(
@@ -376,12 +379,12 @@ const TeamRegistration = () => {
           <Typography variant="h4">Rules</Typography>
           <ul>
             {
-              sport.rules.map(rule=>(<li key={rule}>{rule}</li>))
+              sport?.rules?.map(rule=>(<li key={rule}>{rule}</li>))
             }
           </ul>
         </Stack>
       </Container>
-    </>
+    </Layout>
   );
 }
 

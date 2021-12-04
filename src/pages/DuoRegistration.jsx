@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useState, useEffect} from 'react';
-import {useLocation} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
 import Typography from '@mui/material/Typography';
@@ -15,10 +15,13 @@ import { Alert } from '@mui/material';
 // components:
 import jsendDestructor from '../utils/api/jsendDestructor'
 import NoTeam from '../components/NoTeam'
+import { getSport } from '../utils/helpers/getSport';
+import Layout from '../layout/Layout';
 
 //TODO: Fix FONT SIZING
 const DuoRegistration = () => {
-    const location = useLocation()
+
+    const { sportName } = useParams()
     const cookies = new Cookies()
 
     const token = cookies.get('sports_app_token')
@@ -29,7 +32,7 @@ const DuoRegistration = () => {
       'Authorization': `Bearer ${token}`
     })
 
-    const [sport] = useState(location.state)
+    const [sport, setSport] = useState({})
     const [duoData, setDuoData] = useState({
       registered: false,
       teamId: '',
@@ -49,7 +52,7 @@ const DuoRegistration = () => {
       };
 
       const getPlayers = async () => {
-        const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}&userId=${player.id}&faculty=${player.faculty}&sport=${sport.name}&gender=${player.gender}`, 'GET')
+        const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}&userId=${player.id}&faculty=${player.faculty}&sport=${sportName}&gender=${player.gender}`, 'GET')
         if(status === 'success'){
           setMembers(data)
         }else{
@@ -59,7 +62,7 @@ const DuoRegistration = () => {
 
       const checkForAvailability = async () => {
         const { data } = await jsendRes.destructFromApi(
-          `/teams/check?sport=${sport.name}&year=${player.year}&faculty=${player.faculty}&playerId=${player.id}`, 
+          `/teams/check?sport=${sportName}&year=${player.year}&faculty=${player.faculty}&playerId=${player.id}`, 
           'GET'
         )
         if(data.message === 'Team full'){
@@ -83,6 +86,7 @@ const DuoRegistration = () => {
       }
 
       useEffect(() => {
+        getSport(sportName, jsendRes).then(res => setSport(res))
         checkForAvailability();
         if(!duoData.partner.name){
           getPlayers();
@@ -91,55 +95,64 @@ const DuoRegistration = () => {
       }, [duoData.registered])
       
       const handleRegister = async () => {
-        let response;
-
-        if(duoData.registered){
-          response = await jsendRes.destructFromApi(`/teams/leave/${duoData.teamId}`, 'DELETE')
+        if(!duoData.partner.name){
+          setDuoData(prevState => ({
+            ...prevState,
+            hasError: true,
+            displayMessage: 'Please Select a Partner'
+          }))
+          setOpen(!open)
         }else{
-          const team = {
-            name: `${player.name}, ${duoData.partner.name}`,
-            year: player.year,
-            semester: player.semester,
-            faculty: player.faculty,
-            sport: sport.name,
-            memberIds: [
-              player.id,
-              duoData.partner.id,
-            ],
-          }
-          response = await jsendRes.destructFromApi('/teams', 'POST', team)
-        }
-        
-        const { data, status, message } = response
+          let response;
 
-        if(status === 'success'){
           if(duoData.registered){
-            setDuoData(prevState => {
-              return {
-                ...prevState,
-                registered: false,
-                hasError: true,
-                partner: {},
-                displayMessage: 'You Left the Team',
-              }
-            })
+            response = await jsendRes.destructFromApi(`/teams/leave/${duoData.teamId}`, 'DELETE')
           }else{
-            setDuoData(prevState => {
-              return {
-                ...prevState,
-                registered: true,
-                hasError: false,
-                displayMessage: `Successfully registered in ${sport.name}`,
-              }
-            })
+            const team = {
+              name: `${player.name}, ${duoData.partner.name}`,
+              year: player.year,
+              semester: player.semester,
+              faculty: player.faculty,
+              sport: sport.name,
+              memberIds: [
+                player.id,
+                duoData.partner.id,
+              ],
+            }
+            response = await jsendRes.destructFromApi('/teams', 'POST', team)
           }
-          setOpen(true);
-        }else{
-          console.log(data, message);
+          
+          const { data, status, message } = response
+
+          if(status === 'success'){
+            if(duoData.registered){
+              setDuoData(prevState => {
+                return {
+                  ...prevState,
+                  registered: false,
+                  hasError: true,
+                  partner: {},
+                  displayMessage: 'You Left the Team',
+                }
+              })
+            }else{
+              setDuoData(prevState => {
+                return {
+                  ...prevState,
+                  registered: true,
+                  hasError: false,
+                  displayMessage: `Successfully registered in ${sport.name}`,
+                }
+              })
+            }
+            setOpen(true);
+          }else{
+            console.log(data, message);
+          }
         }
       }
     return (
-            <>
+        <Layout title="Double Register" isSecondPage>
             <div className="banner" style={{minHeight:"30vh",backgroundImage: "url(https://images.pexels.com/photos/34153/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350)",
             backgroundPosition: 'center',
             backgroundSize: 'cover',
@@ -147,10 +160,10 @@ const DuoRegistration = () => {
             </div>
             <Container sx={{marginTop:5}}>
             <Stack spacing={{xs:2,md:4}}>
-            <Typography variant="h5">{sport.name}</Typography>
+            <Typography variant="h5">{sportName}</Typography>
             <p>
-              Coordinator: {sport.coordinator} <br />
-              Vice-Coordinator: {sport.viceCoordinator}
+              Coordinator: {sport?.coordinator} <br />
+              Vice-Coordinator: {sport?.viceCoordinator}
             </p>
             {
               duoData.hasTeamSlot?(
@@ -189,12 +202,12 @@ const DuoRegistration = () => {
             <Typography variant="h5">Rules</Typography>
             <ul style={{margin:"0 20px",fontSize:"18px"}}>
               {
-                sport.rules.map(rule=>(<li key={rule}>{rule}</li>))
+                sport?.rules?.map(rule=>(<li key={rule}>{rule}</li>))
               }
             </ul>
             </Stack>
         </Container>
-        </>
+      </Layout>
     )
 }
 
