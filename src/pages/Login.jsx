@@ -43,6 +43,8 @@ const Login = () => {
                 email: data.user.email,
                 imageUrl: data.user.imageUrl,
                 name: data.user.name,
+                gender: data.user.gender,
+                contactNumber: data.user.contactNumber,
             }
             localStorage.setItem('player', JSON.stringify(player))
             let date = new Date()

@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 import Cookies from 'universal-cookie';
 
-import { Container, Box, Stack, Avatar, Typography, Grid, Button, Chip, Paper, Divider } from '@mui/material';
+import { Container, Box, Stack, Avatar, Typography, Grid, Button, Chip, Paper, Divider, IconButton } from '@mui/material';
 
 // components
 import Layout from '../layout/Layout';
 import jsendDestructor from '../utils/api/jsendDestructor';
+import { Edit } from '@mui/icons-material';
 
 const Profile = () => {
 
@@ -24,7 +25,7 @@ const Profile = () => {
     const [ user, setUser ] = useState({})
 
     const getUserData = async () => {
-        const response = await jsendRes.destructFromApi(`/users/${player?.id}`, 'GET')
+        const response = await jsendRes.destructFromApi(`/users/${player.id}`, 'GET')
 
         if(response.message && response.message==='Please authenticate')
             navigate('/register')
@@ -57,7 +58,12 @@ const Profile = () => {
                         <Avatar src={`https://avatars.dicebear.com/api/bottts/${player?.name}.svg?scale=80`} variant="rounded" sx={{width:'100px', height:'100px', border: '1px solid #25252521'}}/>
                         <Box sx={{display:'flex', flexDirection:'column'}}>
                             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{player?.name}</Typography>
-                            <Typography variant="caption" sx={{fontStyle: 'italic', fontWeight: 'regular'}}>{player?.email}</Typography>
+                            <Box>
+                                <Typography variant="caption" sx={{fontStyle: 'italic', fontWeight: 'regular'}}>{player?.email}</Typography>
+                                <IconButton color="primary" onClick={()=>navigate('/phone-register')}>
+                                    <Edit />
+                                </IconButton>
+                            </Box>
                             {
                                 user?.role==='admin'&&(
                                     <Button variant="outlined" sx={{ textAlign: 'center' }}>
