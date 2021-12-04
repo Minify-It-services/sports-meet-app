@@ -8,11 +8,12 @@ const Layout = ({ title, children }) => {
         <>
             <div style={{ height: '120px', width: '100%'}} />
                 {children}
-            <div className="topbar">
+            <div className="topbar" style={{backgroundColor:'#6F7CC7', color:'#FFFFFF'}}>
                 <Typography >
                     {title}
                 </Typography>
             </div>
+            <div style={{ height: '120px', width: '100%'}} />
             <Navbar />   
         </>
     )

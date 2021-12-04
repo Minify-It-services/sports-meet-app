@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+#notice-card{
+    background-color: #ECF3FB;
+    padding: 1.25rem 1rem;
+    // margin: 1rem;
+    border-radius: 6px;
+    font-family: 'Poppins', sans-serif;
+    .notice-card-header{
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        gap: 1rem;
+        margin-bottom: 1rem;
+        .title{
+            text-decoration: underline;
+        }
+        .chip{
+            justify-self: end;
+        }
+    }
+    p{
+        font-size: 14px;
+    }
+}
