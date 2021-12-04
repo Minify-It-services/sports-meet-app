@@ -19,22 +19,6 @@ import jsendResDestructor from '../../../utils/api/jsendDestructor'
 import AddSport from './AddSport';
 import DrawerBar from '../../../components/DrawerBar';
 
-// data
-// const rows = [
-//     {
-//         id:'1',
-//         name:'football',
-//         captain:'Utsab Gurung',
-//         vice: 'Yogesh Thapa'
-//     },
-//     {
-//         id:'2',
-//         name:'volleyball',
-//         captain:'Alson Garbuja',
-//         vice: 'Sunil Paudel'
-//     },
-// ];
-
 const Sport = () => {
     const cookies = new Cookies();
     const token = cookies.get('sports_app_token');
@@ -68,6 +52,7 @@ const Sport = () => {
     }
     useEffect(() => {
         fetchSports()
+    // eslint-disable-next-line
      }, [])
     return (
         <Box sx={{ display: 'flex' }}>

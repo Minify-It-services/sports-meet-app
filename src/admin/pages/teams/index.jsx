@@ -8,7 +8,6 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
@@ -49,6 +48,7 @@ const Teams = () => {
     }
     useEffect(() => {
        fetchTeams()
+    // eslint-disable-next-line
     }, [])
     return (
         <Box sx={{ display: 'flex' }}>
@@ -68,7 +68,6 @@ const Teams = () => {
                                 <TableCell align="center">Sport</TableCell>
                                 <TableCell align="center">Year</TableCell>
                                 <TableCell align="center">Faculty</TableCell>
-                                {/* <TableCell align="center">Actions</TableCell> */}
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -85,8 +84,6 @@ const Teams = () => {
                     </Table>
                 </TableContainer>
                 : <AddTeam row={toEdit} jsendRes={jsendRes} changeAction={setaction}></AddTeam>
-                // : <AddTeam row={toEdit}></AddTeam>
-
                 }
             </Box>
         </Box>

@@ -40,6 +40,7 @@ function AddSport(props) {
       }
     useEffect(()=>{
         getPlayers();
+    // eslint-disable-next-line
     },[])
     useEffect(() => {
         if (isObjEmpty(editData)) {

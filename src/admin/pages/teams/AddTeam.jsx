@@ -6,10 +6,7 @@ import TextField  from '@mui/material/TextField';
 import Button  from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Autocomplete from '@mui/material/Autocomplete';
-import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
-
-import AddIcon from '@mui/icons-material/Add';
 
 function AddTeam(props) {
   const [members, setMembers] = useState([])
@@ -38,6 +35,7 @@ function AddTeam(props) {
   useEffect(() => {
     fetchSports();
     getPlayers();
+  // eslint-disable-next-line
   }, [])
 
   const [forEdit, setforEdit] = useState(false);
@@ -62,32 +60,7 @@ function AddTeam(props) {
             cleanup();
         }
     }, [editData,props.row]);
-// }, []);
 
-    // data:
-    const academyList = [
-        {
-          year: '2017',
-          semester: '7th',
-        },
-        {
-          year: '2018',
-          semester: '5th',
-        },
-        {
-          year: '2019',
-          semester: '3rd',
-        },
-        {
-          year: '2020',
-          semester: '1st',
-        },
-      ];
-
-    const faculty = ['Software','Computer'];
-    const handleChange = (event,keyName) => {
-        seteditedTeam((prev)=>{return {...prev,[`${keyName}`]:event.target.value}})
-    };
     //TODO:ONSAVE GO BACK TO TABLE SCREEN
     const handleSave = useCallback(event => {
         props.changeAction(false);
@@ -96,61 +69,34 @@ function AddTeam(props) {
     return (
         <Stack spacing={{ xs: 1, sm: 2, md: 3 }} sx={{mt:2}}>
             <TextField id="standard-basic" label="Team Name" variant="standard" type="text" defaultValue={!forEdit?editData.name:""} />
-            {!forEdit?<div>
+            <div>
             <Box display="grid" gridTemplateColumns="1fr 1fr" justifyContent="space-between">
-            <h3>Sport</h3>
-            </Box>
-            <Autocomplete
-              getOptionLabel={(option) => option.name}
-              isOptionEqualToValue={(option, value) => option.label === value.name}
+              <h3>Sport</h3>
+              </Box>
+              <Autocomplete
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.label === value.name}
+                  autoComplete={false}
+                  options={sports}
+                  onChange={(event, value) => setSport(value)}
+                  renderInput={(params) => <TextField {...params} label="Sport" variant="standard" required={true}/>}
+              />
+              <Autocomplete
+                multiple
+                id="tags-standard"
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.label === value.name}
                 autoComplete={false}
-                options={sports}
-                onChange={(event, value) => setSport(value)}
-                renderInput={(params) => <TextField {...params} label="Sport" variant="standard" required={true}/>}
-            />
-            <Autocomplete
-              multiple
-              id="tags-standard"
-              getOptionLabel={(option) => option.name}
-              isOptionEqualToValue={(option, value) => option.label === value.name}
-              autoComplete={false}
-              options={members}
-              onChange={(event, value) => setTeachers(value)}
-              getOptionDisabled={(option)=>(selectedOptions.includes(option)?true:false)}
-              renderInput={(params) => <TextField {...params} label="Team Members" variant="standard" required={true}/>}
-            />
+                options={members}
+                onChange={(event, value) => {
+                  setTeachers(value)
+                  setSelectedOptions(value)
+                }}
+                getOptionDisabled={(option)=>(selectedOptions.includes(option)?true:false)}
+                renderInput={(params) => <TextField {...params} label="Team Members" variant="standard" required={true}/>}
+              />
             </div>
-            :<div>
-                <Box display="grid" gridTemplateColumns="1fr 1fr" justifyContent="space-between" gap="50px">
-                <TextField
-                select
-                label="Year"
-                value={editedTeam.year}
-                onChange={(event)=>handleChange(event,'year')}
-                >
-                {academyList.map((option) => (
-                    <MenuItem key={option.year} value={option.year}>
-                    {option.year}
-                    </MenuItem>
-                ))}
-                </TextField>
-                <TextField
-                select
-                label="Faculty"
-                value={editedTeam.faculty}
-                onChange={(event)=>handleChange(event,'faculty')}
-                >
-                {faculty.map((option) => (
-                    <MenuItem key={option} value={option}>
-                    {option}
-                    </MenuItem>
-                ))}
-                </TextField>
-                </Box>
-            </div>
-            }
             <Button variant="outlined" color="success" onClick={handleSave}>Save</Button>
-            {/* <Button variant="outlined" color="success">Save</Button> */}
         </Stack>
     )
 }

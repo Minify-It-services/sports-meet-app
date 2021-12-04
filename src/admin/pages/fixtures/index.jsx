@@ -32,6 +32,7 @@ const Fixtures = () => {
     };
     useEffect(() => {
         getSports();
+    // eslint-disable-next-line
     }, []);
 
     return (
@@ -50,13 +51,13 @@ const Fixtures = () => {
                     }}
                 >
                     {sports?.map((sport) => {
-                        let type = "solo-registration";
-                        if (sport.type === "team") {
-                            type = "team-registration";
-                        }
-                        if (sport.type === "duo") {
-                            type = "duo-registration";
-                        }
+                        // let type = "solo-registration";
+                        // if (sport.type === "team") {
+                        //     type = "team-registration";
+                        // }
+                        // if (sport.type === "duo") {
+                        //     type = "duo-registration";
+                        // }
                         return (
                             <Link
                                 to={`/admin/fixtures/game`}
