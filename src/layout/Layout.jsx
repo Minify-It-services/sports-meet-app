@@ -13,6 +13,7 @@ const Layout = ({ title, children }) => {
                     {title}
                 </Typography>
             </div>
+            <div style={{ height: '120px', width: '100%'}} />
             <Navbar />   
         </>
     )
