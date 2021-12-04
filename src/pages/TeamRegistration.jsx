@@ -270,7 +270,7 @@ const TeamRegistration = () => {
                         name="captain"
                         ref={captainRef}
                         options={members}
-                        disabled={(teamData.registered&&teamData.role!=='manager')?true:false}
+                        disabled={(teamData.registered&&(teamData.role==='manager'||teamData.role==='coach'))?false:true}
                         value={teamData.captain}
                         onChange={(e, value) => handleChange(e, value, captainRef)}
                         getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
@@ -288,7 +288,7 @@ const TeamRegistration = () => {
                         disablePortal
                         name="coach"
                         ref={coachRef}
-                        disabled={(teamData.registered&&teamData.role!=='manager')?true:false}
+                        disabled={(teamData.registered&&(teamData.role==='manager'||teamData.role==='coach'))?false:true}
                         onChange={(e, value) => handleChange(e, value, coachRef)}
                         options={members}
                         value={teamData.coach!=={}?teamData.coach:''}
@@ -307,7 +307,7 @@ const TeamRegistration = () => {
                         multiple
                         name="memberIds"
                         ref={playerRef}
-                        disabled={(teamData.registered&&teamData.role!=='manager')?true:false}
+                        disabled={(teamData.registered&&(teamData.role==='manager'||teamData.role==='coach'))?false:true}
                         value={teamData.memberIds}
                         onChange={(e, value) => handleChange(e, value, playerRef)}
                         options={members}
