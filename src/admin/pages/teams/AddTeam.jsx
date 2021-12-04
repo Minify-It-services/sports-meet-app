@@ -64,7 +64,8 @@ function AddTeam(props) {
     //TODO:ONSAVE GO BACK TO TABLE SCREEN
     const handleSave = useCallback(event => {
         props.changeAction(false);
-        console.log(editedTeam);
+        console.log(editedTeam, teachers, sport);
+      //eslint-disable-next-line
       }, [props,editedTeam])
     return (
         <Stack spacing={{ xs: 1, sm: 2, md: 3 }} sx={{mt:2}}>
