@@ -9,6 +9,7 @@ import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
+import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import Cookies from 'universal-cookie';
 
@@ -150,9 +151,7 @@ const TeamRegistration = () => {
           setTeamData(prevState => {
             return {
               ...prevState,
-              registered: false,
-              hasError: true,
-              displayMessage: 'You Left the Team',
+              displayMessage: 'Successfully updated your team',
             }
           })
         }else{
@@ -252,7 +251,7 @@ const TeamRegistration = () => {
                         ref={managerRef}
                         options={members}
                         disabled={teamData.registered}
-                        value={teamData.manager}
+                        value={teamData.registered&&teamData.manager}
                         onChange={(e, value) => handleChange(e, value, managerRef)}
                         getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
                         renderInput={(params) => (
@@ -270,8 +269,8 @@ const TeamRegistration = () => {
                         name="captain"
                         ref={captainRef}
                         options={members}
-                        disabled={(teamData.registered&&(teamData.role==='manager'||teamData.role==='coach'))?false:true}
-                        value={teamData.captain}
+                        disabled={teamData.registered&&(teamData.role!=='manager'&&teamData.role!=='coach')}
+                        value={teamData.registered&&teamData.captain}
                         onChange={(e, value) => handleChange(e, value, captainRef)}
                         getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
                         renderInput={(params) => (
@@ -288,10 +287,10 @@ const TeamRegistration = () => {
                         disablePortal
                         name="coach"
                         ref={coachRef}
-                        disabled={(teamData.registered&&(teamData.role==='manager'||teamData.role==='coach'))?false:true}
+                        disabled={teamData.registered&&(teamData.role!=='manager'&&teamData.role!=='coach')}
                         onChange={(e, value) => handleChange(e, value, coachRef)}
                         options={members}
-                        value={teamData.coach!=={}?teamData.coach:''}
+                        value={teamData.registered&&teamData.coach}
                         getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
                         renderInput={(params) => (
                           <TextField {...params} label="Coach" variant="standard" required={true} />
@@ -307,7 +306,7 @@ const TeamRegistration = () => {
                         multiple
                         name="memberIds"
                         ref={playerRef}
-                        disabled={(teamData.registered&&(teamData.role==='manager'||teamData.role==='coach'))?false:true}
+                        disabled={teamData.registered&&(teamData.role!=='manager'&&teamData.role!=='coach')}
                         value={teamData.memberIds}
                         onChange={(e, value) => handleChange(e, value, playerRef)}
                         options={members}
@@ -321,16 +320,8 @@ const TeamRegistration = () => {
                 </Stack>
                 {
                   teamData.registered?(
-                    teamData.role==='manager'?(
-                        <>
-                          <Button
-                            variant="contained"
-                            sx={{ width: 150, alignSelf: "center" }}
-                            form="team-form"
-                            type="submit"
-                          >
-                            Edit
-                          </Button>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: '1em' }}>
+                      {teamData.role==='manager'?(
                           <Button
                             variant="contained"
                             sx={{ width: 150, alignSelf: "center" }}
@@ -338,16 +329,27 @@ const TeamRegistration = () => {
                           >
                             Remove Team
                           </Button>
-                        </>
-                      ):(
-                        <Button
-                          variant="contained"
-                          sx={{ width: 150, alignSelf: "center" }}
-                          color="error"
-                        >
-                          Leave Team
-                        </Button>
-                      )
+                        ):(
+                          <Button
+                            variant="contained"
+                            sx={{ width: 150, alignSelf: "center" }}
+                            color="error"
+                          >
+                            Leave Team
+                          </Button>
+                        )}{
+                          (teamData.role==='manager'||teamData.role==='coach')?(
+                            <Button
+                              variant="contained"
+                              sx={{ width: 150, alignSelf: "center" }}
+                              form="team-form"
+                              type="submit"
+                            >
+                              Edit
+                            </Button>
+                          ):null
+                        }
+                    </Box>
                   ):(
                     <Button
                       variant="contained"
