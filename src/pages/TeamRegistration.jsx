@@ -228,8 +228,8 @@ const TeamRegistration = () => {
         <Stack spacing={3}>
           <Typography variant="h4">{sport.name}</Typography>
           <p>
-            Fact: There are over 318 billion different possible positions after
-            four moves each.
+            Coordinator: {sport.coordinator} <br />
+            Vice-Coordinator: {sport.viceCoordinator}
           </p>
           {
             teamData.hasTeamSlot?(

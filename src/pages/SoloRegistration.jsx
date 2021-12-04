@@ -119,7 +119,10 @@ const SoloRegistration = ()=> {
             <Container sx={{marginTop:5}}>
             <Stack spacing={3}>
             <Typography variant="h4">{sport.name}</Typography>
-            <p>Fact: There are over 318 billion different possible positions after four moves each.</p>
+            <p>
+              Coordinator: {sport.coordinator} <br />
+              Vice-Coordinator: {sport.viceCoordinator}
+            </p>
             {
               soloData.hasTeamSlot?(
                 <Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={()=>handleRegister()}>{soloData.registered? "Leave":"Register"}</Button>

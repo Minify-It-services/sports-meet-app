@@ -148,7 +148,10 @@ const DuoRegistration = () => {
             <Container sx={{marginTop:5}}>
             <Stack spacing={{xs:2,md:4}}>
             <Typography variant="h5">{sport.name}</Typography>
-            <p>Fact: There are over 318 billion different possible positions after four moves each.</p>
+            <p>
+              Coordinator: {sport.coordinator} <br />
+              Vice-Coordinator: {sport.viceCoordinator}
+            </p>
             {
               duoData.hasTeamSlot?(
                 <>
