@@ -10,8 +10,6 @@ import Snackbar from "@mui/material/Snackbar";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Alert from "@mui/material/Alert";
-import Chip from "@mui/material/Chip";
-import Box from "@mui/material/Box";
 import Cookies from 'universal-cookie';
 
 import jsendDestructor from '../utils/api/jsendDestructor'
@@ -46,6 +44,7 @@ const TeamRegistration = () => {
     manager: '',
     captain: '',
     selectedOptions: [],
+    role: ''
   })
   const [members, setMembers] = useState([])
   const [open, setOpen] = React.useState(false);
@@ -87,7 +86,9 @@ const TeamRegistration = () => {
           manager: data.manager,
           captain: data.captain,
           registered: true,
-          teamId: data.teamId
+          teamId: data.teamId,
+          selectedOptions: [data.manager],
+          role: data.role,
         }
       })
     }
@@ -95,9 +96,7 @@ const TeamRegistration = () => {
 
   useEffect(() => {
     checkForAvailability();
-    if(!teamData.coach){
-      getPlayers();
-    }
+    getPlayers();
   // eslint-disable-next-line
   }, [teamData.registered])
 
@@ -121,7 +120,13 @@ const TeamRegistration = () => {
     if(teamData.memberIds.length === 2){
       let response = {}
       if(teamData.registered){
+        const teamToSend = {
+          coach: teamData.coach.id,
+          captain: teamData.captain.id,
+          memberIds: teamData.memberIds.map(member => member.id)
+        }
 
+        response = await jsendRes.destructFromApi(`/teams/${teamData.teamId}`, 'PATCH', teamToSend)
       }else{
         const teamToSend = {
           name: `${player.faculty} ${getYear(player.year)} Team A`,
@@ -234,111 +239,126 @@ const TeamRegistration = () => {
           {
             teamData.hasTeamSlot?(
               <>
-                {!teamData.registered ? (
-                  <Stack spacing={{ xs: 2, md: 4 }}>
-                    <form id="team-form" onSubmit={handleRegister}>
-                      <div>
-                        <Autocomplete
-                          getOptionLabel={(option) => option.name}
-                          isOptionEqualToValue={(option, value) =>
-                            option.label === value.name
-                          }
-                          disablePortal
-                          name="manager"
-                          ref={managerRef}
-                          options={members}
-                          onChange={(e, value) => handleChange(e, value, managerRef)}
-                          getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
-                          renderInput={(params) => (
-                            <TextField {...params} label="Manager" variant="standard" required={true} />
-                          )}
-                        />
-                      </div>
-                      <div>
-                        <Autocomplete
-                          getOptionLabel={(option) => option.name}
-                          isOptionEqualToValue={(option, value) =>
-                            option.label === value.name
-                          }
-                          disablePortal
-                          name="captain"
-                          ref={captainRef}
-                          options={members}
-                          onChange={(e, value) => handleChange(e, value, captainRef)}
-                          getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
-                          renderInput={(params) => (
-                            <TextField {...params} label="Captain" variant="standard" required={true} />
-                          )}
-                        />
-                      </div>
-                      <div>
-                        <Autocomplete
-                          getOptionLabel={(option) => option.name}
-                          isOptionEqualToValue={(option, value) =>
-                            option.label === value.name
-                          }
-                          disablePortal
-                          name="coach"
-                          ref={coachRef}
-                          onChange={(e, value) => handleChange(e, value, coachRef)}
-                          options={members}
-                          getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
-                          renderInput={(params) => (
-                            <TextField {...params} label="Coach" variant="standard" required={true} />
-                          )}
-                        />
-                      </div>
-                      <div>
-                        <Autocomplete
-                          getOptionLabel={(option) => option.name}
-                          isOptionEqualToValue={(option, value) =>
-                            option.label === value.name
-                          }
-                          multiple
-                          name="memberIds"
-                          ref={playerRef}
-                          onChange={(e, value) => handleChange(e, value, playerRef)}
-                          options={members}
-                          getOptionDisabled={(option) => (( teamData.memberIds?.length === 2 || teamData.selectedOptions.includes(option) )?true:false)}
-                          renderInput={(params) => (
-                            <TextField {...params} variant="standard" label="Players" />
-                          )}
-                        />
-                      </div>
-                    </form>
-                  </Stack>
-                ) : (
-                  <div>
-                    <Typography variant="h6">Team Members</Typography>
-                    <Box
-                      sx={{
-                        display: "grid",
-                        gridTemplateColumns: {
-                          lg: "repeat(12,1fr)",
-                          xs: "repeat(2,1fr)",
-                          md: "repeat(6,1fr)",
-                        },
-                      }}
+                <Stack spacing={{ xs: 2, md: 4 }}>
+                  <form id="team-form" onSubmit={handleRegister}>
+                    <div>
+                      <Autocomplete
+                        getOptionLabel={(option) => option.name}
+                        isOptionEqualToValue={(option, value) =>
+                          option.label === value.name
+                        }
+                        disablePortal
+                        name="manager"
+                        ref={managerRef}
+                        options={members}
+                        disabled={teamData.registered}
+                        value={teamData.manager}
+                        onChange={(e, value) => handleChange(e, value, managerRef)}
+                        getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
+                        renderInput={(params) => (
+                          <TextField {...params} label="Manager" variant="standard" required={true} />
+                        )}
+                      />
+                    </div>
+                    <div>
+                      <Autocomplete
+                        getOptionLabel={(option) => option.name}
+                        isOptionEqualToValue={(option, value) =>
+                          option.label === value.name
+                        }
+                        disablePortal
+                        name="captain"
+                        ref={captainRef}
+                        options={members}
+                        disabled={(teamData.registered&&teamData.role!=='manager')?true:false}
+                        value={teamData.captain}
+                        onChange={(e, value) => handleChange(e, value, captainRef)}
+                        getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
+                        renderInput={(params) => (
+                          <TextField {...params} label="Captain" variant="standard" required={true} />
+                        )}
+                      />
+                    </div>
+                    <div>
+                      <Autocomplete
+                        getOptionLabel={(option) => option.name}
+                        isOptionEqualToValue={(option, value) =>
+                          option.label === value.name
+                        }
+                        disablePortal
+                        name="coach"
+                        ref={coachRef}
+                        disabled={(teamData.registered&&teamData.role!=='manager')?true:false}
+                        onChange={(e, value) => handleChange(e, value, coachRef)}
+                        options={members}
+                        value={teamData.coach!=={}?teamData.coach:''}
+                        getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
+                        renderInput={(params) => (
+                          <TextField {...params} label="Coach" variant="standard" required={true} />
+                        )}
+                      />
+                    </div>
+                    <div>
+                      <Autocomplete
+                        getOptionLabel={(option) => option.name}
+                        isOptionEqualToValue={(option, value) =>
+                          option.label === value.name
+                        }
+                        multiple
+                        name="memberIds"
+                        ref={playerRef}
+                        disabled={(teamData.registered&&teamData.role!=='manager')?true:false}
+                        value={teamData.memberIds}
+                        onChange={(e, value) => handleChange(e, value, playerRef)}
+                        options={members}
+                        getOptionDisabled={(option) => (( teamData.memberIds?.length === 2 || teamData.selectedOptions.includes(option) )?true:false)}
+                        renderInput={(params) => (
+                          <TextField {...params} variant="standard" label="Players" />
+                        )}
+                      />
+                    </div>
+                  </form>
+                </Stack>
+                {
+                  teamData.registered?(
+                    teamData.role==='manager'?(
+                        <>
+                          <Button
+                            variant="contained"
+                            sx={{ width: 150, alignSelf: "center" }}
+                            form="team-form"
+                            type="submit"
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="contained"
+                            sx={{ width: 150, alignSelf: "center" }}
+                            color="error"
+                          >
+                            Remove Team
+                          </Button>
+                        </>
+                      ):(
+                        <Button
+                          variant="contained"
+                          sx={{ width: 150, alignSelf: "center" }}
+                          color="error"
+                        >
+                          Leave Team
+                        </Button>
+                      )
+                  ):(
+                    <Button
+                      variant="contained"
+                      sx={{ width: 150, alignSelf: "center" }}
+                      form="team-form"
+                      type="submit"
                     >
-                      {teamData.memberIds.map((member, index) => (
-                        <Chip
-                          sx={{ m: 1 }}
-                          key={index}
-                          label={member.label}
-                          variant="outlined"
-                        />
-                      ))}
-                    </Box>
-                  </div>
-                )}
-                <Button
-                  variant="contained"
-                  sx={{ width: 150, alignSelf: "center" }}
-                  form="team-form"
-                  type="submit"
-                >
-                  {teamData.registered ? "Leave" : "Register"}
-                </Button>
+                      Register
+                    </Button>
+                  )
+                }
               </>
             ): <NoTeam />
           }
