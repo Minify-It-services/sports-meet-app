@@ -43,9 +43,9 @@ const TeamRegistration = () => {
     hasTeamSlot: true,
     teamId: '',
     memberIds: [],
-    coach: '',
-    manager: '',
-    captain: '',
+    coach: null,
+    manager: null,
+    captain: null,
     selectedOptions: [],
     role: ''
   })
@@ -59,7 +59,7 @@ const TeamRegistration = () => {
   };
   
   const getPlayers = async () => {
-    const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}&userId=${player.id}&faculty=${player.faculty}&sport=${sportName}&gender=${player.gender}`, 'GET')
+    const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}&userId=${player.id}&faculty=${player.faculty}&sport=${sportName}&sportType=team&gender=${player.gender}`, 'GET')
     if(status === 'success'){
       setMembers(data)
     }else{
@@ -69,7 +69,7 @@ const TeamRegistration = () => {
 
   const checkForAvailability = async () => {
     const { data } = await jsendRes.destructFromApi(
-      `/teams/check?sport=${sportName}&year=${player.year}&faculty=${player.faculty}&playerId=${player.id}`, 
+      `/teams/check?sport=${sportName}&sportType=team&year=${player.year}&faculty=${player.faculty}&playerId=${player.id}`, 
       'GET'
     )
     if(data.message === 'Team full'){
@@ -137,7 +137,10 @@ const TeamRegistration = () => {
           year: player.year,
           semester: player.semester,
           faculty: player.faculty,
-          sport: sport.name,
+          sport: {
+            name: sport.name,
+            gameType: sport.type,
+          },
           coach: teamData.coach.id,
           captain: teamData.captain.id,
           manager: teamData.manager.id,
@@ -213,8 +216,68 @@ const TeamRegistration = () => {
     }else{
       setTeamData(prevState => ({
         ...prevState,
+        [name]: null,
         selectedOptions: prevState.selectedOptions.filter(val => JSON.stringify(val)!==JSON.stringify(teamData[name])),
       }))
+    }
+  }
+
+  const handleRemoveTeam = async () => {
+    const response = await jsendRes.destructFromApi(`/teams/${teamData.teamId}`, 'DELETE')
+
+    if(response.status === 'success'){
+      setTeamData(prevState => ({
+        ...prevState,
+        registered: false,
+        displayMessage: 'Team deleted successfully',
+        hasError: false,
+        hasTeamSlot: true,
+      }))
+      setOpen(!open)
+    }else{
+      console.log(response);
+    }
+  }
+
+  const handleLeaveTeam = async () => {
+    let teamToSend = {}
+
+    if(player.id === teamData.coach.id){
+      teamToSend = {
+        captain: teamData.captain.id,
+        memberIds: teamData.memberIds.map(member => member.id)
+      }
+    }else if(player.id === teamData.captain.id){
+      teamToSend = {
+        coach: teamData.coach.id,
+        memberIds: teamData.memberIds.map(member => member.id)
+      }
+    }else{
+      const newMemberIds = teamData.memberIds.filter(member => member.id!==player.id)
+      teamToSend = {
+        captain: teamData.captain.id,
+        coach: teamData.coach.id,
+        memberIds: newMemberIds.map(newMember => newMember.id)
+      }
+    }
+
+    const response = await jsendRes.destructFromApi(`/teams/leave/${teamData.teamId}`, 'PATCH', teamToSend)
+
+    if(response.status === 'success'){
+      setTeamData(prevState => ({
+          ...prevState,
+          registered: false,
+          hasError: true,
+          displayMessage: 'You left the team',
+          coach: null,
+          captain: null,
+          manager: null,
+          memberIds: [],
+          selectedOptions: [],
+      }))
+      setOpen(!open)
+    }else{
+      console.log(response);
     }
   }
 
@@ -245,7 +308,7 @@ const TeamRegistration = () => {
                   <form id="team-form" onSubmit={handleRegister}>
                     <div>
                       <Autocomplete
-                        getOptionLabel={(option) => option.name}
+                        getOptionLabel={(option) => option.name ? option.name : ''}
                         isOptionEqualToValue={(option, value) =>
                           option.label === value.name
                         }
@@ -254,7 +317,7 @@ const TeamRegistration = () => {
                         ref={managerRef}
                         options={members}
                         disabled={teamData.registered}
-                        value={teamData.registered&&teamData.manager}
+                        value={teamData.manager}
                         onChange={(e, value) => handleChange(e, value, managerRef)}
                         getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
                         renderInput={(params) => (
@@ -264,7 +327,7 @@ const TeamRegistration = () => {
                     </div>
                     <div>
                       <Autocomplete
-                        getOptionLabel={(option) => option.name}
+                        getOptionLabel={(option) => option.name ? option.name : ''}
                         isOptionEqualToValue={(option, value) =>
                           option.label === value.name
                         }
@@ -273,7 +336,7 @@ const TeamRegistration = () => {
                         ref={captainRef}
                         options={members}
                         disabled={teamData.registered&&(teamData.role!=='manager'&&teamData.role!=='coach')}
-                        value={teamData.registered&&teamData.captain}
+                        value={teamData.captain}
                         onChange={(e, value) => handleChange(e, value, captainRef)}
                         getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
                         renderInput={(params) => (
@@ -283,7 +346,7 @@ const TeamRegistration = () => {
                     </div>
                     <div>
                       <Autocomplete
-                        getOptionLabel={(option) => option.name}
+                        getOptionLabel={(option) => option.name ? option.name : ''}
                         isOptionEqualToValue={(option, value) =>
                           option.label === value.name
                         }
@@ -293,7 +356,7 @@ const TeamRegistration = () => {
                         disabled={teamData.registered&&(teamData.role!=='manager'&&teamData.role!=='coach')}
                         onChange={(e, value) => handleChange(e, value, coachRef)}
                         options={members}
-                        value={teamData.registered&&teamData.coach}
+                        value={teamData.coach}
                         getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
                         renderInput={(params) => (
                           <TextField {...params} label="Coach" variant="standard" required={true} />
@@ -329,6 +392,7 @@ const TeamRegistration = () => {
                             variant="contained"
                             sx={{ width: 150, alignSelf: "center" }}
                             color="error"
+                            onClick={handleRemoveTeam}
                           >
                             Remove Team
                           </Button>
@@ -337,6 +401,7 @@ const TeamRegistration = () => {
                             variant="contained"
                             sx={{ width: 150, alignSelf: "center" }}
                             color="error"
+                            onClick={handleLeaveTeam}
                           >
                             Leave Team
                           </Button>

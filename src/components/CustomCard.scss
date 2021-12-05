@@ -1,0 +1,29 @@
+#customcard {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    text-align: center;
+    width: 130px;
+    height: 130px;
+    margin: 10px;
+    background-color: #ECF3FB;
+    border-radius: 10px;
+    #label {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #000000;
+    }
+    .img-container {
+        height: 50px;
+        width: 50px;
+    }
+    .img-container>img {
+        height: 100%;
+        width: 100%;
+    }
+}
+
+@media (max-width: 400px) {
+    #customcard {}
+}

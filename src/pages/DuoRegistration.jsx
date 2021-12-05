@@ -52,7 +52,7 @@ const DuoRegistration = () => {
       };
 
       const getPlayers = async () => {
-        const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}&userId=${player.id}&faculty=${player.faculty}&sport=${sportName}&gender=${player.gender}`, 'GET')
+        const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}&userId=${player.id}&faculty=${player.faculty}&sport=${sportName}&sportType=duo&gender=${player.gender}`, 'GET')
         if(status === 'success'){
           setMembers(data)
         }else{
@@ -62,7 +62,7 @@ const DuoRegistration = () => {
 
       const checkForAvailability = async () => {
         const { data } = await jsendRes.destructFromApi(
-          `/teams/check?sport=${sportName}&year=${player.year}&faculty=${player.faculty}&playerId=${player.id}`, 
+          `/teams/check?sport=${sportName}&sportType=duo&year=${player.year}&faculty=${player.faculty}&playerId=${player.id}`, 
           'GET'
         )
         if(data.message === 'Team full'){
@@ -113,7 +113,10 @@ const DuoRegistration = () => {
               year: player.year,
               semester: player.semester,
               faculty: player.faculty,
-              sport: sport.name,
+              sport: {
+                name: sportName,
+                gameType: sport.type,
+              },
               memberIds: [
                 player.id,
                 duoData.partner.id,
