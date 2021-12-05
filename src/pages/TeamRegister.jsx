@@ -47,7 +47,7 @@ const TeamRegister = () => {
                         justifyContent: "start",
                     }}
                 >
-                    <Typography variant="h6" sx={{ fontWeight: "bold"}}>
+                    <Typography variant="h6" sx={{ fontWeight: "600"}}>
                         Select the sport you want to register in
                     </Typography>
                     <Box
