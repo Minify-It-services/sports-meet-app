@@ -58,8 +58,9 @@ const Profile = () => {
     useEffect(() => {
         if(!player){
             navigate('/register')
+        }else{
+            getUserData()
         }
-        getUserData()
     // eslint-disable-next-line
     }, [])
 
