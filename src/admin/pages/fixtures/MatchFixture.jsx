@@ -90,11 +90,13 @@ const Matches = () => {
         getMatches();
         getSports();
         if(toEdit.sport){
+            const { hr, min } = getOriginalTimeFormat(toEdit?.time)
+            console.log(hr, min);
             setTeamData({
                 date: toEdit?.date,
                 team1: toEdit?.team1,
                 team2: toEdit?.team2,
-                time: toEdit?.time,
+                time: new Date(2021, 12, 10, hr, min, 0),
             })
             setSport(toEdit.sport)
         }
@@ -128,6 +130,23 @@ const Matches = () => {
 
         return `${hr} : ${min} ${ap}`
     }
+
+    const getOriginalTimeFormat = (time) => {
+        let hr = time.substr(0,2)
+        let min
+        if(hr >= 10)
+            min = time.substr(5,2)
+        else
+            min = time.substr(4,2)
+
+        let ap = time.substr(7,2)
+
+        if(ap === 'PM'){
+            hr = parseInt(hr)+12
+        }
+        min = parseInt(min);
+        return { hr, min }
+    }   
 
     const handleRegister = async () => {
         const matchToSend = {

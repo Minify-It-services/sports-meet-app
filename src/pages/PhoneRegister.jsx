@@ -15,7 +15,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
+// import FormLabel from '@mui/material/FormLabel';
 
 // components:
 import jsendDestructor from '../utils/api/jsendDestructor';
@@ -37,14 +37,14 @@ const PhoneRegister = () => {
     const [displayMessage, setDisplayMessage] = useState('')
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
-          return;
+            return;
         }
         setphoneErro(false);
-      };
+    };
 
     const validatePhoneno=async()=>{
         if (contactNumber.match(/^\98?([0-9]{4})?([0-9]{4})$/)) {
-           await handlePhoneRegister();
+            await handlePhoneRegister();
         }
         else{
             setphoneErro(true);
@@ -85,25 +85,32 @@ const PhoneRegister = () => {
 
     return (
         <div id="phone">
-            <Container sx={{height:"100vh"}}>
-                <Box sx={{display:'grid', gridTemplateRows:'3fr 0fr 1fr 1fr 4fr 1fr', height:"100%"}}>
-                    <Typography variant="h4" gutterBottom component="div" sx={{alignSelf:"end"}}>Enter Your Phone number</Typography>
-                    <Typography variant="p" gutterBottom component="div">Please enter your correct phone number</Typography>
+            <Container sx={{height:"95vh"}}>
+                <Box sx={{display:'grid', gridTemplateRows:'4fr 1fr 1fr 1fr 4fr', height:"100%"}}>
+                    {/* phone-number */}
+                    <Typography color="primary" variant="body1" gutterBottom component="div" sx={{alignSelf:"end", fontWeight:'500', fontSize:'1.15rem'}}>
+                        Enter Your Phone number
+                    </Typography>
                     <TextField id="standard-basic" label="Phone no" name="contactNumber" value={contactNumber} onChange={e=>setContactNumber(e.target.value)} variant="standard" type="number"/>
-                    <Typography variant="h4" gutterBottom component="div" sx={{alignSelf:"end"}}>Please Select Gender</Typography>
+                    {/* select-gender */}
+                    <Typography color="primary" variant="body1" gutterBottom component="div" sx={{alignSelf:"end", fontWeight:'500', fontSize:'1.15rem'}}>
+                        Please Select Gender
+                    </Typography>
                     <FormControl component="fieldset">
-                        <FormLabel component="legend">Gender</FormLabel>
+                        {/* <FormLabel component="legend" sx={{fontSize:'0.9rem'}}>Gender</FormLabel> */}
                         <RadioGroup row aria-label="gender" name="row-radio-buttons-group" value={gender} required={true}>
-                            <FormControlLabel value="female" control={<Radio />} label="Female" onClick={(e)=> setGender(e.target.value)} />
-                            <FormControlLabel value="male" control={<Radio />} label="Male"  onClick={(e)=> setGender(e.target.value)} />
+                            <FormControlLabel value="female" control={<Radio size="small" color="primary" />} label="Female" onClick={(e)=> setGender(e.target.value)} />
+                            <FormControlLabel value="male" control={<Radio size="small" color="primary" />} label="Male" onClick={(e)=> setGender(e.target.value)} />
                         </RadioGroup>
                     </FormControl>
-                    <Box gridRow="span 4" sx={{alignSelf:"center", justifySelf:"end"}}>
-                        <Button variant="outlined" endIcon={<NavigateNextIcon />} onClick={validatePhoneno}>
+                    {/* proceed-button */}
+                    <Box gridRow="span 4" sx={{alignSelf:"end", justifySelf:"end"}}>
+                        <Button color="primary" variant="contained" endIcon={<NavigateNextIcon />} onClick={validatePhoneno}>
                             Proceed
                         </Button>
                     </Box>
                 </Box>
+
                 <Snackbar open={phoneErro} autoHideDuration={1500} onClose={handleClose}>
                     <Alert onClose={handleClose} severity={"error"} sx={{ width: '100%' }}>
                         {displayMessage}

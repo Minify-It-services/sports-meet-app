@@ -39,6 +39,7 @@ const Teams = () => {
 
     const fetchTeams = async ()=>{
         const response = await jsendRes.destructFromApi('/teams','GET')
+        console.log(response)
         if(response.status === 'success'){
             setTeams(response.data)
         }
@@ -75,7 +76,7 @@ const Teams = () => {
                                 <TableRow  key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <TableCell component="th" scope="row" align="center">{index+1}</TableCell>
                                     <TableCell align="center">{team.name}</TableCell>
-                                    <TableCell align="center">{team.sport}</TableCell>
+                                    <TableCell align="center">{team.sport.name}</TableCell>
                                     <TableCell align="center">{team.year}</TableCell>
                                     <TableCell align="center">{team.faculty}</TableCell>
                                 </TableRow>
