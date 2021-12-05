@@ -48,7 +48,7 @@ const SoloRegistration = ()=> {
 
       const checkForAvailability = async () => {
         const { data } = await jsendRes.destructFromApi(
-          `/teams/check?sport=${sportName}&year=${player.year}&faculty=${player.faculty}&playerId=${player.id}`, 
+          `/teams/check?sport=${sportName}&sportType=single&year=${player.year}&faculty=${player.faculty}&playerId=${player.id}`, 
           'GET'
         )
         if(data.message === 'Team full'){
@@ -84,7 +84,10 @@ const SoloRegistration = ()=> {
             year: player.year,
             semester: player.semester,
             faculty: player.faculty,
-            sport: sport.name,
+            sport: {
+              name: sport.name,
+              gameType: sport.type,
+            },
             memberIds: [
               player.id
             ],
