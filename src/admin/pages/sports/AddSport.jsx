@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState,useEffect,useCallback } from 'react';
+import { useState,useEffect } from 'react';
 import { cleanup } from '@testing-library/react';
 
 import TextField  from '@mui/material/TextField';
@@ -29,7 +29,7 @@ function AddSport(props) {
     const [members, setMembers] = useState([])
     
     const [forEdit, setforEdit] = useState(false);
-    const [editedSport, seteditedSport] = useState({});
+    const [editedSport] = useState({});
     let editData=props.row;
     const isObjEmpty=(obj)=>{
         if (obj && Object.keys(obj).length === 0
