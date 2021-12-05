@@ -56,12 +56,12 @@ const Admin = () => {
       <Route path="dashboard" element={<Dashboard />} />
       <Route path="sport" element={<Sports />} />
       <Route path="team" element={<Teams />} />
-      <Route path="fixture/*" element={<Fixture />} />
+      <Route path="fixture/*" element={<AdminFixture />} />
       <Route path="notice" element={<Notice />} />
     </Routes>
   )
 }
-const Fixture = () => {
+const AdminFixture = () => {
   return (
     <Routes>
       <Route path="/" element={<Fixtures />} />
