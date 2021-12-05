@@ -94,7 +94,7 @@ const Profile = () => {
                         <Box display='grid'  gridTemplateColumns={{md:"repeat(2,1fr)",lg:"repeat(3,1fr)", xs:"repeat(1,1fr)", sm:"repeat(2,1fr)"}} gap={{xs:1,md:3,sm:2}} justifyContent="center">
                             {user?.teams?.map((team, id)=>{
                                 const {teamName, sport, role} = team;
-                                return <ParticipatedSportCard role={role} sport={sport.name} title={teamName} key={id}/>
+                                return <ParticipatedSportCard role={role} sport={sport.name} sportType={sport.gameType} title={teamName} key={id}/>
                             })}
                         </Box>
                         :<Typography variant="body2" maxWidth="450px" margin="0 auto" textAlign="center" gutterBottom component="div" color='secondary'>No more team registration available for this sport.If it is a system error contact 3rd year. Thank you</Typography>}
