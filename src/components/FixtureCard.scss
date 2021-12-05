@@ -1,0 +1,45 @@
+#fixture-card{
+    // max-width: 350px;
+    border-radius: 6px;
+    .fixture-container{
+        padding: 1rem;
+        background-color: #ECF3FB;
+    }
+    .sport-bar{
+        border-radius: 6px;
+        background-color: #ECF3FB;
+        padding:.5rem 1rem;
+        display: flex;
+        align-items: center;
+        margin:1rem 0;
+        img{
+            height: 20px;
+            margin-right: 1rem;
+        }
+    }
+    .header::after{
+        content: '';
+        width: 100%;
+        margin-top: 8px;
+        margin-bottom: 15px;
+        background-color: black;
+        height: 1px;
+        display: block;
+    }
+    .fixture{
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        padding: 0.2rem 0;
+        .right{
+            justify-self: right;
+        }
+        .center{
+            justify-self: center;
+        }
+    }
+    .flex{
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+}
