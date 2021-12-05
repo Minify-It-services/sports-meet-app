@@ -45,10 +45,10 @@ const Navbar = () => {
     return (
         <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
             <BottomNavigation sx={{ width:'100%' }} className="items" value={value}>
-                <BottomNavigationAction label="Home" value="home" icon={<BiHomeAlt />} className={`item ${path[1]===''?'item-active':''}`} onClick={() => navigate('/')} />
-                <BottomNavigationAction label="Fixture" value="fixture" icon={<FiTablet />} className={`item ${path[1]==='fixture'?'item-active':''}`} onClick={() => navigate('/fixture')} />
-                <BottomNavigationAction label="Register" value="register" icon={<HiOutlineDocumentAdd />} className={`item ${path[1]==='teamRegister'?'item-active':''}`} onClick={()=> navigate('/teamRegister')} />
-                <BottomNavigationAction label="Profile" value="profile" icon={<FiUser />} className={`item ${path[1]==='profile'?'item-active':''}`} onClick={() => {navigate('/profile')}} />
+                <BottomNavigationAction value="home" icon={<BiHomeAlt />} className={`item ${path[1]===''?'item-active':''}`} onClick={() => navigate('/')} />
+                <BottomNavigationAction value="fixture" icon={<FiTablet />} className={`item ${path[1]==='fixture'?'item-active':''}`} onClick={() => navigate('/fixture')} />
+                <BottomNavigationAction value="register" icon={<HiOutlineDocumentAdd />} className={`item ${path[1]==='teamRegister'?'item-active':''}`} onClick={()=> navigate('/teamRegister')} />
+                <BottomNavigationAction value="profile" icon={<FiUser />} className={`item ${path[1]==='profile'?'item-active':''}`} onClick={() => {navigate('/profile')}} />
             </BottomNavigation>
         </Paper>
     );
