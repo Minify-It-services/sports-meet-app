@@ -18,14 +18,17 @@ import Paper from '@mui/material/Paper';
 // components
 import DrawerBar from '../../../components/DrawerBar';
 import jsendDestructor from '../../../utils/api/jsendDestructor';
+import { Chip } from '@mui/material';
 
 const Dashboard = () => {
 
+    const date = new Date();
     const navigate = useNavigate()
     const cookies = new Cookies();
     
     const token = cookies.get('sports_app_token');
     const [counts, setCounts] = useState({})
+    const [matches, setMatches] = useState([])
 
     const jsendRes = new jsendDestructor({
         'Content-Type': 'application/json',
@@ -42,9 +45,18 @@ const Dashboard = () => {
             navigate('/profile')
         }
     }
+    const getTodayMatches = async () => {
+        const { data, status, message } = await jsendRes.destructFromApi('/matches/today')
+
+        if(status === 'success')
+            setMatches(data)
+        else
+            console.log(data, message);
+    }
 
     useEffect(() => {
         getData();
+        getTodayMatches();
     // eslint-disable-next-line
     }, []);
     
@@ -85,53 +97,36 @@ const Dashboard = () => {
                         </CardContent>
                     </Card>
                 </Stack>
-                {/* table: matches of the day */}
                 <TableContainer component={Paper} sx={{ marginTop:'50px'}}>
                     <Table aria-label="simple table">
                         <TableHead>
                             <TableRow sx={{height:'100px'}}>
                                 <TableCell align="left" sx={{fontSize:'2rem', fontWeight:'600'}}>Matches Of The Day</TableCell>
                                 <TableCell></TableCell>
-                                <TableCell align="right" sx={{fontSize:'1.25rem', fontWeight:'500', opacity:'0.85'}}>01 Dec. 2021</TableCell>
+                                <TableCell align="right" sx={{fontSize:'1.25rem', fontWeight:'500', opacity:'0.85'}}>{date.toISOString().substr(0, 10)}</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            <TableRow>
-                                <TableCell align="left">
-                                    <span style={{marginRight:'25px'}}>Software 2018 'A'</span>
-                                    <strong>VS</strong>
-                                    <span style={{marginLeft:'25px'}}>Software 2019 'B'</span>
-                                </TableCell>
-                                <TableCell align='center'>Football</TableCell>
-                                <TableCell align="right">08:00 AM</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell align="left">
-                                    <span style={{marginRight:'25px'}}>Software 2018 'A'</span>
-                                    <strong>VS</strong>
-                                    <span style={{marginLeft:'25px'}}>Software 2019 'B'</span>
-                                </TableCell>
-                                <TableCell align='center'>Football</TableCell>
-                                <TableCell align="right">08:00 AM</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell align="left">
-                                    <span style={{marginRight:'25px'}}>Software 2018 'A'</span>
-                                    <strong>VS</strong>
-                                    <span style={{marginLeft:'25px'}}>Software 2019 'B'</span>
-                                </TableCell>
-                                <TableCell align='center'>Football</TableCell>
-                                <TableCell align="right">08:00 AM</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell align="left">
-                                    <span style={{marginRight:'25px'}}>Software 2018 'A'</span>
-                                    <strong>VS</strong>
-                                    <span style={{marginLeft:'25px'}}>Software 2019 'B'</span>
-                                </TableCell>
-                                <TableCell align='center'>Football</TableCell>
-                                <TableCell align="right">08:00 AM</TableCell>
-                            </TableRow>
+                            {
+                                matches.map((match, i) => (
+                                    <TableRow>
+                                        <TableCell align="left">
+                                            <span style={{marginRight:'25px'}}>{match.team1.name}</span>
+                                            <strong>VS</strong>
+                                            <span style={{marginLeft:'25px'}}>{match.team2.name}</span>
+                                        </TableCell>
+                                        <TableCell align='center'>
+                                            <Chip
+                                                size="small"
+                                                variant="outlined"
+                                                color={match.sport.gameType==='team'?'primary':match.sport.gameType==='duo'?'warning':'success'}
+                                                label={match.sport.name}
+                                            />
+                                        </TableCell>
+                                        <TableCell align="right">{match.time}</TableCell>
+                                    </TableRow>
+                                ))
+                            }
                         </TableBody>
                     </Table>
                 </TableContainer>
