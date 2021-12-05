@@ -65,12 +65,12 @@ const Login = () => {
     return (
         <Box sx={{width:'100%',height:'100vh'}} className='login-screen'>
             <Container sx={{height:'100%',display: 'flex',justifyContent:'center',alignItems: 'center'}}>
-                <Box sx={{display: 'flex',flexDirection: 'column',justifyContent: 'space-evenly',alignItems: 'center',height:'50%'}}>
+                <Box sx={{display: 'flex',flexDirection: 'column',justifyContent: 'space-evenly',alignItems: 'center',height:'60%'}}>
                     <Box sx={{textAlign:'center'}}>
-                        <Typography variant="h4" sx={{fontWeight:'600'}}>Welcome to GCES</Typography>
-                        <Typography variant="caption">Log in to continue your GCES sports journey</Typography>
+                        <Typography color="primary" variant="h4" sx={{fontWeight:'600'}}>Welcome to GCES</Typography>
+                        <Typography variant="subtitle2" sx={{fontWeight:'500', opacity:'0.5'}}>Log in to continue your GCES sports journey</Typography>
                     </Box>
-                    <Box sx={{textAlign:'center', border: (differentEmail&&'1px solid #dc3545') }}>
+                    <Box sx={{border: (differentEmail&&'1px solid #dc3545') }}>
                         <GoogleLogin 
                             clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
                             buttonText='Login with GCES account'
@@ -80,16 +80,16 @@ const Login = () => {
                         />
                     </Box>
                     <Box sx={{textAlign:'center'}}>
-                        <Typography variant="caption">OR</Typography>
-                        <Typography variant="body2">
-                            Don't have an account?
+                        <Typography variant="caption" sx={{fontWeight:'500', opacity:'0.75'}}>OR</Typography>
+                        <Typography variant="body2" sx={{fontWeight:'500', opacity:'0.75'}}>
+                            Don't have an account?<br/>
                             <Link to="/register">Register Now</Link>
                         </Typography>
                     </Box>
                     {
                         differentEmail&&(
                             <Box sx={{textAlign: 'center'}}>
-                                <Typography variant="h6" sx={{color: '#dc3545'}}>Please Use the Bese Email</Typography>
+                                <Typography variant="subtitle2" sx={{color: '#dc3545'}}>Please Use the Bese Email</Typography>
                             </Box>
                         )
                     }

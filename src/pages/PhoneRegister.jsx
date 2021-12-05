@@ -37,14 +37,14 @@ const PhoneRegister = () => {
     const [displayMessage, setDisplayMessage] = useState('')
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
-          return;
+            return;
         }
         setphoneErro(false);
-      };
+    };
 
     const validatePhoneno=async()=>{
         if (contactNumber.match(/^\98?([0-9]{4})?([0-9]{4})$/)) {
-           await handlePhoneRegister();
+            await handlePhoneRegister();
         }
         else{
             setphoneErro(true);

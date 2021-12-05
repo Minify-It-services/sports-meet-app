@@ -92,10 +92,10 @@ const Register = () => {
     return (
         <Box sx={{width:'100%',height:'100vh'}} className='login-screen'>
             <Container sx={{height:'100%',display: 'flex',justifyContent:'center',alignItems: 'center'}}>
-                <Box sx={{display: 'flex',flexDirection: 'column',justifyContent: 'space-evenly',alignItems: 'center',height:'50%'}}>
+                <Box sx={{display: 'flex',flexDirection: 'column',justifyContent: 'space-evenly',alignItems: 'center',height:'60%'}}>
                     <Box sx={{textAlign:'center'}}>
-                        <Typography variant="h4" sx={{fontWeight:'600'}}>Welcome to GCES</Typography>
-                        <Typography variant="caption">Sign in to continue your GCES sports journey</Typography>
+                        <Typography color="primary" variant="h4" sx={{fontWeight:'600'}}>Welcome to GCES</Typography>
+                        <Typography variant="subtitle2" sx={{fontWeight:'500', opacity:'0.5'}}>Sign in to continue your GCES sports journey</Typography>
                     </Box>
                     <Box sx={{textAlign:'center', border: (differentEmail&&'1px solid #dc3545') }}>
                         <GoogleLogin 
@@ -107,16 +107,16 @@ const Register = () => {
                         />
                     </Box>
                     <Box sx={{textAlign:'center'}}>
-                        <Typography variant="caption">OR</Typography>
-                        <Typography variant="body2">
-                            Already have an account?
+                        <Typography variant="caption" sx={{fontWeight:'500', opacity:'0.75'}}>OR</Typography>
+                        <Typography variant="body2" sx={{fontWeight:'500', opacity:'0.75'}}>
+                            Already have an account? <br/>
                             <Link to="/login">Log in</Link>
                         </Typography>
                     </Box>
                     {
                         differentEmail&&(
                             <Box sx={{textAlign: 'center'}}>
-                                <Typography variant="h6" sx={{color: '#dc3545'}}>Please Use the Bese Email</Typography>
+                                <Typography variant="subtitle2" sx={{color: '#dc3545'}}>Please Use the Bese Email!</Typography>
                             </Box>
                         )
                     }

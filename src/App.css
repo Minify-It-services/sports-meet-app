@@ -1,34 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
 
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-}
 .topbar {
-  padding: 1.5em 1em; 
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
-  background-color: #fff;
+    padding: 1.5em 1em;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
+    background-color: #fff;
 }
-#phone{
-  background-image:url("./assets/img/DesktopMode.svg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-}
-@media (max-width:600px) {
-  #phone{
-    background-image: url('./assets/img/phone.svg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-  }
-}
+
 ::-webkit-scrollbar {
-  width: 0;
+    width: 0;
+    display: none;
 }
