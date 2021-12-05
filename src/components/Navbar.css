@@ -1,0 +1,14 @@
+.items {
+    background-color: #6F7CC7 !important;
+}
+
+.item {
+    color: #FFFFFF !important;
+    font-size: 1.3rem;
+    transition: all 0.5s ease-in-out !important;
+}
+
+.item-active {
+    border-top: 3px solid #FF804B !important;
+    background-color: #5666BD !important;
+}

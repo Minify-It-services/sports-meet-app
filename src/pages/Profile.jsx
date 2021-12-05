@@ -88,7 +88,7 @@ const Profile = () => {
                                                 {teamName}
                                             </Typography>
                                             <Box sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                                                <Chip size="small" label={sport} variant="outlined" color="primary" />
+                                                <Chip size="small" label={sport.name} variant="outlined" color="primary" />
                                                 <Divider orientation="vertical" flexItem />
                                                 <Chip size="small" label={role} variant="outlined" color="warning" />
                                             </Box>

@@ -6,10 +6,13 @@ import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import Paper from '@mui/material/Paper';
 
 // icons
-import HomeIcon from '@mui/icons-material/Home';
-import TableChartIcon from '@mui/icons-material/TableChart';
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
-import PersonIcon from '@mui/icons-material/Person';
+import {BiHomeAlt} from 'react-icons/bi';
+import {FiTablet} from 'react-icons/fi';
+import {HiOutlineDocumentAdd} from 'react-icons/hi';
+import {FiUser} from 'react-icons/fi';
+
+// css
+import './Navbar.css';
 
 const Navbar = () => {
 
@@ -18,15 +21,17 @@ const Navbar = () => {
 
     const [value, setValue] = React.useState();
 
+    const path = pathname.split('/')
+
     React.useEffect(() => {
-        switch (pathname) {
-            case '/':
+        switch (path[1]) {
+            case '':
                 setValue('home')
                 break;
-            case '/profile':
+            case 'profile':
                 setValue('profile')
                 break;
-            case '/teamRegister':
+            case 'teamRegister':
                 setValue('register')
                 break;
             default: return
@@ -36,11 +41,11 @@ const Navbar = () => {
 
     return (
         <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
-            <BottomNavigation sx={{ width:'100%' }} value={value}>
-                <BottomNavigationAction lable="Home" value="home" icon={<HomeIcon />} onClick={() => navigate('/')}/>
-                <BottomNavigationAction lable="Fixtures" value="fixtures" icon={<TableChartIcon />}/>
-                <BottomNavigationAction lable="Register" value="register" icon={<NoteAddIcon />} onClick={()=> navigate('/teamRegister')}/>
-                <BottomNavigationAction lable="Profile" value="profile" icon={<PersonIcon />} onClick={() => {navigate('/profile')}} />
+            <BottomNavigation sx={{ width:'100%' }} className="items" value={value}>
+                <BottomNavigationAction lable="Home" value="home" icon={<BiHomeAlt />} className={`item ${path[1]===''?'item-active':''}`} onClick={() => navigate('/')} />
+                <BottomNavigationAction lable="Fixtures" value="fixtures" icon={<FiTablet />} className="item" />
+                <BottomNavigationAction lable="Register" value="register" icon={<HiOutlineDocumentAdd />} className={`item ${path[1]==='teamRegister'?'item-active':''}`} onClick={()=> navigate('/teamRegister')} />
+                <BottomNavigationAction lable="Profile" value="profile" icon={<FiUser />} className={`item ${path[1]==='profile'?'item-active':''}`} onClick={() => {navigate('/profile')}} />
             </BottomNavigation>
         </Paper>
     );
