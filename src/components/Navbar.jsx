@@ -11,8 +11,8 @@ import {FiTablet} from 'react-icons/fi';
 import {HiOutlineDocumentAdd} from 'react-icons/hi';
 import {FiUser} from 'react-icons/fi';
 
-// css
-import './Navbar.css';
+// scss
+import './Navbar.scss';
 
 const Navbar = () => {
 

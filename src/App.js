@@ -13,10 +13,10 @@ import Notice from './admin/pages/notice';
 import Matches from './admin/pages/fixtures/MatchFixture';
 
 // fonts:
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
+// import '@fontsource/roboto/300.css';
+// import '@fontsource/roboto/400.css';
+// import '@fontsource/roboto/500.css';
+// import '@fontsource/roboto/700.css';
 
 // css:
 import './App.css';

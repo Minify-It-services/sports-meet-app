@@ -10,12 +10,8 @@ const Home = () => {
         <Layout title="Home Page">
             <div className="homeBackground"
                 style={{
-                backgroundImage: "url(/images/home-bg.gif)",
-                height:"70vh",
+                height:"80vh",
                 width:"100%",
-                backgroundPosition:"center",
-                backgroundRepeat:"no-repeat",
-                backgroundSize:"contain",
                 display:"flex",
                 flexDirection:"column",
                 alignItems:"center",
@@ -29,8 +25,13 @@ const Home = () => {
                         justifyContent:"center",
                         textAlign:"center",
                         }}>
-                        <Typography variant="h3" style={{fontSize:"3rem"}}>Welcome To GCES Sports Meet App </Typography>
-                        <Typography variant="h6">Let's play soon</Typography>
+                        <Typography variant="h4" style={{fontSize:"1.5rem", fontWeight:'600'}}>
+                            Welcome to GCES <br/>Sports Meet 
+                        </Typography>
+                        <img src="/images/home-bg.gif" alt="" style={{width:'250px'}} />
+                        <Typography variant="h6" color='primary' style={{fontSize:"1rem", fontWeight:'500'}}>
+                            Let's play soon
+                        </Typography>
                     </div>
             </div>
         </Layout>
