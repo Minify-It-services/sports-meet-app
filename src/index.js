@@ -7,6 +7,14 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import App from './App';
 
 const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#6F7CC7',
+    },
+    secondary: {
+      main: '#FF804B',
+    },
+  },
   typography: {
     fontFamily:  'Poppins, sans-serif',
   },
