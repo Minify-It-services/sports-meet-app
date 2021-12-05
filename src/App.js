@@ -10,7 +10,7 @@ import Sports from './admin/pages/sports';
 import Teams from './admin/pages/teams';
 import Fixtures from './admin/pages/fixtures';
 import Notice from './admin/pages/notice';
-import MatchFixture from './admin/pages/fixtures/MatchFixture';
+import Matches from './admin/pages/fixtures/MatchFixture';
 
 // fonts:
 import '@fontsource/roboto/300.css';
@@ -54,16 +54,17 @@ const Admin = () => {
       <Route path="dashboard" element={<Dashboard />} />
       <Route path="sport" element={<Sports />} />
       <Route path="team" element={<Teams />} />
-      <Route path="fixture/*" element={<Matches />} />
+      <Route path="fixture/*" element={<Fixture />} />
       <Route path="notice" element={<Notice />} />
     </Routes>
   )
 }
-const Matches = () => {
+const Fixture = () => {
   return (
     <Routes>
       <Route path="/" element={<Fixtures />} />
-      <Route path="game" element={<MatchFixture />} />
+      <Route path="matches" element={<Matches />} />
+      {/* <Route path="results" element={<MatchFixture />} /> */}
     </Routes>
   )
 }
