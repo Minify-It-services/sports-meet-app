@@ -3,7 +3,6 @@ import './ParticipatedSportCard.scss'
 import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
-import ButtonUnstyled from '@mui/base/ButtonUnstyled';
 
 
 function ParticipatedSportCard({sport,role,title}) {
