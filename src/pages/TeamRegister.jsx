@@ -11,12 +11,6 @@ import Typography from '@mui/material/Typography';
 // components:
 import jsendDestructor from "../utils/api/jsendDestructor";
 
-// const Item = styled(Paper)(() => ({
-//     textAlign: "center",
-//     height: 60,
-//     lineHeight: "60px",
-// }));
-
 const TeamRegister = () => {
     const cookies = new Cookies();
     const token = cookies.get("sports_app_token");
@@ -43,7 +37,7 @@ const TeamRegister = () => {
 
     return (
         <Layout title="Register">
-            <Box sx={{ width: "100%" }}>
+            <Box sx={{ width: "100%", marginTop:"25px", textAlign:'center' }}>
                 <Container
                     sx={{
                         height: "100%",
@@ -53,18 +47,15 @@ const TeamRegister = () => {
                         justifyContent: "start",
                     }}
                 >
-                    <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                        Select sport you want to participate
+                    <Typography variant="h6" sx={{ fontWeight: "bold"}}>
+                        Select the sport you want to register in
                     </Typography>
                     <Box
                         sx={{
-                            display: "grid",
-                            gridTemplateColumns: {
-                                lg: "repeat(4,1fr)",
-                                md: "repeat(4,1fr)",
-                                sm: "repeat(2,1fr)",
-                                xs: "repeat(1,1fr)",
-                            },
+                            display: 'flex',
+                            justifyContent:'center',
+                            flexWrap: 'wrap',
+                            marginTop:'25px'
                         }}
                     >
                         {sports?.map((sport) => {
