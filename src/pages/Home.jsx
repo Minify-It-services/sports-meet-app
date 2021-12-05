@@ -1,39 +1,55 @@
 import React from 'react';
 
-import { Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
 
 // components
 import Layout from '../layout/Layout';
+import MatchCard from '../components/MatchCard';
+import NoticeCard from '../components/NoticeCard';
 
 const Home = () => {
     return (
         <Layout title="Home Page">
-            <div className="homeBackground"
-                style={{
-                height:"80vh",
-                width:"100%",
-                display:"flex",
-                flexDirection:"column",
-                alignItems:"center",
-                justifyContent:"center",
-                }}>
-                    <div className="bgText"
-                        style={{
-                        display:"flex",
-                        flexDirection:"column",
-                        alignItems:"center",
-                        justifyContent:"center",
-                        textAlign:"center",
-                        }}>
-                        <Typography variant="h4" style={{fontSize:"1.5rem", fontWeight:'600'}}>
-                            Welcome to GCES <br/>Sports Meet 
-                        </Typography>
-                        <img src="/images/home-bg.gif" alt="" style={{width:'250px'}} />
-                        <Typography variant="h6" color='primary' style={{fontSize:"1rem", fontWeight:'500'}}>
-                            Let's play soon
-                        </Typography>
-                    </div>
-            </div>
+            <Box mx={{xs:'1rem', sm:'3rem', md:'5rem', lg:'9rem'}} my='1rem'>
+                {/* Matches-section: */}
+            <Box>
+                <Typography color='primary' sx={{fontSize:'1rem', fontWeight:'600', borderBottom:'2px dashed #00000050', marginBottom:'25px', padding:'10px 0px'}}>
+                    Matches
+                </Typography>
+                <Grid container spacing={2}>
+                    {/* -----Mappping from here----- */}
+                    <Grid item xs={12} sm={6} lg={4}>
+                        <MatchCard></MatchCard>
+                    </Grid>
+                    <Grid item xs={12} sm={6} lg={4}>
+                        <MatchCard></MatchCard>
+                    </Grid>
+                    <Grid item xs={12} sm={6} lg={4}>
+                        <MatchCard></MatchCard>
+                    </Grid>
+                </Grid>
+            </Box>
+            {/* Notice-section: */}
+            <Box my='1rem'>
+                <Typography color='primary' sx={{fontSize:'1rem', fontWeight:'600', borderBottom:'2px dashed #00000050', marginBottom:'25px', padding:'10px 0px'}}>
+                    Notices
+                </Typography>
+                <Grid container spacing={2}>
+                    {/* -----Mappping from here----- */}
+                    <Grid item xs={12} md={6} lg={4}>
+                        <NoticeCard></NoticeCard>
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={4}>
+                        <NoticeCard></NoticeCard>
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={4}>
+                        <NoticeCard></NoticeCard>
+                    </Grid>
+                </Grid>
+            </Box>
+            </Box>
         </Layout>
     )
 }
