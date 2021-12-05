@@ -39,6 +39,7 @@ const Teams = () => {
 
     const fetchTeams = async ()=>{
         const response = await jsendRes.destructFromApi('/teams','GET')
+        console.log(response)
         if(response.status === 'success'){
             setTeams(response.data)
         }

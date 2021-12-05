@@ -23,7 +23,7 @@ const Sport = () => {
     const cookies = new Cookies();
     const token = cookies.get('sports_app_token');
     const jsendRes = new jsendResDestructor({
-        'Content-Type': 'application/jsend',
+        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
     })
     const [action, setaction] = useState(false);
@@ -48,6 +48,15 @@ const Sport = () => {
         }
         else{
             console.log(response.message);
+        }
+    }
+    const deleteSport = async (id) => {
+        if(window.confirm('Are you sure you want to delete the sport?')){
+            const response = await jsendRes.destructFromApi(`/sports/${id}`, 'DELETE')
+            if(response.status === 'success')
+                window.location.reload()
+            else
+                console.log(response);
         }
     }
     useEffect(() => {
@@ -87,7 +96,7 @@ const Sport = () => {
                                     <TableCell align="center">
                                         <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
                                         <Button key="one" variant="outlined" color="primary" onClick={()=>editData(sport)}>Edit</Button>
-                                        <Button key="two" variant="outlined" color="error">Delete</Button>
+                                        <Button key="two" variant="outlined" color="error" onClick={()=>deleteSport(sport.id)}>Delete</Button>
                                         </Stack>
                                     </TableCell>
                                 </TableRow>
