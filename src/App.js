@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 // pages:guest
-import { TeamRegister, HomePage, SoloRegistration, TeamRegistration, DuoRegistration,PhoneRegister, ProfilePage, Login, Register } from './pages';
+import { TeamRegister, HomePage, SoloRegistration, TeamRegistration, DuoRegistration,PhoneRegister, ProfilePage, Login, Register, Fixture} from './pages';
 
 // pages:admin
 import Dashboard from './admin/pages/dashboard';
@@ -30,6 +30,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/phone-register" element={<PhoneRegister />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/fixture" element={<Fixture />} />
         <Route path="/teamRegister/*" element={<Team />} />
         <Route path="/admin/*" element={<Admin />} />
       </Routes>
