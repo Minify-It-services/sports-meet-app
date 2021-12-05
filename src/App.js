@@ -11,6 +11,7 @@ import Teams from './admin/pages/teams';
 import Fixtures from './admin/pages/fixtures';
 import Notice from './admin/pages/notice';
 import Matches from './admin/pages/fixtures/MatchFixture';
+import ResultFixture from './admin/pages/fixtures/ResultFixture';
 
 // fonts:
 // import '@fontsource/roboto/300.css';
@@ -64,7 +65,7 @@ const Fixture = () => {
     <Routes>
       <Route path="/" element={<Fixtures />} />
       <Route path="matches" element={<Matches />} />
-      {/* <Route path="results" element={<MatchFixture />} /> */}
+      <Route path="results" element={<ResultFixture />} />
     </Routes>
   )
 }
