@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -18,88 +18,32 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
+
 import { Typography } from '@mui/material';
 
 // components
+import Cookies from 'universal-cookie';
+import jsendDestructor from '../../../utils/api/jsendDestructor';
 import DrawerBar from '../../../components/DrawerBar';
+import { DesktopTimePicker } from '@mui/lab';
 
-// data:
-const rows = [
-    {
-        date:"5-12-2021",
-        team1:{
-            id:"id123",
-            name:"Software5thSem"
-        },
-        team2:{
-            id:"id1234",
-            name:"Software1stSem"
-        },
-        score:{
-            team1: 0, // default
-            team2: 0, // default
-        },
-        resultId: 'mongoDB_id', // default --> null,
-        status: "upcoming", // default
-        sport:"volleyball"
-    },
-    {
-        date:"5-12-2021",
-        team1:{
-            id:"id123",
-            name:"Computer5thSem"
-        },
-        team2:{
-            id:"id1234",
-            name:"Software1stSem"
-        },
-        score:{
-            team1: 0, // default
-            team2: 0, // default
-        },
-        resultId: 'mongoDB_id', // default --> null,
-        status: "upcoming", // default
-        sport:"volleyball"
-    },
-];
-
-const teams=[{
-    name: "Software 1th sem Team A",
-    "year": "2018",
-    "semester": "5th",
-    "faculty": "Software",
-    "memberIds":["619a241e106c9015687a1d71"],
-    "coach": "619a22bc0498ca60f4153ea8",
-    "manager": "619a22bc0498ca60f4153ea8",
-    "captain": "619a22bc0498ca60f4153ea8",
-    "sportId":"6198e9e4cd4bc645a092f230"
-},{
-    name: "Software 5thsem Team B",
-    "year": "2018",
-    "semester": "5th",
-    "faculty": "Software",
-    "memberIds":["619a241e106c9015687a1d71"],
-    "coach": "619a22bc0498ca60f4153ea8",
-    "manager": "619a22bc0498ca60f4153ea8",
-    "captain": "619a22bc0498ca60f4153ea8",
-    "sportId":"6198e9e4cd4bc645a092f230"
-},
-{
-    name: "Software 5th sem Team A",
-    "year": "2018",
-    "semester": "5th",
-    "faculty": "Software",
-    "memberIds":["619a241e106c9015687a1d71"],
-    "coach": "619a22bc0498ca60f4153ea8",
-    "manager": "619a22bc0498ca60f4153ea8",
-    "captain": "619a22bc0498ca60f4153ea8",
-    "sportId":"6198e9e4cd4bc645a092f230"
-},
-]
-
-const MatchFixture = () => {
-    const [date, setdate] = useState(new Date());
+const Matches = () => {
+    const cookies = new Cookies();
+    const token = cookies.get("sports_app_token");
+    const jsendRes = new jsendDestructor({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+    });
+    const [sports, setSports] = useState([]);
+    const [sport, setSport] = useState(null);
+    const [teams, setTeams] = useState([]);
+    const [matches, setMatches] = useState([]);
+    const [teamData, setTeamData] = useState({
+        team1: null,
+        team2: null,
+        date: new Date(),
+        time: new Date(),
+    })
     const [action, setaction] = useState(false);
     const [toEdit, settoEdit] = useState({});
     const editData=(row)=>{
@@ -113,6 +57,115 @@ const MatchFixture = () => {
         }
         else return false;
     }
+   
+    const getSports = async () => {
+        const { data, status, message } = await jsendRes.destructFromApi("/sports", "GET");
+        if (status === "success") {
+            setSports(data);
+        } else {
+            console.log(data, message);
+        }
+    };
+    const getMatches = async () => {
+        const { data, status, message } = await jsendRes.destructFromApi('/matches', 'GET')
+        if(status === "success")
+            setMatches(data)
+        else
+            console.log(data, message)
+    }
+    const fetchTeams = async () => {
+        let response = {}
+
+        if(toEdit.sport)
+            response = await jsendRes.destructFromApi(`/teams?sport=${toEdit.sport.name}&sportType=${toEdit.sport.gameType}`, 'GET')
+        else
+            response = await jsendRes.destructFromApi(`/teams?sport=${sport.name}&sportType=${sport.type}`, 'GET')
+
+        if(response.status === 'success')
+            setTeams(response.data)
+        else
+            console.log(response);
+    }
+    useEffect(() => {
+        getMatches();
+        getSports();
+        if(toEdit.sport){
+            setTeamData({
+                date: toEdit?.date,
+                team1: toEdit?.team1,
+                team2: toEdit?.team2,
+                time: toEdit?.time,
+            })
+            setSport(toEdit.sport)
+        }
+    // eslint-disable-next-line
+    }, [toEdit]);
+    useEffect(() => {
+        if(sport && sport?.name !== '')
+            fetchTeams();
+
+    // eslint-disable-next-line
+    }, [sports, sport])
+
+    const getFormatedTime = (time) => {
+        let hr = time.getHours();
+        let min = time.getMinutes();
+        let ap = 'AM'
+
+        if(hr === 12){
+            ap = 'PM'
+        }
+        if(hr > 12){
+            hr -= 12
+            if(hr < 10)
+                hr = `0${hr}`
+
+            ap = 'PM'
+        }
+        if(min < 10){
+            min = `0${min}`
+        }
+
+        return `${hr} : ${min} ${ap}`
+    }
+
+    const handleRegister = async () => {
+        const matchToSend = {
+            ...teamData,
+            time: getFormatedTime(teamData.time),
+            sport: toEdit.sport?{
+                name: toEdit.sport.name,
+                gameType: toEdit.sport.gameType,
+            }: {
+                name: sport.name,
+                gameType: sport.type,
+            }
+        }
+
+        let response = {}
+        if(toEdit.sport){
+            response = await jsendRes.destructFromApi(`/matches/${toEdit.id}`, 'PATCH', matchToSend)
+        }else{
+            response = await jsendRes.destructFromApi('/matches', 'POST', matchToSend)
+        }
+
+        if(response.status === 'success'){
+            window.location.reload()
+        }else{
+            console.log(response);
+        }
+    }
+
+    const deleteMatch = async (id) => {
+        if(window.confirm('Are you sure you want to delete the match?')){
+            const response = await jsendRes.destructFromApi(`/matches/${id}`, 'DELETE')
+            if(response.status === 'success')
+                window.location.reload()
+            else
+                console.log(response);
+        }
+    }
+
     return (
         <Box sx={{ display: 'flex' }}>
             <DrawerBar pageName={'Fixture'} pageId ={4} />
@@ -128,23 +181,22 @@ const MatchFixture = () => {
                             <TableRow>
                                 <TableCell align="center">Match</TableCell>
                                 <TableCell align="center">Date</TableCell>
-                                <TableCell align="center">Status</TableCell>
                                 <TableCell align="center">Results</TableCell>
+                                <TableCell align="center">Time</TableCell>
                                 <TableCell align="center">Actions</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row,index) => (
+                            {matches?.map((match,index) => (
                                 <TableRow  key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                    {/* <TableCell component="th" scope="row" align="center">{row.sportId}</TableCell> */}
-                                    <TableCell align="center">{row.team1.name} vs {row.team2.name}</TableCell>
-                                    <TableCell align="center">{row.date}</TableCell>
-                                    <TableCell align="center">{row.status}</TableCell>
-                                    <TableCell align="center">{row.resultId}</TableCell>
+                                    <TableCell align="center">{match?.team1.name} vs {match?.team2.name}</TableCell>
+                                    <TableCell align="center">{match?.date.substr(0, 10)}</TableCell>
+                                    <TableCell align="center">{match?.score.team1||0} : {match?.score.team2||0}</TableCell>
+                                    <TableCell align="center">{match?.time}</TableCell>
                                     <TableCell align="center">
                                         <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
-                                        <Button key="one" variant="outlined" color="primary" onClick={()=>editData(row)}>Edit</Button>
-                                        <Button key="two" variant="outlined" color="error">Delete</Button>
+                                        <Button key="one" variant="outlined" color="primary" onClick={()=>editData(match)}>Edit</Button>
+                                        <Button key="two" variant="outlined" color="error" onClick={()=>deleteMatch(match.id)}>Delete</Button>
                                         </Stack>
                                     </TableCell>
                                 </TableRow>
@@ -152,50 +204,63 @@ const MatchFixture = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                // : <AddTeam row={toEdit} changeAction={setaction}></AddTeam>
                 : <div row={toEdit}>
                     <Stack spacing={4} my={4}>
+                        <Typography>Select Sport</Typography>
+                        <Box display="grid" gridTemplateColumns="1fr">
+                            <Autocomplete
+                                disableClearable={true}
+                                disablePortal
+                                getOptionLabel={option => option.name || ''}
+                                value={sport}
+                                options={sports}
+                                onChange={(e, value)=>setSport({ name: value.name, type: value.type })}
+                                renderInput={(params) => <TextField {...params} label="Sport" />}
+                            />
+                        </Box>
                         <Typography>Select two Teams </Typography>
                         <Box display="grid" gridTemplateColumns="1fr 1fr" gap={5}>
                             <Autocomplete
-                            disablePortal
-                            options={teams.map(team=>team.name)}
-                            renderInput={(params) => <TextField {...params} label="Team1" />}
+                                disablePortal
+                                options={teams}
+                                isOptionEqualToValue={(option, value) => option.label === value.name}
+                                getOptionLabel={option => option.name || ''}
+                                value={teamData.team1}
+                                onChange={(e, value) => setTeamData(prevState => ({
+                                    ...prevState,
+                                    team1: { id: value.id, name: value.name }
+                                }))}
+                                renderInput={(params) => <TextField {...params} label="Team1" />}
                             />
                             <Autocomplete
-                            disablePortal
-                            options={teams.map(team=>team.name)}
-                            renderInput={(params) => <TextField {...params} label="Team2" />}
+                                disablePortal
+                                options={teams}
+                                isOptionEqualToValue={(option, value) => option.label === value.name}
+                                getOptionLabel={option => option.name || ''}
+                                value={teamData.team2}
+                                onChange={(e, value) => setTeamData(prevState => ({
+                                    ...prevState,
+                                    team2: { id: value.id, name: value.name }
+                                }))}
+                                renderInput={(params) => <TextField {...params} label="Team2" />}
                             />
                         </Box>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DesktopDatePicker
-                            label="Date"
-                            inputFormat="MM/dd/yyyy"
-                            value={date}
-                            onChange={(e,value)=>setdate(value)}
-                            renderInput={(params) => <TextField {...params} />}
+                                label="Date"
+                                inputFormat="MM/dd/yyyy"
+                                value={teamData.date}
+                                onChange={(value) => setTeamData(prevState => ({ ...prevState, date: value }))}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                            <DesktopTimePicker
+                                label="Time"
+                                value={teamData.time}
+                                onChange={(value) => setTeamData(prevState => ({ ...prevState, time: value }))}
+                                renderInput={(params) => <TextField {...params} />}
                             />
                         </LocalizationProvider>
-                        <Box display='grid' gridTemplateColumns="1fr 1fr" gap={5}>
-                            <TextField id="standard-basic" label="Team1 Score" variant="standard" type="number" />
-                            <TextField id="standard-basic" label="Team2 Score" variant="standard" type="number" />
-                        </Box>
-                        <Box display="grid" gridTemplateColumns="1fr 1fr" gap={5}>
-                            <TextareaAutosize
-                            aria-label="empty textarea"
-                            placeholder="Card Description"
-                            style={{ width: '100%',minHeight:'200px' }}
-                            // defaultValue={!forEdit?editData.description:""} onChange={(event)=>handleChange(event,'description')}
-                            />
-                            <TextareaAutosize
-                            aria-label="empty textarea"
-                            placeholder="Score Description"
-                            style={{ width: '100%',minHeight:'200px' }}
-                            // defaultValue={!forEdit?editData.description:""} onChange={(event)=>handleChange(event,'description')}
-                            />
-                        </Box>
-                        <Button variant="outlined" color="success" onClick={()=>console.log('save match fixture')}>Save</Button>
+                        <Button variant="outlined" color="success" onClick={handleRegister}>Save</Button>
                     </Stack>
                 </div>
 
@@ -205,4 +270,4 @@ const MatchFixture = () => {
     )
 }
 
-export default MatchFixture
+export default Matches

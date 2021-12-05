@@ -1,6 +1,5 @@
 import React from 'react';
-import { useState,useEffect,useCallback } from 'react';
-import { cleanup } from '@testing-library/react';
+import { useState,useEffect } from 'react';
 
 import TextField  from '@mui/material/TextField';
 import Button  from '@mui/material/Button';
@@ -38,38 +37,28 @@ function AddTeam(props) {
   // eslint-disable-next-line
   }, [])
 
-  const [forEdit, setforEdit] = useState(false);
-    const [editedTeam, seteditedTeam] = useState({});
-    let editData=props.row;
-    const isObjEmpty=(obj)=>{
-        if (obj && Object.keys(obj).length === 0
-        && Object.getPrototypeOf(obj) === Object.prototype) {
-          return true;
-        }
-        else return false;
-      }
-    useEffect(() => {
-        if (isObjEmpty(editData)) {
-            setforEdit(false);
-        }
-        else {
-            setforEdit(true);
-            seteditedTeam(props.row);
-        };
-        return ()=>{
-            cleanup();
-        }
-    }, [editData,props.row]);
+    const [name, setName] = useState('');
 
-    //TODO:ONSAVE GO BACK TO TABLE SCREEN
-    const handleSave = useCallback(event => {
-        props.changeAction(false);
-        console.log(editedTeam, teachers, sport);
-      //eslint-disable-next-line
-      }, [props,editedTeam])
+      const pushTeam= async ()=> {
+        const team = {
+          name,
+          sport:{
+            name: sport.name,
+            gameType: sport.type,
+          },
+          memberIds: teachers.map(teacher=>teacher.id),
+        }
+        const  response = await props.jsendRes.destructFromApi('/teams/teachers','POST',team)
+        if(response.status === 'success'){
+            window.location.reload()
+        }
+        else{
+            console.log(response)
+        }
+    }
     return (
         <Stack spacing={{ xs: 1, sm: 2, md: 3 }} sx={{mt:2}}>
-            <TextField id="standard-basic" label="Team Name" variant="standard" type="text" defaultValue={!forEdit?editData.name:""} />
+            <TextField id="standard-basic" label="Team Name" variant="standard" type="text" onChange={(e)=>setName(e.target.value)}/>
             <div>
             <Box display="grid" gridTemplateColumns="1fr 1fr" justifyContent="space-between">
               <h3>Sport</h3>
@@ -97,7 +86,7 @@ function AddTeam(props) {
                 renderInput={(params) => <TextField {...params} label="Team Members" variant="standard" required={true}/>}
               />
             </div>
-            <Button variant="outlined" color="success" onClick={handleSave}>Save</Button>
+            <Button variant="outlined" color="success" onClick={pushTeam}>Save</Button>
         </Stack>
     )
 }
