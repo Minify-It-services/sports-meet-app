@@ -26,7 +26,7 @@ const Home = () => {
                         textAlign:"center",
                         }}>
                         <Typography variant="h4" style={{fontSize:"1.5rem", fontWeight:'600'}}>
-                            Welcome To GCES <br/>Sports Meet 
+                            Welcome to GCES <br/>Sports Meet 
                         </Typography>
                         <img src="/images/home-bg.gif" alt="" style={{width:'250px'}} />
                         <Typography variant="h6" color='primary' style={{fontSize:"1rem", fontWeight:'500'}}>
