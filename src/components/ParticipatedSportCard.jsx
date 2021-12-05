@@ -4,9 +4,11 @@ import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import SendIcon from '@mui/icons-material/Send';
+import { Link } from 'react-router-dom';
 
 
-function ParticipatedSportCard({sport,role,title}) {
+function ParticipatedSportCard({sport,sportType,role,title}) {
+    const type = sportType==='single'?'solo-registration':(sportType==='duo'?'duo-registration':'team-registration');
     return (
         <div id="participated-sport-card">
         <Typography variant="subtitle1" gutterBottom component="div">{title}</Typography>
@@ -16,7 +18,9 @@ function ParticipatedSportCard({sport,role,title}) {
                     className="chip"/></div>
                     <div className="flex"><p>Sport:</p><Chip variant="outlined" color="warning" size="small" label={sport} sx={{minWidth:'120px'}} className="chip"/></div>
                 </div>
-                <Button variant="contained" endIcon={<SendIcon />} size="small" sx={{maxWidth:"120px", maxHeight:"35px"}} color="primary" style={{textTransform: 'none'}} >Details</Button>
+                <Link to={`/teamRegister/${type}/${sport}`} style={{ textDecoration: 'none' }}>
+                    <Button variant="contained" endIcon={<SendIcon />} size="small" sx={{maxWidth:"120px", maxHeight:"35px"}} color="primary" style={{textTransform: 'none'}} >Details</Button>
+                </Link>
             </div>
         </div>
     )
