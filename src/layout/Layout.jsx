@@ -16,7 +16,7 @@ const Layout = ({ title, children, isSecondPage=false }) => {
                 <Typography >
                     {isSecondPage&&<span style={{ marginRight: '1em', cursor: 'pointer' }} onClick={()=>navigate(-1)}><ArrowBackIos /></span>} {title}
                 </Typography>
-                <img src="./images/logo-full.png" alt="logo" style={{width:'50px'}} />
+                <img src="/images/logo-full.png" alt="logo" style={{width:'50px'}} />
             </div>
             <div style={{ height: '10vh', width: '100%'}} />
             <Navbar />   
