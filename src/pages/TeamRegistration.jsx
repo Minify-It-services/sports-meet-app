@@ -239,6 +239,48 @@ const TeamRegistration = () => {
     }
   }
 
+  const handleLeaveTeam = async () => {
+    let teamToSend = {}
+
+    if(player.id === teamData.coach.id){
+      teamToSend = {
+        captain: teamData.captain.id,
+        memberIds: teamData.memberIds.map(member => member.id)
+      }
+    }else if(player.id === teamData.captain.id){
+      teamToSend = {
+        coach: teamData.coach.id,
+        memberIds: teamData.memberIds.map(member => member.id)
+      }
+    }else{
+      const newMemberIds = teamData.memberIds.filter(member => member.id!==player.id)
+      teamToSend = {
+        captain: teamData.captain.id,
+        coach: teamData.coach.id,
+        memberIds: newMemberIds.map(newMember => newMember.id)
+      }
+    }
+
+    const response = await jsendRes.destructFromApi(`/teams/leave/${teamData.teamId}`, 'PATCH', teamToSend)
+
+    if(response.status === 'success'){
+      setTeamData(prevState => ({
+          ...prevState,
+          registered: false,
+          hasError: true,
+          displayMessage: 'You left the team',
+          coach: null,
+          captain: null,
+          manager: null,
+          memberIds: [],
+          selectedOptions: [],
+      }))
+      setOpen(!open)
+    }else{
+      console.log(response);
+    }
+  }
+
   return (
     <Layout title="Team Register" isSecondPage>
       <div
@@ -359,6 +401,7 @@ const TeamRegistration = () => {
                             variant="contained"
                             sx={{ width: 150, alignSelf: "center" }}
                             color="error"
+                            onClick={handleLeaveTeam}
                           >
                             Leave Team
                           </Button>
