@@ -28,6 +28,9 @@ const Navbar = () => {
             case '':
                 setValue('home')
                 break;
+            case 'fixture':
+                setValue('fixture')
+                break;
             case 'profile':
                 setValue('profile')
                 break;
@@ -42,10 +45,10 @@ const Navbar = () => {
     return (
         <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
             <BottomNavigation sx={{ width:'100%' }} className="items" value={value}>
-                <BottomNavigationAction lable="Home" value="home" icon={<BiHomeAlt />} className={`item ${path[1]===''?'item-active':''}`} onClick={() => navigate('/')} />
-                <BottomNavigationAction lable="Fixtures" value="fixtures" icon={<FiTablet />} className="item" />
-                <BottomNavigationAction lable="Register" value="register" icon={<HiOutlineDocumentAdd />} className={`item ${path[1]==='teamRegister'?'item-active':''}`} onClick={()=> navigate('/teamRegister')} />
-                <BottomNavigationAction lable="Profile" value="profile" icon={<FiUser />} className={`item ${path[1]==='profile'?'item-active':''}`} onClick={() => {navigate('/profile')}} />
+                <BottomNavigationAction label="Home" value="home" icon={<BiHomeAlt />} className={`item ${path[1]===''?'item-active':''}`} onClick={() => navigate('/')} />
+                <BottomNavigationAction label="Fixture" value="fixture" icon={<FiTablet />} className={`item ${path[1]==='fixture'?'item-active':''}`} onClick={() => navigate('/fixture')} />
+                <BottomNavigationAction label="Register" value="register" icon={<HiOutlineDocumentAdd />} className={`item ${path[1]==='teamRegister'?'item-active':''}`} onClick={()=> navigate('/teamRegister')} />
+                <BottomNavigationAction label="Profile" value="profile" icon={<FiUser />} className={`item ${path[1]==='profile'?'item-active':''}`} onClick={() => {navigate('/profile')}} />
             </BottomNavigation>
         </Paper>
     );
