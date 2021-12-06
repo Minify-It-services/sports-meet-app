@@ -33,28 +33,7 @@ const Profile = () => {
 
         setUser(response.data)
     }
-    const getSem = (year) => {
-        switch (year) {
-            case '2018':
-                return '5th'
-            case '2017':
-                return '7th'
-            case '2019':
-                return '3rd'
-            case '2020':
-                return '1st'
-            default: return 'unknown'
-        }
-    }
-    // const getRandomWords = () => {
-    //     let text = "";
-    //     const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    //     for (var i = 0; i < 5; i++)
-    //         text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    //     setSeed(text)
-    // }
     useEffect(() => {
         if(!player){
             navigate('/register')
@@ -78,7 +57,7 @@ const Profile = () => {
                                     <Edit sx={{fontSize:'1.25rem'}} />
                                 </IconButton>
                             </Box>
-                            <Typography variant="subtitle2" gutterBottom component="div" color="secondary" sx={{fontSize:'0.8rem'}}>{ `${user?.year} | ${getSem(user?.year)} sem | ${user?.faculty}`}</Typography>  
+                            <Typography variant="subtitle2" gutterBottom component="div" color="secondary" sx={{fontSize:'0.8rem'}}>{ `${player.year} | ${player.semester} sem | ${player.faculty}`}</Typography>  
                             {
                                 user?.role==='admin'&&(
                                     <Button variant="outlined" sx={{ textAlign: 'center', fontSize:'0.75rem' }}>
