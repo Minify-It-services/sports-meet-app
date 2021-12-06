@@ -9,7 +9,17 @@ function Fixture() {
     return (
         <Layout title="Fixture Page">
             <Box mx={{xs:'1rem', sm:'3rem', md:'5rem', lg:'9rem'}} my='1rem'>
-            <Typography color='primary' sx={{fontSize:'1rem', fontWeight:'600', }}>Team Games</Typography>
+                <Typography color='primary' sx={{fontSize:'1rem', fontWeight:'600', }}>
+                    Team Games
+                </Typography>
+                <FixtureCard/>
+                <FixtureCard/>
+            </Box>
+            <Box mx={{xs:'1rem', sm:'3rem', md:'5rem', lg:'9rem'}} my='1rem'>
+                <Typography color='primary' sx={{fontSize:'1rem', fontWeight:'600', }}>
+                    Single Games
+                </Typography>
+                <FixtureCard/>
                 <FixtureCard/>
             </Box>
         </Layout>

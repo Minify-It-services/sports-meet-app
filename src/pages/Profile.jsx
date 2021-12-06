@@ -71,24 +71,24 @@ const Profile = () => {
                     <Stack direction="row" spacing={5} justifyContent="center" alignItems="center" sx={{ margin:'1em 0' }}>
                         <Avatar src={`https://avatars.dicebear.com/api/bottts/${player?.name}.svg?scale=80`} variant="rounded" sx={{width:'100px', height:'100px', border: '1px solid #25252521'}}/>
                         <Box sx={{display:'flex', flexDirection:'column'}}>
-                            <Typography variant="h6">{player?.name}</Typography>
+                            <Typography variant="h6" sx={{fontSize:'1.1rem'}}>{player?.name}</Typography>
                             <Box>
-                                <Typography variant="caption" sx={{fontStyle: 'italic', fontWeight: 'regular'}}>{player?.email}</Typography>
+                                <Typography variant="caption" sx={{fontStyle: 'italic', fontWeight: '400', fontSize:'0.675rem'}}>{player?.email}</Typography>
                                 <IconButton color="primary" onClick={()=>navigate('/phone-register')}>
-                                    <Edit />
+                                    <Edit sx={{fontSize:'1.25rem'}} />
                                 </IconButton>
                             </Box>
-                            <Typography variant="subtitle2" gutterBottom component="div" color="secondary">{ `${user?.year} | ${getSem(user?.year)} sem | ${user?.faculty}`}</Typography>  
+                            <Typography variant="subtitle2" gutterBottom component="div" color="secondary" sx={{fontSize:'0.8rem'}}>{ `${user?.year} | ${getSem(user?.year)} sem | ${user?.faculty}`}</Typography>  
                             {
                                 user?.role==='admin'&&(
-                                    <Button variant="outlined" sx={{ textAlign: 'center' }}>
+                                    <Button variant="outlined" sx={{ textAlign: 'center', fontSize:'0.75rem' }}>
                                         <Link style={{ color: '#1976d2', textDecoration: 'none' }} to="/admin/dashboard">Admin side</Link>
                                     </Button>
                                 )
                             }
                         </Box>
                     </Stack>
-                    <Box>
+                    <Box sx={{marginTop:'25px'}}>
                         <Typography variant='body1' sx={{ fontWeight: '600', marginBottom:'25px' }}>Participated Sports:</Typography>
                         {/* check for emppty sports and render */}
                         {1?
