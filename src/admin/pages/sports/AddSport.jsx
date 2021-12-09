@@ -24,6 +24,7 @@ function AddSport(props) {
         imageUrl: '',
         type: '',
         rules: '',
+        forGender: '',
     })
     const [members, setMembers] = useState([])
     
@@ -88,6 +89,7 @@ function AddSport(props) {
             rules: sportData.rules.split('|'),
             coordinators: sportData.coordinators.split(','),
             referees: sportData.referees,
+            forGender: sportData.forGender,
         }
         console.log(sportToCreate)
         let response = {}
@@ -165,13 +167,6 @@ function AddSport(props) {
                 }))}
                 value={sportData.extraLimit}
                 />
-                <TextField label="Image URL" variant="standard" type="text"
-                onChange={e=> setSportData(prevState => ({
-                    ...prevState, 
-                    imageUrl : e.target.value
-                }))}
-                value={sportData.imageUrl}
-                />
                 <TextField
                 select
                 label="Sports Type"
@@ -185,6 +180,26 @@ function AddSport(props) {
                     <MenuItem  value="duo">Double</MenuItem>
                     <MenuItem  value="team">Team</MenuItem>
                 </TextField>
+                <TextField
+                select
+                label="For Gender"
+                onChange={e=> setSportData(prevState => ({
+                    ...prevState, 
+                    forGender : e.target.value
+                }))}
+                value={sportData.forGender}
+                >
+                    <MenuItem  value="male">Male</MenuItem>
+                    <MenuItem  value="female">Female</MenuItem>
+                    <MenuItem  value="both">Both</MenuItem>
+                </TextField>
+                <TextField label="Image URL" variant="standard" type="text"
+                onChange={e=> setSportData(prevState => ({
+                    ...prevState, 
+                    imageUrl : e.target.value
+                }))}
+                value={sportData.imageUrl}
+                />
             </Box>
             <TextareaAutosize
             aria-label="empty textarea"

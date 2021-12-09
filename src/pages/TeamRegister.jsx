@@ -14,6 +14,7 @@ import jsendDestructor from "../utils/api/jsendDestructor";
 const TeamRegister = () => {
     const cookies = new Cookies();
     const token = cookies.get("sports_app_token");
+    const {gender} = JSON.parse(localStorage.getItem('player'))
     const jsendRes = new jsendDestructor({
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -21,7 +22,7 @@ const TeamRegister = () => {
     const [sports, setSports] = useState([]);
     const getSports = async () => {
         const { data, status, message } = await jsendRes.destructFromApi(
-            "/sports",
+            `/sports?gender=${gender}`,
             "GET"
         );
         if (status === "success") {
