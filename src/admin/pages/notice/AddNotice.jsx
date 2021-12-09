@@ -6,7 +6,7 @@ import TextField  from '@mui/material/TextField';
 import Button  from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
-
+import MenuItem from '@mui/material/MenuItem';
 
 function AddNotice(props) {
     const [forEdit, setforEdit] = useState(false);
@@ -38,6 +38,7 @@ function AddNotice(props) {
             const noticeToSend = {
                 title: editedNotice.title,
                 description: editedNotice.description,
+                label: editedNotice.label,
             }
             response = await props.jsendRes.destructFromApi(`/notices/${editedNotice.id}`,'PATCH',noticeToSend)
         }
@@ -58,6 +59,18 @@ function AddNotice(props) {
         return (
         <Stack spacing={{ xs: 1, sm: 2, md: 3 }} sx={{mt:2}}>
             <TextField id="standard-basic" label="Title" variant="standard" type="text" defaultValue={!forEdit?editData.title:""} onChange={(event)=>handleChange(event,'title')}/>
+            <TextField
+                select
+                label="Notice Type"
+                onChange={e=>handleChange(e, 'label')}
+                defaultValue={!forEdit?editData.label:"delayed"}
+                >
+                    <MenuItem  value="delayed">Delayed</MenuItem>
+                    <MenuItem  value="default winner">Default Winner</MenuItem>
+                    <MenuItem  value="moved ahead">Moved Ahead</MenuItem>
+                    <MenuItem  value="cancelled">Cancelled</MenuItem>
+                    <MenuItem  value="important">Important</MenuItem>
+                </TextField>
             <TextareaAutosize
             aria-label="empty textarea"
             placeholder="Description"

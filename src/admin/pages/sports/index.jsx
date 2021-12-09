@@ -89,8 +89,7 @@ const Sport = () => {
                                     <TableCell align="center" sx={{textTransform:'capitalize'}}>{sport.name}</TableCell>
                                     <TableCell align="center">
                                         <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">
-                                            <p sx={{textTransform:'capitalize'}}>{sport.coordinator}</p>
-                                            <p sx={{textTransform:'capitalize'}}>{sport.viceCoordinator}</p>
+                                            <p sx={{textTransform:'capitalize'}}>{sport.coordinators.join(', ')}</p>
                                         </Stack>
                                     </TableCell>
                                     <TableCell align="center">
