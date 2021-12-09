@@ -57,7 +57,7 @@ const Profile = () => {
                                     <Edit sx={{fontSize:'1.25rem'}} />
                                 </IconButton>
                             </Box>
-                            <Typography variant="subtitle2" gutterBottom component="div" color="secondary" sx={{fontSize:'0.8rem'}}>{ `${player.year} | ${player.semester} sem | ${player.faculty}`}</Typography>  
+                            <Typography variant="subtitle2" gutterBottom component="div" color="secondary" sx={{fontSize:'0.8rem'}}>{ `${player?.year} | ${player?.semester} sem | ${player?.faculty}`}</Typography>  
                             {
                                 user?.role==='admin'&&(
                                     <Button variant="outlined" sx={{ textAlign: 'center', fontSize:'0.75rem' }}>
