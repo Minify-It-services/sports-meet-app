@@ -121,7 +121,7 @@ const SoloRegistration = ()=> {
             <Container sx={{marginTop:5}}>
             <Stack spacing={3}>
             <Typography color='primary' sx={{fontSize:'1rem', fontWeight:'600', display: 'flex', alignItems: 'center', borderBottom:'2px dashed #00000050', marginBottom:'25px', padding:'10px 0px'}}>
-              <img src={sport.imageUrl} alt="sport logo" width="50px" style={{ backgroundColor:'', marginRight: '1em'}} />  { sportName }
+              <img src={sport.imageUrl} alt="" width="50px" style={{ backgroundColor:'', marginRight: '1em'}} />  { sportName }
             </Typography>
             <p>
               Coordinators: {sport?.coordinators?.join(', ')}

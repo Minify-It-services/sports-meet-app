@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import Cookies from 'universal-cookie';
 
 import { Container, Box, Stack, Avatar, Typography, Button, IconButton } from '@mui/material';
+import LinearProgress from '@mui/material/LinearProgress';
 
 // components
 import Layout from '../layout/Layout';
@@ -24,14 +25,17 @@ const Profile = () => {
     })
     
     const [ user, setUser ] = useState({})
+    const [ loading, setLoading ] = useState(false)
 
     const getUserData = async () => {
+        setLoading(true)
         const response = await jsendRes.destructFromApi(`/users/${player.id}`, 'GET')
 
         if(response.message && response.message==='Please authenticate')
             navigate('/register')
 
         setUser(response.data)
+        setLoading(false)
     }
 
     useEffect(() => {
@@ -69,15 +73,22 @@ const Profile = () => {
                     </Stack>
                     <Box sx={{marginTop:'25px'}}>
                         <Typography variant='body1' sx={{ fontWeight: '600', marginBottom:'25px' }}>Participated Sports:</Typography>
-                        {/* check for emppty sports and render */}
-                        {1?
-                        <Box display='grid'  gridTemplateColumns={{md:"repeat(2,1fr)",lg:"repeat(3,1fr)", xs:"repeat(1,1fr)", sm:"repeat(2,1fr)"}} gap={{xs:1,md:3,sm:2}} justifyContent="center">
-                            {user?.teams?.map((team, id)=>{
-                                const {teamName, sport, role} = team;
-                                return <ParticipatedSportCard role={role} sport={sport.name} sportType={sport.gameType} title={teamName} key={id}/>
-                            })}
-                        </Box>
-                        :<Typography variant="body2" maxWidth="450px" margin="0 auto" textAlign="center" gutterBottom component="div" color='secondary'>No more team registration available for this sport.If it is a system error contact 3rd year. Thank you</Typography>}
+                        {
+                            loading?<LinearProgress color="inherit" />:(
+                                <>
+                                    {
+                                    user?.teams?.length>=0?(
+                                        <Box display='grid'  gridTemplateColumns={{md:"repeat(2,1fr)",lg:"repeat(3,1fr)", xs:"repeat(1,1fr)", sm:"repeat(2,1fr)"}} gap={{xs:1,md:3,sm:2}} justifyContent="center">
+                                            {user?.teams?.map((team, id)=>{
+                                                const {teamName, sport, role} = team;
+                                                return <ParticipatedSportCard role={role} sport={sport.name} sportType={sport.gameType} title={teamName} key={id}/>
+                                            })}
+                                        </Box>
+                                    )
+                                    :<Typography variant="body2" maxWidth="450px" margin="0 auto" textAlign="center" gutterBottom component="div" color='secondary'>You are not participating in any sports. Participate in one and see them here.</Typography>}
+                                </>
+                            )
+                        }
                     </Box>
                 </Container>
             </Box>

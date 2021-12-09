@@ -12,6 +12,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import Cookies from 'universal-cookie';
+import LinearProgress from '@mui/material/LinearProgress';
 
 import jsendDestructor from '../utils/api/jsendDestructor'
 import NoTeam from '../components/NoTeam'
@@ -50,7 +51,10 @@ const TeamRegistration = () => {
     role: ''
   })
   const [members, setMembers] = useState([])
+  const [allMembers, setAllMembers] = useState([])
   const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = useState(false);
+  const [playerLimit, setPlayerLimit] = useState(1);
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -67,7 +71,18 @@ const TeamRegistration = () => {
     }
   }
 
+  const getAllPlayers = async () => {
+    const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}&userId=${player.id}&faculty=${player.faculty}&sport=${sportName}&sportType=team`, 'GET')
+    if(status === 'success'){
+      setAllMembers(data)
+    }else{
+      console.log(data, message);
+    }
+    setLoading(false)
+  }
+
   const checkForAvailability = async () => {
+    setLoading(true);
     const { data } = await jsendRes.destructFromApi(
       `/teams/check?sport=${sportName}&sportType=team&year=${player.year}&faculty=${player.faculty}&playerId=${player.id}`, 
       'GET'
@@ -99,8 +114,10 @@ const TeamRegistration = () => {
 
   useEffect(() => {
     getSport(sportName, jsendRes).then(res => setSport(res))
+    setPlayerLimit(((sport.playerLimit-1)+sport.extraLimit))
     checkForAvailability();
     getPlayers();
+    getAllPlayers();
   // eslint-disable-next-line
   }, [teamData.registered])
 
@@ -239,188 +256,144 @@ const TeamRegistration = () => {
     }
   }
 
-  const handleLeaveTeam = async () => {
-    let teamToSend = {}
-
-    if(player.id === teamData.coach.id){
-      teamToSend = {
-        captain: teamData.captain.id,
-        memberIds: teamData.memberIds.map(member => member.id)
-      }
-    }else if(player.id === teamData.captain.id){
-      teamToSend = {
-        coach: teamData.coach.id,
-        memberIds: teamData.memberIds.map(member => member.id)
-      }
-    }else{
-      const newMemberIds = teamData.memberIds.filter(member => member.id!==player.id)
-      teamToSend = {
-        captain: teamData.captain.id,
-        coach: teamData.coach.id,
-        memberIds: newMemberIds.map(newMember => newMember.id)
-      }
-    }
-
-    const response = await jsendRes.destructFromApi(`/teams/leave/${teamData.teamId}`, 'PATCH', teamToSend)
-
-    if(response.status === 'success'){
-      setTeamData(prevState => ({
-          ...prevState,
-          registered: false,
-          hasError: true,
-          displayMessage: 'You left the team',
-          coach: null,
-          captain: null,
-          manager: null,
-          memberIds: [],
-          selectedOptions: [],
-      }))
-      setOpen(!open)
-    }else{
-      console.log(response);
-    }
-  }
-
   return (
     <Layout title="Team Register" isSecondPage>
       <Container sx={{ marginTop: 5 }}>
         <Stack spacing={3}>
           <Typography color='primary' sx={{fontSize:'1rem', fontWeight:'600', display: 'flex', alignItems: 'center', borderBottom:'2px dashed #00000050', marginBottom:'25px', padding:'10px 0px'}}>
-            <img src={sport.imageUrl} alt="sport logo" width="50px" style={{ backgroundColor:'', marginRight: '1em'}} />  { sportName }
+            <img src={sport.imageUrl} alt="" width="50px" style={{ backgroundColor:'', marginRight: '1em'}} />  { sportName }
           </Typography>
           <p>
             Coordinators: {sport?.coordinators?.join(', ')}
           </p>
           {
-            teamData.hasTeamSlot?(
+            loading?<LinearProgress color="inherit" />:(
               <>
-                <Stack spacing={{ xs: 2, md: 4 }}>
-                  <form id="team-form" onSubmit={handleRegister}>
-                    <div>
-                      <Autocomplete
-                        getOptionLabel={(option) => option.name ? option.name : ''}
-                        isOptionEqualToValue={(option, value) =>
-                          option.label === value.name
-                        }
-                        disablePortal
-                        name="manager"
-                        ref={managerRef}
-                        options={members}
-                        disabled={teamData.registered}
-                        value={teamData.manager}
-                        onChange={(e, value) => handleChange(e, value, managerRef)}
-                        getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
-                        renderInput={(params) => (
-                          <TextField {...params} label="Manager" variant="standard" required={true} />
-                        )}
-                      />
-                    </div>
-                    <div>
-                      <Autocomplete
-                        getOptionLabel={(option) => option.name ? option.name : ''}
-                        isOptionEqualToValue={(option, value) =>
-                          option.label === value.name
-                        }
-                        disablePortal
-                        name="captain"
-                        ref={captainRef}
-                        options={members}
-                        disabled={teamData.registered&&(teamData.role!=='manager'&&teamData.role!=='coach')}
-                        value={teamData.captain}
-                        onChange={(e, value) => handleChange(e, value, captainRef)}
-                        getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
-                        renderInput={(params) => (
-                          <TextField {...params} label="Captain" variant="standard" required={true} />
-                        )}
-                      />
-                    </div>
-                    <div>
-                      <Autocomplete
-                        getOptionLabel={(option) => option.name ? option.name : ''}
-                        isOptionEqualToValue={(option, value) =>
-                          option.label === value.name
-                        }
-                        disablePortal
-                        name="coach"
-                        ref={coachRef}
-                        disabled={teamData.registered&&(teamData.role!=='manager'&&teamData.role!=='coach')}
-                        onChange={(e, value) => handleChange(e, value, coachRef)}
-                        options={members}
-                        value={teamData.coach}
-                        getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
-                        renderInput={(params) => (
-                          <TextField {...params} label="Coach" variant="standard" required={true} />
-                        )}
-                      />
-                    </div>
-                    <div>
-                      <Autocomplete
-                        getOptionLabel={(option) => option.name}
-                        isOptionEqualToValue={(option, value) =>
-                          option.label === value.name
-                        }
-                        multiple
-                        name="memberIds"
-                        ref={playerRef}
-                        disabled={teamData.registered&&(teamData.role!=='manager'&&teamData.role!=='coach')}
-                        value={teamData.memberIds}
-                        onChange={(e, value) => handleChange(e, value, playerRef)}
-                        options={members}
-                        getOptionDisabled={(option) => (( teamData.memberIds?.length === 2 || teamData.selectedOptions.includes(option) )?true:false)}
-                        renderInput={(params) => (
-                          <TextField {...params} variant="standard" label="Players" />
-                        )}
-                      />
-                    </div>
-                  </form>
-                </Stack>
                 {
-                  teamData.registered?(
-                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: '1em' }}>
-                      {teamData.role==='manager'?(
-                          <Button
-                            variant="contained"
-                            sx={{ width: 150, alignSelf: "center" }}
-                            color="error"
-                            onClick={handleRemoveTeam}
-                          >
-                            Remove Team
-                          </Button>
+                  teamData.hasTeamSlot?(
+                    <>
+                      <Stack spacing={{ xs: 2, md: 4 }}>
+                        <form id="team-form" onSubmit={handleRegister}>
+                          <div>
+                            <Autocomplete
+                              getOptionLabel={(option) => option.name ? option.name : ''}
+                              isOptionEqualToValue={(option, value) =>
+                                option.label === value.name
+                              }
+                              disablePortal
+                              name="manager"
+                              ref={managerRef}
+                              options={allMembers}
+                              disabled={teamData.registered}
+                              value={teamData.manager}
+                              onChange={(e, value) => handleChange(e, value, managerRef)}
+                              getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
+                              renderInput={(params) => (
+                                <TextField {...params} label="Manager" variant="standard" required={true} />
+                              )}
+                            />
+                          </div>
+                          <div>
+                            <Autocomplete
+                              getOptionLabel={(option) => option.name ? option.name : ''}
+                              isOptionEqualToValue={(option, value) =>
+                                option.label === value.name
+                              }
+                              disablePortal
+                              name="coach"
+                              ref={coachRef}
+                              disabled={teamData.registered&&(teamData.role!=='manager'&&teamData.role!=='coach')}
+                              onChange={(e, value) => handleChange(e, value, coachRef)}
+                              options={allMembers}
+                              value={teamData.coach}
+                              getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
+                              renderInput={(params) => (
+                                <TextField {...params} label="Coach" variant="standard" required={true} />
+                              )}
+                            />
+                          </div>
+                          <div>
+                            <Autocomplete
+                              getOptionLabel={(option) => option.name ? option.name : ''}
+                              isOptionEqualToValue={(option, value) =>
+                                option.label === value.name
+                              }
+                              disablePortal
+                              name="captain"
+                              ref={captainRef}
+                              options={members}
+                              disabled={teamData.registered&&(teamData.role!=='manager'&&teamData.role!=='coach')}
+                              value={teamData.captain}
+                              onChange={(e, value) => handleChange(e, value, captainRef)}
+                              getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
+                              renderInput={(params) => (
+                                <TextField {...params} label="Captain" variant="standard" required={true} />
+                              )}
+                            />
+                          </div>
+                          <div>
+                            <Autocomplete
+                              getOptionLabel={(option) => option.name}
+                              isOptionEqualToValue={(option, value) =>
+                                option.label === value.name
+                              }
+                              multiple
+                              name="memberIds"
+                              ref={playerRef}
+                              disabled={teamData.registered&&(teamData.role!=='manager'&&teamData.role!=='coach')}
+                              value={teamData.memberIds}
+                              onChange={(e, value) => handleChange(e, value, playerRef)}
+                              options={members}
+                              getOptionDisabled={(option) => (( teamData.memberIds?.length === playerLimit || teamData.selectedOptions.includes(option) )?true:false)}
+                              renderInput={(params) => (
+                                <TextField {...params} variant="standard" label="Players" />
+                              )}
+                            />
+                          </div>
+                        </form>
+                      </Stack>
+                      {
+                        teamData.registered?(
+                          <Box sx={{ display: 'flex', justifyContent: 'center', gap: '1em' }}>
+                            {teamData.role==='manager'?(
+                                <Button
+                                  variant="contained"
+                                  sx={{ width: 150, alignSelf: "center" }}
+                                  color="error"
+                                  onClick={handleRemoveTeam}
+                                >
+                                  Remove Team
+                                </Button>
+                              ):null}
+                              {
+                                (teamData.role==='manager'||teamData.role==='coach')?(
+                                  <Button
+                                    variant="contained"
+                                    sx={{ width: 150, alignSelf: "center" }}
+                                    form="team-form"
+                                    type="submit"
+                                  >
+                                    Edit
+                                  </Button>
+                                ):null
+                              }
+                          </Box>
                         ):(
                           <Button
                             variant="contained"
                             sx={{ width: 150, alignSelf: "center" }}
-                            color="error"
-                            onClick={handleLeaveTeam}
+                            form="team-form"
+                            type="submit"
                           >
-                            Leave Team
+                            Register
                           </Button>
-                        )}{
-                          (teamData.role==='manager'||teamData.role==='coach')?(
-                            <Button
-                              variant="contained"
-                              sx={{ width: 150, alignSelf: "center" }}
-                              form="team-form"
-                              type="submit"
-                            >
-                              Edit
-                            </Button>
-                          ):null
-                        }
-                    </Box>
-                  ):(
-                    <Button
-                      variant="contained"
-                      sx={{ width: 150, alignSelf: "center" }}
-                      form="team-form"
-                      type="submit"
-                    >
-                      Register
-                    </Button>
-                  )
+                        )
+                      }
+                    </>
+                  ): <NoTeam />
                 }
               </>
-            ): <NoTeam />
+            )
           }
           <Snackbar open={open} autoHideDuration={1500} onClose={handleClose}>
             <Alert

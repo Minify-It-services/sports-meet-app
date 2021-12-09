@@ -11,6 +11,7 @@ import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { Alert } from '@mui/material';
+import LinearProgress from '@mui/material/LinearProgress';
 
 // components:
 import jsendDestructor from '../utils/api/jsendDestructor'
@@ -33,6 +34,7 @@ const DuoRegistration = () => {
     })
 
     const [sport, setSport] = useState({})
+    const [loading, setLoading] = useState(false)
     const [duoData, setDuoData] = useState({
       registered: false,
       teamId: '',
@@ -58,9 +60,11 @@ const DuoRegistration = () => {
         }else{
           console.log(data, message);
         }
+        setLoading(false);
       }
 
       const checkForAvailability = async () => {
+        setLoading(true);
         const { data } = await jsendRes.destructFromApi(
           `/teams/check?sport=${sportName}&sportType=duo&year=${player.year}&faculty=${player.faculty}&playerId=${player.id}`, 
           'GET'
@@ -159,39 +163,45 @@ const DuoRegistration = () => {
             <Container sx={{marginTop:5}}>
             <Stack spacing={{xs:2,md:4}}>
             <Typography color='primary' sx={{fontSize:'1rem', fontWeight:'600', display: 'flex', alignItems: 'center', borderBottom:'2px dashed #00000050', marginBottom:'25px', padding:'10px 0px'}}>
-              <img src={sport.imageUrl} alt="sport logo" width="50px" style={{ backgroundColor:'', marginRight: '1em'}} />  { sportName }
+              <img src={sport.imageUrl} alt="" width="50px" style={{ backgroundColor:'', marginRight: '1em'}} />  { sportName }
             </Typography>
             <p>
               Coordinators: {sport?.coordinators?.join(', ')}
             </p>
             {
-              duoData.hasTeamSlot?(
+              loading?<LinearProgress color="inherit" />:(
                 <>
-                {
-                  duoData.registered ? (
-                    <div><Typography variant="h5">Your Partner</Typography><p>{duoData.partner.name}</p></div>
-                  ) :(
-                    <>
-                      <Typography variant="subtitle">Select Your Partner</Typography>
-                      <Autocomplete
-                        getOptionLabel={(option) => option.name}
-                        isOptionEqualToValue={(option, value) => option.label === value.name}
-                          autoComplete={false}
-                          options={members}
-                          onChange={(event, value) => setDuoData(prevState => {
-                            return {
-                              ...prevState,
-                              partner: value,
-                            }
-                          })}
-                          renderInput={(params) => <TextField {...params} label="Partner" variant="standard" required={true}/>}
-                      />
+                  {
+                    duoData.hasTeamSlot?(
+                      <>
+                      {
+                        duoData.registered ? (
+                          <div><Typography variant="h5">Your Partner</Typography><p>{duoData.partner.name}</p></div>
+                        ) :(
+                          <>
+                            <Typography variant="subtitle">Select Your Partner</Typography>
+                            <Autocomplete
+                              getOptionLabel={(option) => option.name}
+                              isOptionEqualToValue={(option, value) => option.label === value.name}
+                                autoComplete={false}
+                                options={members}
+                                onChange={(event, value) => setDuoData(prevState => {
+                                  return {
+                                    ...prevState,
+                                    partner: value,
+                                  }
+                                })}
+                                renderInput={(params) => <TextField {...params} label="Partner" variant="standard" required={true}/>}
+                            />
+                          </>
+                        )
+                      }
+                      <Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={handleRegister}>{duoData.registered? "Leave":"Register"}</Button>
                     </>
-                  )
-                }
-                <Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={handleRegister}>{duoData.registered? "Leave":"Register"}</Button>
-              </>
-              ):<NoTeam/>
+                    ):<NoTeam/>
+                  }
+                </>
+              )
             }
             <Snackbar open={open} autoHideDuration={1500} onClose={handleClose}>
                 <Alert onClose={handleClose} severity={!duoData.hasError?"success":"error"} sx={{ width: '100%' }}>
