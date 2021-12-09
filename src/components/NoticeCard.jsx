@@ -7,14 +7,12 @@ function NoticeCard({title,status,desc}) {
         <div id="notice-card">
             <div className="notice-card-header">
                 <div className="title">
-                    {/* {title} */}Match Delayed
+                    {title}
                 </div>
-                {/* label={status} */}
-                <Chip variant="outlined" color="warning" size="small" label="delayed" sx={{minWidth:'120px'}} className="chip"/>
+                <Chip variant="outlined" color="warning" size="small" label={status} sx={{minWidth:'120px'}} className="chip"/>
             </div>
             <p>
-                {/* {desc} */}
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum repudiandae facilis rem, neque quam saepe at totam vero placeat eius!
+                {desc}
             </p>
         </div>
     )
