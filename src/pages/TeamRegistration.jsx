@@ -283,23 +283,13 @@ const TeamRegistration = () => {
 
   return (
     <Layout title="Team Register" isSecondPage>
-      <div
-        className="banner"
-        style={{
-          minHeight: "30vh",
-          backgroundImage:
-            "url(https://i2-prod.irishmirror.ie/incoming/article8074062.ece/ALTERNATES/s1227b/Atletico-Madrid-v-Real-Madrid.jpg)",
-          backgroundPosition: "center",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-        }}
-      ></div>
       <Container sx={{ marginTop: 5 }}>
         <Stack spacing={3}>
-          <Typography variant="h4">{sportName}</Typography>
+          <Typography color='primary' sx={{fontSize:'1rem', fontWeight:'600', display: 'flex', alignItems: 'center', borderBottom:'2px dashed #00000050', marginBottom:'25px', padding:'10px 0px'}}>
+            <img src={sport.imageUrl} alt="sport logo" width="50px" style={{ backgroundColor:'', marginRight: '1em'}} />  { sportName }
+          </Typography>
           <p>
-            Coordinator: {sport?.coordinator} <br />
-            Vice-Coordinator: {sport?.viceCoordinator}
+            Coordinators: {sport?.coordinators?.join(', ')}
           </p>
           {
             teamData.hasTeamSlot?(
