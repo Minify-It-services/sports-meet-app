@@ -4,6 +4,8 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import { Link } from 'react-router-dom';
+import { GiPaperBomb } from 'react-icons/gi';
+import { HiOutlineNewspaper } from 'react-icons/hi';
 
 // components
 import DrawerBar from "../../../components/DrawerBar";
@@ -26,13 +28,15 @@ const Fixtures = () => {
                         gap: '2em'
                     }}
                 >
-                    <Link to='/admin/fixture/matches' style={{ textDecoration: 'none', }}>
+                    <Link to='/admin/fixture/matches/mat' style={{ textDecoration: 'none', }}>
                         <Paper sx={{ padding: '1em', textAlign: 'center' }}>
+                            <GiPaperBomb style={{ fontSize: '4rem' }} /> <br />
                             <Typography variant="body">Matches</Typography>
                         </Paper>
                     </Link>
-                    <Link to='/admin/fixture/results' style={{ textDecoration: 'none', }}>
+                    <Link to='/admin/fixture/matches/res' style={{ textDecoration: 'none', }}>
                         <Paper sx={{ padding: '1em', textAlign: 'center' }}>
+                            <HiOutlineNewspaper style={{ fontSize: '4rem' }}/> <br />
                             <Typography variant="body">Results</Typography>
                         </Paper>
                     </Link>
