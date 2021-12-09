@@ -404,8 +404,8 @@ const TeamRegistration = () => {
               {teamData.displayMessage}
             </Alert>
           </Snackbar>
-          <Typography variant="h4">Rules</Typography>
-          <ul>
+          <Typography variant="h6">Rules</Typography>
+          <ul style={{margin:'0 1rem'}}>
             {
               sport?.rules?.map(rule=>(<li key={rule}>{rule}</li>))
             }
