@@ -68,6 +68,7 @@ function AddSport(props) {
             setSportData({
                 ...props.row,
                 rules: props.row.rules.join('|'),
+                coordinators: props.row.coordinators.join(','),
             });
         };
         return ()=>{
