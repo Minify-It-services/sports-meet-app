@@ -63,6 +63,9 @@ const Home = () => {
                                             team2={match.team2.name} 
                                             time={match.time}
                                             sports={match.sport.name}
+                                            status={match.status}
+                                            score1={match.score.team1Score}
+                                            score2={match.score.team2Score}
                                         ></MatchCard>
                                     </Grid>
                                 ))
