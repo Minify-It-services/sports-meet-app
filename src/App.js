@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import OneSignal from 'react-onesignal'
 
 // pages:guest
 import { TeamRegister, HomePage, SoloRegistration, TeamRegistration, DuoRegistration,PhoneRegister, ProfilePage, Login, Register, Fixture} from './pages';
@@ -17,6 +18,11 @@ import UserDetail from './admin/pages/users';
 import './App.css';
 
 const App = () => {
+  useEffect(() => {
+    OneSignal.init({
+      appId: process.env.REACT_APP_ONE_SIGNAL_APP_ID
+    });
+  }, []);
   return (
     <BrowserRouter>
       <Routes>
