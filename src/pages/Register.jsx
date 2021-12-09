@@ -57,8 +57,6 @@ const Register = () => {
             imageUrl,
             role: 'user',
         }
-        if(year === '2018')
-            user.role = 'admin'
 
         const response = await jsendRes.destructFromApi('/auth/register', 'POST', user)
 
