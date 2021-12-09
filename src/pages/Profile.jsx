@@ -48,7 +48,7 @@ const Profile = () => {
     }, [])
 
     return (
-        <Layout title="Profile Page">
+        <Layout title="Profile">
             <Box sx={{width:'100%'}}>
                 <Container sx={{height:'100%', width:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
                     <Stack direction="row" spacing={5} justifyContent="center" alignItems="center" sx={{ margin:'1em 0' }}>

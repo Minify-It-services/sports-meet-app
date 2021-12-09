@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 
 function Fixture() {
     return (
-        <Layout title="Fixture Page">
+        <Layout title="Fixture">
             <Box mx={{xs:'1rem', sm:'3rem', md:'5rem', lg:'9rem'}} my='1rem'>
                 <Typography color='primary' sx={{fontSize:'1rem', fontWeight:'600', }}>
                     Team Games
