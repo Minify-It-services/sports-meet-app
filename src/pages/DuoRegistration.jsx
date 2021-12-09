@@ -208,8 +208,8 @@ const DuoRegistration = () => {
                 {duoData.displayMessage}
                 </Alert>
             </Snackbar>
-            <Typography variant="h5">Rules</Typography>
-            <ul style={{margin:"0 20px",fontSize:"18px"}}>
+            <Typography variant="h6">Rules</Typography>
+            <ul style={{margin:"0 1rem"}}>
               {
                 sport?.rules?.map(rule=>(<li key={rule}>{rule}</li>))
               }
