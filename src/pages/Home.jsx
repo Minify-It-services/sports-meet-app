@@ -44,7 +44,7 @@ const Home = () => {
     }, [])
 
     return (
-        <Layout title="Home Page">
+        <Layout title="Home">
             <Box mx={{xs:'1rem', sm:'3rem', md:'5rem', lg:'9rem'}} my='1rem'>
             <Box>
                 <Typography color='primary' sx={{fontSize:'1rem', fontWeight:'600', borderBottom:'2px dashed #00000050', marginBottom:'25px', padding:'10px 0px'}}>
