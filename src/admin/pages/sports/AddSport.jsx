@@ -15,8 +15,7 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 function AddSport(props) {
     const [sportData, setSportData] = useState({
         name: '',
-        coordinator: '',
-        viceCoordinator: '',
+        coordinators: '',
         referees: [],
         classLimit: -1,
         limit: -1,
@@ -29,7 +28,7 @@ function AddSport(props) {
     const [members, setMembers] = useState([])
     
     const [forEdit, setforEdit] = useState(false);
-    const [editedSport] = useState({});
+    // const [editedSport] = useState({});
     let editData=props.row;
     const isObjEmpty=(obj)=>{
         if (obj && Object.keys(obj).length === 0
@@ -66,7 +65,10 @@ function AddSport(props) {
         }
         else {
             setforEdit(true);
-            setSportData(props.row);
+            setSportData({
+                ...props.row,
+                rules: props.row.rules.join('|'),
+            });
         };
         return ()=>{
             cleanup();
@@ -75,13 +77,21 @@ function AddSport(props) {
 
     const handleSave = async ()=>{
         const sportToCreate = {
-            ...sportData,
-            rules: sportData.rules.split('|')
+            name: sportData.name,
+            type: sportData.type,
+            limit: sportData.limit,
+            classLimit: sportData.classLimit,
+            imageUrl: sportData.imageUrl,
+            playerLimit: sportData.playerLimit,
+            extraLimit: sportData.extraLimit,
+            rules: sportData.rules.split('|'),
+            coordinators: sportData.coordinators.split(','),
+            referees: sportData.referees,
         }
         console.log(sportToCreate)
         let response = {}
         if(forEdit)
-            response = await props.jsendRes.destructFromApi(`/sports/${editedSport.id}`,'PATCH',sportToCreate)
+            response = await props.jsendRes.destructFromApi(`/sports/${sportData.id}`,'PATCH',sportToCreate)
         else
             response = await props.jsendRes.destructFromApi('/sports','POST',sportToCreate)
         if(response.status === 'success'){
@@ -99,18 +109,12 @@ function AddSport(props) {
                 name : e.target.value
             }))} 
             value={sportData.name} />
-            <TextField id="standard-basic" label="Coordinator" variant="standard" type="text" 
+            <TextField id="standard-basic" label="Coordinators" variant="standard" type="text" 
             onChange={e=> setSportData(prevState => ({
                 ...prevState, 
-                coordinator : e.target.value
+                coordinators : e.target.value
             }))}
-            value={sportData.coordinator} />
-            <TextField id="standard-basic" label="Vice-Coordinator" variant="standard" type="text" 
-            onChange={e=> setSportData(prevState => ({
-                ...prevState, 
-                viceCoordinator : e.target.value
-            }))} 
-            value={sportData.viceCoordinator} />
+            value={sportData.coordinators} />
             <Autocomplete
                 multiple
                 id="tags-standard"

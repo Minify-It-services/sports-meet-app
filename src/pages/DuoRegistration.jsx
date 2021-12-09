@@ -156,17 +156,13 @@ const DuoRegistration = () => {
       }
     return (
         <Layout title="Double Register" isSecondPage>
-            <div className="banner" style={{minHeight:"30vh",backgroundImage: "url(https://images.pexels.com/photos/34153/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350)",
-            backgroundPosition: 'center',
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat'}}>
-            </div>
             <Container sx={{marginTop:5}}>
             <Stack spacing={{xs:2,md:4}}>
-            <Typography variant="h5">{sportName}</Typography>
+            <Typography color='primary' sx={{fontSize:'1rem', fontWeight:'600', display: 'flex', alignItems: 'center', borderBottom:'2px dashed #00000050', marginBottom:'25px', padding:'10px 0px'}}>
+              <img src={sport.imageUrl} alt="sport logo" width="50px" style={{ backgroundColor:'', marginRight: '1em'}} />  { sportName }
+            </Typography>
             <p>
-              Coordinator: {sport?.coordinator} <br />
-              Vice-Coordinator: {sport?.viceCoordinator}
+              Coordinators: {sport?.coordinators?.join(', ')}
             </p>
             {
               duoData.hasTeamSlot?(
