@@ -25,6 +25,7 @@ import SportsIcon from '@mui/icons-material/Sports';
 import GroupsIcon from '@mui/icons-material/Groups';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import PersonIcon from '@mui/icons-material/Person';
 
 const drawerWidth = 240;
 
@@ -140,6 +141,15 @@ const itemTypes = [
             )
         }
     },
+    {
+        id:6,
+        text:'userDetail',
+        getIcon(){
+            return(
+                <PersonIcon />
+            )
+        }
+    }
 ];
 
 

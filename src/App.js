@@ -11,12 +11,7 @@ import Teams from './admin/pages/teams';
 import Fixtures from './admin/pages/fixtures';
 import Notice from './admin/pages/notice';
 import Matches from './admin/pages/fixtures/MatchFixture';
-
-// fonts:
-// import '@fontsource/roboto/300.css';
-// import '@fontsource/roboto/400.css';
-// import '@fontsource/roboto/500.css';
-// import '@fontsource/roboto/700.css';
+import UserDetail from './admin/pages/users';
 
 // css:
 import './App.css';
@@ -57,6 +52,7 @@ const Admin = () => {
       <Route path="team" element={<Teams />} />
       <Route path="fixture/*" element={<AdminFixture />} />
       <Route path="notice" element={<Notice />} />
+      <Route path="userDetail" element={<UserDetail />} />
     </Routes>
   )
 }
