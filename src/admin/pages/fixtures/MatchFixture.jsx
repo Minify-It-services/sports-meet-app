@@ -173,9 +173,7 @@ const Matches = () => {
             }: {
                 name: sport.name,
                 gameType: sport.type,
-            },
-            cards: "",
-            scores: "",
+            }
         }
 
         let response = {}
