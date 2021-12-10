@@ -15,6 +15,7 @@ import jsendDestructor from '../utils/api/jsendDestructor'
 import NoTeam from '../components/NoTeam'
 import { getSport } from '../utils/helpers/getSport';
 import Layout from '../layout/Layout';
+import Loader from '../components/Loader';
 
 //TODO: need fixing
 const SoloRegistration = ()=> {
@@ -31,6 +32,7 @@ const SoloRegistration = ()=> {
   })
 
   const [sport, setSport] = useState({})
+  const [loading, setLoading] = useState(false)
   const [soloData, setSoloData] = useState({
     registered: false,
     teamId: '',
@@ -47,6 +49,7 @@ const SoloRegistration = ()=> {
       };
 
       const checkForAvailability = async () => {
+        setLoading(true);
         const { data } = await jsendRes.destructFromApi(
           `/teams/check?sport=${sportName}&sportType=single&year=${player.year}&faculty=${player.faculty}&playerId=${player.id}`, 
           'GET'
@@ -64,6 +67,7 @@ const SoloRegistration = ()=> {
             registered: true,
           }))
         }
+        setLoading(false)
       }
 
       useEffect(() => {
@@ -74,6 +78,7 @@ const SoloRegistration = ()=> {
 
       const handleRegister = async () => {
 
+        setLoading(true)
         let response;
 
         if(soloData.registered){
@@ -112,12 +117,14 @@ const SoloRegistration = ()=> {
             }))
           }
           setOpen(!open);
+          setLoading(false);
         }else{
           console.log(data, message);
         }
       }
     return (
         <Layout title="Single Register" isSecondPage>
+            {loading&&<Loader />}
             <Container sx={{marginTop:5}}>
             <Stack spacing={3}>
             <Typography color='primary' sx={{fontSize:'1rem', fontWeight:'600', display: 'flex', alignItems: 'center', borderBottom:'2px dashed #00000050', marginBottom:'25px', padding:'10px 0px'}}>
