@@ -15,7 +15,7 @@ import jsendDestructor from '../utils/api/jsendDestructor'
 import NoTeam from '../components/NoTeam'
 import { getSport } from '../utils/helpers/getSport';
 import Layout from '../layout/Layout';
-import Loader from '../components/Loader';
+import { LinearProgress } from '@mui/material';
 
 //TODO: need fixing
 const SoloRegistration = ()=> {
@@ -124,7 +124,6 @@ const SoloRegistration = ()=> {
       }
     return (
         <Layout title="Single Register" isSecondPage>
-            {loading&&<Loader />}
             <Container sx={{marginTop:5}}>
             <Stack spacing={3}>
             <Typography color='primary' sx={{fontSize:'1rem', fontWeight:'600', display: 'flex', alignItems: 'center', borderBottom:'2px dashed #00000050', marginBottom:'25px', padding:'10px 0px'}}>
@@ -134,10 +133,16 @@ const SoloRegistration = ()=> {
               Coordinators: {sport?.coordinators?.join(', ')}
             </p>
             {
-              soloData.hasTeamSlot?(
-                <Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={()=>handleRegister()}>{soloData.registered? "Leave":"Register"}</Button>
-              ):(
-                <NoTeam />
+              loading?<LinearProgress color="inherit" />:(
+                <>
+                  {
+                    soloData.hasTeamSlot?(
+                      <Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={()=>handleRegister()}>{soloData.registered? "Leave":"Register"}</Button>
+                    ):(
+                      <NoTeam />
+                    )
+                  }
+                </>
               )
             }
             <Snackbar open={open} autoHideDuration={1500} onClose={handleClose}>
