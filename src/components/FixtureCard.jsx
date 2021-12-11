@@ -1,4 +1,6 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -46,9 +48,11 @@ function FixtureCard({ gameName, matches }) {
                     )
                 }
                 <div className="flex">
-                    <Button variant="contained" size="small" style={{textTransform:"none", fontSize:'0.85rem'}} endIcon={<ArrowForwardIosIcon />}>
-                        Details
-                    </Button>
+                    <Link to={`/fixture/details/${matches[0].sport.name}/${matches[0].sport.gameType}`}>
+                        <Button variant="contained" size="small" style={{textTransform:"none", fontSize:'0.85rem'}} endIcon={<ArrowForwardIosIcon />}>
+                            Details
+                        </Button>
+                    </Link>
                 </div>
             </div>
         </div>

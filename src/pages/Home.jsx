@@ -59,13 +59,8 @@ const Home = () => {
                                 matches?.map(match => (
                                     <Grid item xs={12} sm={6} lg={4} key={match.id}>
                                         <MatchCard 
-                                            team1={match.team1.name} 
-                                            team2={match.team2.name} 
-                                            time={match.time}
-                                            sports={match.sport.name}
-                                            status={match.status}
-                                            score1={match.score.team1Score}
-                                            score2={match.score.team2Score}
+                                            match={match}
+                                            sportName={match.sport.name}
                                         ></MatchCard>
                                     </Grid>
                                 ))
