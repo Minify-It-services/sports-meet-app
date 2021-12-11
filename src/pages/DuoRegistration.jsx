@@ -92,9 +92,9 @@ const DuoRegistration = () => {
       useEffect(() => {
         getSport(sportName, jsendRes).then(res => setSport(res))
         checkForAvailability();
-        if(!duoData.partner.name){
+        // if(!duoData.partner.name){
           getPlayers();
-        }
+        // }
       // eslint-disable-next-line
       }, [duoData.registered])
       

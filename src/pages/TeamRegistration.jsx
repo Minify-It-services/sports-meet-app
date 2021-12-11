@@ -54,7 +54,6 @@ const TeamRegistration = () => {
   const [allMembers, setAllMembers] = useState([])
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = useState(false);
-  const [playerLimit, setPlayerLimit] = useState(1);
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -114,7 +113,6 @@ const TeamRegistration = () => {
 
   useEffect(() => {
     getSport(sportName, jsendRes).then(res => setSport(res))
-    setPlayerLimit(((sport.playerLimit-1)+sport.extraLimit))
     checkForAvailability();
     getPlayers();
     getAllPlayers();
@@ -344,7 +342,7 @@ const TeamRegistration = () => {
                               value={teamData.memberIds}
                               onChange={(e, value) => handleChange(e, value, playerRef)}
                               options={members}
-                              getOptionDisabled={(option) => (( teamData.memberIds?.length === playerLimit || teamData.selectedOptions.includes(option) )?true:false)}
+                              getOptionDisabled={(option) => (( teamData.memberIds?.length === ((parseInt(sport.playerLimit)-1)+parseInt(sport.extraLimit)) || teamData.selectedOptions.includes(option) )?true:false)}
                               renderInput={(params) => (
                                 <TextField {...params} variant="standard" label="Players" />
                               )}
