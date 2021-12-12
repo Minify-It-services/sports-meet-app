@@ -1,6 +1,8 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 
+import { Link } from 'react-router-dom';
+
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -114,6 +116,7 @@ const Teams = () => {
                                 <TableCell align="center">Sport</TableCell>
                                 <TableCell align="center">Year</TableCell>
                                 <TableCell align="center">Faculty</TableCell>
+                                <TableCell align="center">Action</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -124,6 +127,9 @@ const Teams = () => {
                                     <TableCell align="center">{team.sport.name}</TableCell>
                                     <TableCell align="center">{team.year}</TableCell>
                                     <TableCell align="center">{team.faculty}</TableCell>
+                                    <TableCell align="center">
+                                        <Link to={`/admin/team/details/${team.id}`}>Details</Link>
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

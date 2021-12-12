@@ -13,6 +13,7 @@ import Fixtures from './admin/pages/fixtures';
 import Notice from './admin/pages/notice';
 import Matches from './admin/pages/fixtures/MatchFixture';
 import UserDetail from './admin/pages/users';
+import TeamDetail from './admin/pages/teams/TeamDetail';
 
 // css:
 import './App.css';
@@ -57,6 +58,7 @@ const Admin = () => {
       <Route path="dashboard" element={<Dashboard />} />
       <Route path="sport" element={<Sports />} />
       <Route path="team" element={<Teams />} />
+      <Route path="team/details/:teamId" element={<TeamDetail />} />
       <Route path="fixture/*" element={<AdminFixture />} />
       <Route path="notice" element={<Notice />} />
       <Route path="userDetail" element={<UserDetail />} />
