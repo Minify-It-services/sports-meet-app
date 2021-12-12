@@ -18,6 +18,7 @@ import jsendDestructor from '../utils/api/jsendDestructor'
 import NoTeam from '../components/NoTeam'
 import { getSport } from '../utils/helpers/getSport'
 import Layout from "../layout/Layout";
+import RegisterUp from "../components/RegisterUp";
 
 const TeamRegistration = () => {
 
@@ -28,6 +29,7 @@ const TeamRegistration = () => {
   const { sportName } = useParams()
   const [sport, setSport] = useState({})
   const cookies = new Cookies()
+  const [isRegisterTimeUp, setIsRegisterTimeUp] = useState(false)
 
   const token = cookies.get('sports_app_token')
   const player = JSON.parse(localStorage.getItem('player'))
@@ -112,7 +114,10 @@ const TeamRegistration = () => {
   }
 
   useEffect(() => {
-    getSport(sportName, jsendRes).then(res => setSport(res))
+    getSport(sportName, jsendRes).then(res => {
+      setSport(res.sport)
+      setIsRegisterTimeUp(res.isRegisterTimeUp)
+    })
     checkForAvailability();
     getPlayers();
     getAllPlayers();
@@ -136,6 +141,7 @@ const TeamRegistration = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
+    setLoading(true);
     if(teamData.memberIds.length === ((parseInt(sport.playerLimit)-1)+parseInt(sport.extraLimit))){
       let response = {}
       if(teamData.registered){
@@ -197,6 +203,8 @@ const TeamRegistration = () => {
       }))
       setOpen(true);
     }
+
+    setLoading(false);
   };
 
   const handleChange = (e, value, ref) => {
@@ -264,6 +272,7 @@ const TeamRegistration = () => {
           <p>
             Coordinators: {sport?.coordinators?.join(', ')}
           </p>
+          {isRegisterTimeUp&&<RegisterUp />}
           {
             loading?<LinearProgress color="inherit" />:(
               <>
@@ -282,7 +291,7 @@ const TeamRegistration = () => {
                               name="manager"
                               ref={managerRef}
                               options={allMembers}
-                              disabled={teamData.registered}
+                              disabled={(teamData.registered || isRegisterTimeUp)}
                               value={teamData.manager}
                               onChange={(e, value) => handleChange(e, value, managerRef)}
                               getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
@@ -300,7 +309,7 @@ const TeamRegistration = () => {
                               disablePortal
                               name="coach"
                               ref={coachRef}
-                              disabled={teamData.registered&&(teamData.role!=='manager'&&teamData.role!=='coach')}
+                              disabled={(teamData.registered&&(teamData.role!=='manager'&&teamData.role!=='coach'))||isRegisterTimeUp}
                               onChange={(e, value) => handleChange(e, value, coachRef)}
                               options={allMembers}
                               value={teamData.coach}
@@ -320,7 +329,7 @@ const TeamRegistration = () => {
                               name="captain"
                               ref={captainRef}
                               options={members}
-                              disabled={teamData.registered&&(teamData.role!=='manager'&&teamData.role!=='coach')}
+                              disabled={(teamData.registered&&(teamData.role!=='manager'&&teamData.role!=='coach'))||isRegisterTimeUp}
                               value={teamData.captain}
                               onChange={(e, value) => handleChange(e, value, captainRef)}
                               getOptionDisabled={(option) => (teamData.selectedOptions.includes(option)?true:false)}
@@ -338,7 +347,7 @@ const TeamRegistration = () => {
                               multiple
                               name="memberIds"
                               ref={playerRef}
-                              disabled={teamData.registered&&(teamData.role!=='manager'&&teamData.role!=='coach')}
+                              disabled={(teamData.registered&&(teamData.role!=='manager'&&teamData.role!=='coach'))||isRegisterTimeUp}
                               value={teamData.memberIds}
                               onChange={(e, value) => handleChange(e, value, playerRef)}
                               options={members}
@@ -351,40 +360,44 @@ const TeamRegistration = () => {
                         </form>
                       </Stack>
                       {
-                        teamData.registered?(
-                          <Box sx={{ display: 'flex', justifyContent: 'center', gap: '1em' }}>
-                            {teamData.role==='manager'?(
+                        !isRegisterTimeUp&&(
+                          <>
+                            {
+                              teamData.registered?(
+                                <Box sx={{ display: 'flex', justifyContent: 'center', gap: '1em' }}>
+                                  {teamData.role==='manager'?(
+                                      <>
+                                        <Button
+                                          variant="contained"
+                                          sx={{ width: 150, alignSelf: "center" }}
+                                          color="error"
+                                          onClick={handleRemoveTeam}
+                                        >
+                                          Remove Team
+                                        </Button>
+                                        <Button
+                                          variant="contained"
+                                          sx={{ width: 150, alignSelf: "center" }}
+                                          form="team-form"
+                                          type="submit"
+                                        >
+                                          Edit
+                                        </Button>
+                                      </>
+                                    ):null}
+                                </Box>
+                              ):(
                                 <Button
                                   variant="contained"
                                   sx={{ width: 150, alignSelf: "center" }}
-                                  color="error"
-                                  onClick={handleRemoveTeam}
+                                  form="team-form"
+                                  type="submit"
                                 >
-                                  Remove Team
+                                  Register
                                 </Button>
-                              ):null}
-                              {
-                                (teamData.role==='manager'||teamData.role==='coach')?(
-                                  <Button
-                                    variant="contained"
-                                    sx={{ width: 150, alignSelf: "center" }}
-                                    form="team-form"
-                                    type="submit"
-                                  >
-                                    Edit
-                                  </Button>
-                                ):null
-                              }
-                          </Box>
-                        ):(
-                          <Button
-                            variant="contained"
-                            sx={{ width: 150, alignSelf: "center" }}
-                            form="team-form"
-                            type="submit"
-                          >
-                            Register
-                          </Button>
+                              )
+                            }
+                          </>
                         )
                       }
                     </>
