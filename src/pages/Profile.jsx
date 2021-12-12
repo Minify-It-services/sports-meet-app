@@ -81,7 +81,7 @@ const Profile = () => {
                                         <Box display='grid'  gridTemplateColumns={{md:"repeat(2,1fr)",lg:"repeat(3,1fr)", xs:"repeat(1,1fr)", sm:"repeat(2,1fr)"}} gap={{xs:1,md:3,sm:2}} justifyContent="center">
                                             {user?.teams?.map((team, id)=>{
                                                 const {teamName, sport, role} = team;
-                                                return <ParticipatedSportCard role={role} sport={sport.name} sportType={sport.gameType} title={teamName} key={id}/>
+                                                return <ParticipatedSportCard role={role} sport={sport.name||''} sportType={sport.gameType||''} title={teamName} key={id}/>
                                             })}
                                         </Box>
                                     )
