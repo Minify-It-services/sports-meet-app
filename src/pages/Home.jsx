@@ -15,6 +15,7 @@ import MatchCard from '../components/MatchCard';
 import NoticeCard from '../components/NoticeCard';
 
 import jsendDestructor from '../utils/api/jsendDestructor'
+import Minify from '../components/Minify';
 
 const Home = () => {
 
@@ -140,6 +141,7 @@ const Home = () => {
                 )
             }
             </Box>
+            <Minify />
         </Layout>
     )
 }

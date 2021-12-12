@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 // components:
 import Loader from '../components/Loader';
 import jsendDestructor from "../utils/api/jsendDestructor";
+import Minify from "../components/Minify";
 
 const TeamRegister = () => {
 
@@ -93,6 +94,7 @@ const TeamRegister = () => {
                     </Box>
                 </Container>
             </Box>
+            <Minify />
         </Layout>
     );
 };
