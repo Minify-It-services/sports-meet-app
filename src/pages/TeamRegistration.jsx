@@ -136,7 +136,7 @@ const TeamRegistration = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    if(teamData.memberIds.length === 2){
+    if(teamData.memberIds.length === ((parseInt(sport.playerLimit)-1)+parseInt(sport.extraLimit))){
       let response = {}
       if(teamData.registered){
         const teamToSend = {
