@@ -18,6 +18,7 @@ import jsendDestructor from '../utils/api/jsendDestructor'
 import NoTeam from '../components/NoTeam'
 import { getSport } from '../utils/helpers/getSport';
 import Layout from '../layout/Layout';
+import RegisterUp from '../components/RegisterUp';
 
 //TODO: Fix FONT SIZING
 const DuoRegistration = () => {
@@ -44,6 +45,7 @@ const DuoRegistration = () => {
       hasError: false,
     })
     const [members, setMembers] = useState([])
+    const [isRegisterTimeUp, setIsRegisterTimeUp] = useState(false)
 
     const [open, setOpen] = React.useState(false);
     const handleClose = (event, reason) => {
@@ -90,7 +92,10 @@ const DuoRegistration = () => {
       }
 
       useEffect(() => {
-        getSport(sportName, jsendRes).then(res => setSport(res))
+        getSport(sportName, jsendRes).then(res => {
+          setSport(res.sport)
+          setIsRegisterTimeUp(res.isRegisterTimeUp)
+        })
         checkForAvailability();
         // if(!duoData.partner.name){
           getPlayers();
@@ -168,6 +173,7 @@ const DuoRegistration = () => {
             <p>
               Coordinators: {sport?.coordinators?.join(', ')}
             </p>
+            {isRegisterTimeUp&&<RegisterUp />}
             {
               loading?<LinearProgress color="inherit" />:(
                 <>
@@ -185,6 +191,7 @@ const DuoRegistration = () => {
                               isOptionEqualToValue={(option, value) => option.label === value.name}
                                 autoComplete={false}
                                 options={members}
+                                disabled={isRegisterTimeUp}
                                 onChange={(event, value) => setDuoData(prevState => {
                                   return {
                                     ...prevState,
@@ -196,7 +203,9 @@ const DuoRegistration = () => {
                           </>
                         )
                       }
-                      <Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={handleRegister}>{duoData.registered? "Leave":"Register"}</Button>
+                      {
+                        !isRegisterTimeUp&&<Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={handleRegister}>{duoData.registered? "Leave":"Register"}</Button>
+                      }
                     </>
                     ):<NoTeam/>
                   }

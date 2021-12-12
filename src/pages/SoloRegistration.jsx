@@ -16,8 +16,8 @@ import NoTeam from '../components/NoTeam'
 import { getSport } from '../utils/helpers/getSport';
 import Layout from '../layout/Layout';
 import { LinearProgress } from '@mui/material';
+import RegisterUp from '../components/RegisterUp';
 
-//TODO: need fixing
 const SoloRegistration = ()=> {
 
   const { sportName } = useParams()
@@ -40,6 +40,7 @@ const SoloRegistration = ()=> {
     displayMessage: '',
   })
     const [open, setOpen] = React.useState(false);
+    const [isRegisterTimeUp, setIsRegisterTimeUp] = useState(false);
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
           return;
@@ -71,7 +72,10 @@ const SoloRegistration = ()=> {
       }
 
       useEffect(() => {
-        getSport(sportName, jsendRes).then(res => setSport(res))
+        getSport(sportName, jsendRes).then(res => {
+          setSport(res.sport)
+          setIsRegisterTimeUp(res.isRegisterTimeUp)
+        })
         checkForAvailability();
       // eslint-disable-next-line
       }, [soloData.registered])
@@ -132,12 +136,17 @@ const SoloRegistration = ()=> {
             <p>
               Coordinators: {sport?.coordinators?.join(', ')}
             </p>
+            {isRegisterTimeUp&&<RegisterUp />}
             {
               loading?<LinearProgress color="inherit" />:(
                 <>
                   {
                     soloData.hasTeamSlot?(
-                      <Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={()=>handleRegister()}>{soloData.registered? "Leave":"Register"}</Button>
+                      <>
+                        {
+                          !isRegisterTimeUp&&<Button variant="contained" sx={{width: 150,alignSelf:"center"}} onClick={()=>handleRegister()}>{soloData.registered? "Leave":"Register"}</Button>
+                        }
+                      </>
                     ):(
                       <NoTeam />
                     )
