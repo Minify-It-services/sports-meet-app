@@ -13,7 +13,7 @@ const Login = () => {
     const cookies = new Cookies()
     const jsendRes = new jsendDestructor()
 
-    const [ differentEmail, setDifferentEmail ] = useState(false)
+    const [ notUser, setNotUser ] = useState(false)
 
     const navigate = useNavigate()
     const { signOut } = useGoogleLogout({
@@ -24,12 +24,7 @@ const Login = () => {
     const onSuccess = async (res) => {
         const { email } = res.profileObj
 
-        if(!email.match(/^be20(1|2)(0|7|8|9)(s|c)e[0-9]{1,3}@gces.edu.np$/g)){
-            setDifferentEmail(true)
-            signOut()
-            return
-        }
-        setDifferentEmail(false)
+        setNotUser(false)
 
         const response = await jsendRes.destructFromApi('/auth/login', 'POST', {email})
 
@@ -54,7 +49,11 @@ const Login = () => {
             navigate('/profile')
         }
         else{
+            signOut();
             console.log(data, message);
+            if(message === 'Incorrect email'){
+                setNotUser(true)
+            }
         }
 
     }
@@ -70,7 +69,7 @@ const Login = () => {
                         <Typography color="primary" variant="h4" sx={{fontWeight:'600'}}>Welcome to GCES</Typography>
                         <Typography variant="subtitle2" sx={{fontWeight:'500', opacity:'0.5'}}>Log in to continue your GCES sports journey</Typography>
                     </Box>
-                    <Box sx={{border: (differentEmail&&'1px solid #dc3545') }}>
+                    <Box sx={{border: (notUser&&'1px solid #dc3545') }}>
                         <GoogleLogin 
                             clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
                             buttonText='Login with GCES account'
@@ -87,9 +86,9 @@ const Login = () => {
                         </Typography>
                     </Box>
                     {
-                        differentEmail&&(
+                        notUser&&(
                             <Box sx={{textAlign: 'center'}}>
-                                <Typography variant="subtitle2" sx={{color: '#dc3545'}}>Please Use the Bese Email</Typography>
+                                <Typography variant="subtitle2" sx={{color: '#dc3545'}}>User Not Found</Typography>
                             </Box>
                         )
                     }
