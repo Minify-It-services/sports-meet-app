@@ -83,6 +83,15 @@ const TeamDetail = () => {
                                 )
                             }
                             {
+                                team?._doc?.captain&&(
+                                    <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                        <TableCell align="center">Captain</TableCell>
+                                        <TableCell align="center">{team?._doc.captain?.name}</TableCell>
+                                        <TableCell align="center">{team?._doc.captain?.contactNumber}</TableCell>
+                                    </TableRow>
+                                )
+                            }
+                            {
                                 team?.members?.map(member => (
                                     <TableRow key={member.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                         <TableCell align="center">Player</TableCell>
