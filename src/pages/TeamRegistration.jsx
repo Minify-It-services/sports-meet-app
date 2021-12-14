@@ -52,7 +52,7 @@ const TeamRegistration = () => {
     selectedOptions: [],
     role: ''
   })
-  const [members, setMembers] = useState([])
+  // const [members, setMembers] = useState([])
   const [allMembers, setAllMembers] = useState([])
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = useState(false);
@@ -63,14 +63,14 @@ const TeamRegistration = () => {
     setOpen(false);
   };
   
-  const getPlayers = async () => {
-    const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}&userId=${player.id}&faculty=${player.faculty}&sport=${sportName}&sportType=team&gender=${player.gender}`, 'GET')
-    if(status === 'success'){
-      setMembers(data)
-    }else{
-      console.log(data, message);
-    }
-  }
+  // const getPlayers = async () => {
+  //   const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}&userId=${player.id}&faculty=${player.faculty}&sport=${sportName}&sportType=team&gender=${player.gender}`, 'GET')
+  //   if(status === 'success'){
+  //     setMembers(data)
+  //   }else{
+  //     console.log(data, message);
+  //   }
+  // }
 
   const getAllPlayers = async () => {
     const { data, status, message } = await jsendRes.destructFromApi(`/users?year=${player.year}&userId=${player.id}&faculty=${player.faculty}&sport=${sportName}&sportType=team`, 'GET')
@@ -119,7 +119,7 @@ const TeamRegistration = () => {
       setIsRegisterTimeUp(res.isRegisterTimeUp)
     })
     checkForAvailability();
-    getPlayers();
+    // getPlayers();
     getAllPlayers();
   // eslint-disable-next-line
   }, [teamData.registered])
@@ -142,7 +142,7 @@ const TeamRegistration = () => {
     e.preventDefault();
 
     setLoading(true);
-    if(teamData.memberIds.length === ((parseInt(sport.playerLimit)-1)+parseInt(sport.extraLimit))){
+    if(teamData.memberIds.length >= (parseInt(sport.playerLimit)-1) && teamData.memberIds.length <= ((parseInt(sport.playerLimit)-1)+parseInt(sport.extraLimit))){
       let response = {}
       if(teamData.registered){
         const teamToSend = {
@@ -328,7 +328,7 @@ const TeamRegistration = () => {
                               disablePortal
                               name="captain"
                               ref={captainRef}
-                              options={members}
+                              options={allMembers}
                               disabled={(teamData.registered&&(teamData.role!=='manager'&&teamData.role!=='coach'))||isRegisterTimeUp}
                               value={teamData.captain}
                               onChange={(e, value) => handleChange(e, value, captainRef)}
@@ -350,7 +350,7 @@ const TeamRegistration = () => {
                               disabled={(teamData.registered&&(teamData.role!=='manager'&&teamData.role!=='coach'))||isRegisterTimeUp}
                               value={teamData.memberIds}
                               onChange={(e, value) => handleChange(e, value, playerRef)}
-                              options={members}
+                              options={allMembers}
                               getOptionDisabled={(option) => (( teamData.memberIds?.length === ((parseInt(sport.playerLimit)-1)+parseInt(sport.extraLimit)) || teamData.selectedOptions.includes(option) )?true:false)}
                               renderInput={(params) => (
                                 <TextField {...params} variant="standard" label="Players" />
