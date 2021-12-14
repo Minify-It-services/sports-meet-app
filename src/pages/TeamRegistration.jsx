@@ -154,7 +154,7 @@ const TeamRegistration = () => {
         response = await jsendRes.destructFromApi(`/teams/${teamData.teamId}`, 'PATCH', teamToSend)
       }else{
         const teamToSend = {
-          name: `${player.faculty} ${getYear(player.year)} Team A`,
+          name: `${player.faculty} ${getYear(player.year)}`,
           year: player.year,
           semester: player.semester,
           faculty: player.faculty,
