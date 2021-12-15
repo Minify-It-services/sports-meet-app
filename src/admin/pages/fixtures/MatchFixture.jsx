@@ -251,6 +251,7 @@ const Matches = () => {
                         <TableHead>
                             <TableRow>
                                 <TableCell align="center">Match</TableCell>
+                                <TableCell align="center">Sport</TableCell>
                                 <TableCell align="center">Date</TableCell>
                                 <TableCell align="center">Results</TableCell>
                                 {type==='mat'&&<TableCell align="center">Time</TableCell>}
@@ -261,6 +262,7 @@ const Matches = () => {
                             {matches?.map((match,index) => (
                                 <TableRow  key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <TableCell align="center">{match?.team1.name} vs {match?.team2.name}</TableCell>
+                                    <TableCell align="center">{match?.sport.name}</TableCell>
                                     <TableCell align="center">{match?.date.substr(0, 10)}</TableCell>
                                     <TableCell align="center">{match?.score.team1Score||0} : {match?.score.team2Score||0}</TableCell>
                                     {type==='mat'&&<TableCell align="center">{match?.time}</TableCell>}
