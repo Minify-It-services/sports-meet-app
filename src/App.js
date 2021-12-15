@@ -17,6 +17,7 @@ import TeamDetail from './admin/pages/teams/TeamDetail';
 
 // css:
 import './App.css';
+import TieSheet from './pages/TieSheet';
 
 const App = () => {
   useEffect(() => {
@@ -34,6 +35,7 @@ const App = () => {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/fixture" element={<Fixture />} />
         <Route path="/fixture/details/:sport/:sportType" element={<MatchDetails />} />
+        <Route path="/tie-sheet" element={<TieSheet />} />
         <Route path="/teamRegister/*" element={<Team />} />
         <Route path="/admin/*" element={<Admin />} />
       </Routes>
