@@ -13,7 +13,7 @@ function MatchCard({match, showDate=false, sportName}) {
                 <p className="time">
                     {
                         match.status==='completed'?(<>{match.score.team1Score} : {match.score.team2Score}</>):(<>
-                            {showDate?(<>{match.date.substr(0,10)}</>):(<>Time: {match.time}</>)}
+                            {showDate&&`${match.date.substr(0,10)} ' || '`}Time: {match.time}
                         </>)
                     }
                 </p>
