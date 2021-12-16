@@ -79,6 +79,26 @@ const Home = () => {
         <Layout title="Home">
             <Box mx={{xs:'1rem', sm:'3rem', md:'5rem', lg:'9rem'}} my='1rem'>
             <Box>
+                </Box>
+                {
+                    notices.length!==0&&(
+                        <Box my='1rem'>
+                            <Typography color='primary' sx={{fontSize:'1rem', fontWeight:'600', borderBottom:'2px dashed #00000050', marginBottom:'25px', padding:'10px 0px'}}>
+                                Notices
+                            </Typography>
+                            <Grid container spacing={2}>
+                                {
+                                    notices?.map(notice => (
+                                        <Grid item xs={12} md={6} lg={4} key={notice.id}>
+                                            <NoticeCard title={notice.title} desc={notice.description} status={notice.label}></NoticeCard>
+                                        </Grid>
+                                    ))
+                                }
+                            </Grid>
+                        </Box>
+                    )
+                }
+                </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography color='primary' sx={{fontSize:'1rem', fontWeight:'600', borderBottom:'2px dashed #00000050', marginBottom:'25px', padding:'10px 0px'}}>
                         Matches
@@ -121,26 +141,6 @@ const Home = () => {
                         }
                     </>)
                 }
-            </Box>
-            {
-                notices.length!==0&&(
-                    <Box my='1rem'>
-                        <Typography color='primary' sx={{fontSize:'1rem', fontWeight:'600', borderBottom:'2px dashed #00000050', marginBottom:'25px', padding:'10px 0px'}}>
-                            Notices
-                        </Typography>
-                        <Grid container spacing={2}>
-                            {
-                                notices?.map(notice => (
-                                    <Grid item xs={12} md={6} lg={4} key={notice.id}>
-                                        <NoticeCard title={notice.title} desc={notice.description} status={notice.label}></NoticeCard>
-                                    </Grid>
-                                ))
-                            }
-                        </Grid>
-                    </Box>
-                )
-            }
-            </Box>
             <Minify />
         </Layout>
     )
