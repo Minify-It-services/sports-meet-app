@@ -13,6 +13,10 @@ import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -59,6 +63,8 @@ const Matches = () => {
         setaction(!action);
         settoEdit(row);
     }
+    const [sportName, setSportName] = useState('all');
+    const [shownMatches, setShownMatches] = useState([])
     const isObjEmpty=(obj)=>{
         if (obj && Object.keys(obj).length === 0
         && Object.getPrototypeOf(obj) === Object.prototype) {
@@ -78,8 +84,10 @@ const Matches = () => {
     const getMatches = async () => {
         const { data, status, message } = await jsendRes.destructFromApi('/matches', 'GET')
         
-        if(status === "success")
+        if(status === "success"){
             setMatches(data)
+            setShownMatches(matches)
+        }
         else
             console.log(data, message)
     }
@@ -160,6 +168,14 @@ const Matches = () => {
         min = parseInt(min);
         return { hr, min }
     }   
+
+    const handleChange = async (e) => {
+        setSportName(e.target.value)
+        if(e.target.value==='all')
+            setShownMatches(matches)
+        else
+            setShownMatches(matches.filter(match => match.sport.name===e.target.value))
+    }
 
     const handleRegister = async () => {
         let matchToSend = {
@@ -245,6 +261,21 @@ const Matches = () => {
                             }}}>Add MatchFixture</Button>
                         )
                     }
+                    <FormControl sx={{ width: '200px', marginRight: '1em' }}>
+                        <InputLabel id="demo-simple-select-label">Sport</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={sportName}
+                            label="Sport"
+                            onChange={e => handleChange(e)}
+                        >
+                            <MenuItem value="all">All</MenuItem>
+                            {
+                                sports.map(sport => (<MenuItem value={sport.name} key={sport.id}>{sport.name}</MenuItem>))
+                            }
+                        </Select>
+                    </FormControl>
                 </Box>
                 {!action? <TableContainer component={Paper} sx={{mt:2}}>
                     <Table aria-label="simple table">
@@ -259,7 +290,7 @@ const Matches = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {matches?.map((match,index) => (
+                            {shownMatches?.map((match,index) => (
                                 <TableRow  key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <TableCell align="center">{match?.team1.name} vs {match?.team2.name}</TableCell>
                                     <TableCell align="center">{match?.sport.name}</TableCell>
