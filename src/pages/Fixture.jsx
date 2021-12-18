@@ -34,7 +34,8 @@ function Fixture() {
         <Layout title="Fixture">
             {loading&&<Loader />}
             <Box mx={{xs:'1rem', sm:'3rem', md:'5rem', lg:'9rem'}} my='1rem'>
-                <Button color="info" variant="contained"><Link to='/tie-sheet' style={{ color: '#fff', textDecoration: 'none'}}>Tie Sheets</Link></Button>
+                <Button color="info" variant="contained" sx={{ marginRight: '2em' }}><Link to='/tie-sheet' style={{ color: '#fff', textDecoration: 'none' }}>Tie Sheets</Link></Button>
+                <Button color="primary" variant="contained"><Link to='/league' style={{ color: '#fff', textDecoration: 'none'}}>League Tables</Link></Button>
                 {
                     matches?.map((match, i) => match[0]?.sport&&<FixtureCard key={i} gameName={match[0]?.sport.name} matches={match} />)
                 }

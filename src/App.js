@@ -18,6 +18,7 @@ import TeamDetail from './admin/pages/teams/TeamDetail';
 // css:
 import './App.css';
 import TieSheet from './pages/TieSheet';
+import League from './pages/League';
 
 const App = () => {
   useEffect(() => {
@@ -36,6 +37,7 @@ const App = () => {
         <Route path="/fixture" element={<Fixture />} />
         <Route path="/fixture/details/:sport/:sportType" element={<MatchDetails />} />
         <Route path="/tie-sheet" element={<TieSheet />} />
+        <Route path="/league" element={<League />} />
         <Route path="/teamRegister/*" element={<Team />} />
         <Route path="/admin/*" element={<Admin />} />
       </Routes>
